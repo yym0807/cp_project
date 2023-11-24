@@ -73,7 +73,6 @@ int check(){
 		if(x+h[i][0] >= 0 && x+h[i][0] < 8 && y+h[i][1] >= 0 && y+h[i][1] < 8){
 			if(board[x+h[i][0]][y+h[i][1]] == "Nn"[turn]){
 				checkcount++;
-//				break;
 			}
 		}
 	}
@@ -331,7 +330,6 @@ bool any_valid(){
 		for(int j = 0; j < 8; j++){
 			if(board[i][j] >= "aA"[turn] && board[i][j] <= "zZ"[turn]){
 				if(valid_moves(i, j, vm, 0)){
-					cout << i << ' ' << j << '\n';//這行感覺沒有用？ 
 					return 1;
 				}
 			}
@@ -442,7 +440,7 @@ int main(){
 				board['8'-s[1]][s[0]-'a'] = (char)(p + !turn * 32);
 				board[xi][yi] = '*';
 			}
-			if((board[xi][yi] == 'I' || board[xi][yi] == 'i') && yi != s[0]-'a' && board['8'-s[1]][s[0]-'a'] == '*'){
+			else if((board[xi][yi] == 'I' || board[xi][yi] == 'i') && yi != s[0]-'a' && board['8'-s[1]][s[0]-'a'] == '*'){
 				//passant
 				board['8'-s[1]][s[0]-'a'] = board[xi][yi];
 				board[xi][yi] = '*';
