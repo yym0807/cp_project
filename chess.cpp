@@ -24,18 +24,26 @@ int passant = -2;
 int check(){
 	int checkcount = 0;
 	int x, y;
-	for(x = 0; x < 8; x++){
+	for(x = 0; x < 8; x++){//找到國王位置 
 		for(y = 0; y < 8; y++){
 			if(board[x][y] == "kK"[turn]) break;
 		}
 		if(y < 8) break;
 	}
-	if(x > 0 && !turn || x < 7 && turn){
+	for(int i = 0; i < 8; i++){//king check
+		if(x+dirs[i][0] >= 0 && x+dirs[i][0] < 8 && y+dirs[i][1] >= 0 && y+dirs[i][1] < 8){
+			if(board[x+dirs[i][0]][y+dirs[i][1]] == "Kk"[turn]){
+				checkcount++;
+				break;
+			}	
+		}
+	}
+	if(x > 0 && !turn || x < 7 && turn){//pawn check 
 		if(!turn && (y > 0 && board[x-1][y-1] == 'I' || y < 7 && board[x-1][y+1] == 'I') || turn && (y > 0 && board[x+1][y-1] == 'i' || y < 7 && board[x+1][y+1] == 'i')){
 			checkcount++;
 		}
 	}
-	for(int i = 0; i < 4; i++){
+	for(int i = 0; i < 4; i++){//直線武器 
 		int t = 1;
 		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
 			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t] == '*'){
@@ -45,10 +53,10 @@ int check(){
 			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Qq"[turn] || board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Rr"[turn]){
 				checkcount++;
 			}
-			break;
+			break;//有東西擋著就break 
 		}
 	}
-	for(int i = 4; i < 8; i++){
+	for(int i = 4; i < 8; i++){//斜線武器 
 		int t = 1;
 		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
 			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t] == '*'){
@@ -61,7 +69,7 @@ int check(){
 			break;
 		}
 	}
-	for(int i = 0; i < 8; i++){
+	for(int i = 0; i < 8; i++){//knight check 
 		if(x+h[i][0] >= 0 && x+h[i][0] < 8 && y+h[i][1] >= 0 && y+h[i][1] < 8){
 			if(board[x+h[i][0]][y+h[i][1]] == "Nn"[turn]){
 				checkcount++;
@@ -72,7 +80,7 @@ int check(){
 	return checkcount;
 }
 
-bool king_can_go(bool side, int x, int y){
+bool king_can_go(bool side, int x, int y){//入堡時判斷國王能不能走 
 	if(board[x][y] != '*') return 0;
 	if(x > 0 && turn || x < 7 && !turn){
 		if(!turn && (y > 0 && board[x-1][y-1] == 'I' || y < 7 && board[x-1][y+1] == 'I') || turn && (y > 0 && board[x+1][y-1] == 'i' || y < 7 && board[x+1][y+1] == 'i')){
@@ -115,7 +123,7 @@ bool king_can_go(bool side, int x, int y){
 	return 1;
 }
 
-bool check_if_move(int xi, int yi, int xf, int yf){
+bool check_if_move(int xi, int yi, int xf, int yf){//判斷是否自殺 
 	char tem = board[xf][yf];
 	board[xf][yf] = board[xi][yi];
 	board[xi][yi] = '*';
@@ -125,15 +133,15 @@ bool check_if_move(int xi, int yi, int xf, int yf){
 	return c;
 }
 
-bool valid_moves(int xi, int yi, bool vm[][8], bool output = 1){
-	if(xi * (xi-7) > 0 || yi * (yi-7) > 0){
+bool valid_moves(int xi, int yi, bool vm[][8], bool output = 1){//輸出有哪些合法走法 
+	if(xi * (xi-7) > 0 || yi * (yi-7) > 0){ 
 		cout << "Invalid\n";
 		cout << "Press enter to choose again...";
 		getchar();
 		getchar();
 		return 0;
 	}
-	if(board[xi][yi] == '*' || board[xi][yi] < 'a' && !turn || board[xi][yi] > 'Z' && turn){
+	if(board[xi][yi] == '*' || board[xi][yi] < 'a' && !turn || board[xi][yi] > 'Z' && turn){//選到無子/對手旗子 
 		cout << "Invalid\n";
 		cout << "Press enter to choose again...";
 		getchar();
@@ -323,7 +331,7 @@ bool any_valid(){
 		for(int j = 0; j < 8; j++){
 			if(board[i][j] >= "aA"[turn] && board[i][j] <= "zZ"[turn]){
 				if(valid_moves(i, j, vm, 0)){
-					cout << i << ' ' << j << '\n';
+					cout << i << ' ' << j << '\n';//這行感覺沒有用？ 
 					return 1;
 				}
 			}
@@ -454,4 +462,4 @@ int main(){
 		cout << "It's a stalemate\n";
 	}
 	return 0;
-} 
+}  
