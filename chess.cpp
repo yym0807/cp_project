@@ -3,15 +3,26 @@
 #include <cstring>
 using namespace std;
 
+//char board[8][8] = {
+//	'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R',
+//	'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I',
+//	'*', '*', '*', '*', '*', '*', '*', '*',
+//	'*', '*', '*', '*', '*', '*', '*', '*',
+//	'*', '*', '*', '*', '*', '*', '*', '*',
+//	'*', '*', '*', '*', '*', '*', '*', '*',
+//	'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i',
+//	'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r',
+//};
+
 char board[8][8] = {
-	'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R',
-	'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I',
 	'*', '*', '*', '*', '*', '*', '*', '*',
+	'*', '*', '*', 'K', '*', '*', '*', '*',
 	'*', '*', '*', '*', '*', '*', '*', '*',
+	'*', '*', '*', '*', '*', '*', 'k', '*',
 	'*', '*', '*', '*', '*', '*', '*', '*',
+	'*', '*', '*', '*', 'B', '*', '*', '*',
 	'*', '*', '*', '*', '*', '*', '*', '*',
-	'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i',
-	'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r',
+	'*', '*', '*', '*', '*', '*', 'b', '*',
 };
 
 bool oo[2] = {1, 1};
@@ -338,12 +349,47 @@ bool any_valid(){
 	return 0;
 }
 
+bool checkmate(){
+	if(!any_valid() && check()) return 1;
+	return 0;
+}
+
+bool stalemate(){
+	if(!any_valid() && !check()) return 1;
+	bool n = 0, N = 0, b = 0, B = 0;
+	bool bcolor, Bcolor;
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			if(board[i][j] == '*' || board[i][j] == 'K' || board[i][j] == 'k') continue;
+			else if(board[i][j] == 'N'){
+				if(N || B || n || b) return 0;
+				N = 1;
+			}
+			else if(board[i][j] == 'n'){
+				if(N || B || n || b) return 0;
+				n = 1;
+			}
+			else if(board[i][j] == 'B'){
+				if(N || B || n || b && bcolor != ((i + j) & 1)) return 0;
+				B = 1;
+				Bcolor = (i + j) & 1;
+			}
+			else if(board[i][j] == 'b'){
+				if(N || b || n || B && Bcolor != ((i + j) & 1)) return 0;
+				b = 1;
+				bcolor = (i + j) & 1;
+			}
+		}
+	}
+	return 1;
+}
+
 int main(){
 	int xi, yi;
 	char s[3];
 	const char side[2][6] = {"white", "black"};
-	while(any_valid()){
-		system("cls");
+	while(!checkmate() && !stalemate()){
+//		system("cls");
 		char m = 'Q';
 		for(int i = 0; i < 8; i++){
 			cout << 8 - i << " |";
@@ -453,11 +499,14 @@ int main(){
 		}
 		turn = !turn;
 	}
-	if(check()){
+	if(checkmate()){
 		cout << "Winner is " << side[!turn] << '\n';
 	}
-	else{
+	else if(stalemate()){
 		cout << "It's a stalemate\n";
+	}
+	else{
+		cout << "ERROR\n";
 	}
 	return 0;
 }  
