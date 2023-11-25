@@ -3,26 +3,15 @@
 #include <cstring>
 using namespace std;
 
-//char board[8][8] = {
-//	'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R',
-//	'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I',
-//	'*', '*', '*', '*', '*', '*', '*', '*',
-//	'*', '*', '*', '*', '*', '*', '*', '*',
-//	'*', '*', '*', '*', '*', '*', '*', '*',
-//	'*', '*', '*', '*', '*', '*', '*', '*',
-//	'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i',
-//	'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r',
-//};
-
 char board[8][8] = {
+	'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R',
+	'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I',
 	'*', '*', '*', '*', '*', '*', '*', '*',
-	'*', '*', '*', 'K', '*', '*', '*', '*',
 	'*', '*', '*', '*', '*', '*', '*', '*',
-	'*', '*', '*', '*', '*', '*', 'k', '*',
 	'*', '*', '*', '*', '*', '*', '*', '*',
-	'*', '*', '*', '*', 'B', '*', '*', '*',
 	'*', '*', '*', '*', '*', '*', '*', '*',
-	'*', '*', '*', '*', '*', '*', 'b', '*',
+	'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i',
+	'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r',
 };
 
 bool oo[2] = {1, 1};
@@ -88,49 +77,6 @@ int check(){
 		}
 	}
 	return checkcount;
-}
-
-bool king_can_go(bool side, int x, int y){//入堡時判斷國王能不能走 
-	if(board[x][y] != '*') return 0;
-	if(x > 0 && turn || x < 7 && !turn){
-		if(!turn && (y > 0 && board[x-1][y-1] == 'I' || y < 7 && board[x-1][y+1] == 'I') || turn && (y > 0 && board[x+1][y-1] == 'i' || y < 7 && board[x+1][y+1] == 'i')){
-			return 0;
-		}
-	}
-	for(int i = 0; i < 4; i++){
-		int t = 1;
-		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
-			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t] == '*'){
-				t++;
-				continue;
-			}
-			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Qq"[side] || board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Rr"[side]){
-				return 0;
-			}
-			break;
-		}
-	}
-	for(int i = 4; i < 8; i++){
-		int t = 1;
-		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
-			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t] == '*'){
-				t++;
-				continue;
-			}
-			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Qq"[side] || board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Bb"[side]){
-				return 0;
-			}
-			break;
-		}
-	}
-	for(int i = 0; i < 8; i++){
-		if(x+h[i][0] >= 0 && x+h[i][0] < 8 && y+h[i][1] >= 0 && y+h[i][1] < 8){
-			if(board[x+h[i][0]][y+h[i][1]] == "Nn"[side]){
-				return 0;
-			}
-		}
-	}
-	return 1;
 }
 
 bool check_if_move(int xi, int yi, int xf, int yf){//判斷是否自殺 
@@ -230,14 +176,14 @@ bool valid_moves(int xi, int yi, bool vm[][8], bool output = 1){//輸出有哪些合法
 				}
 			}
 			if(ooo[turn]){
-				if(!check() && board[xi][1] == '*' && king_can_go(turn, xi, 2) && king_can_go(turn, xi, 3)){
+				if(!check() && board[xi][1] == '*' && board[xi][2] == '*' && !check_if_move(xi, 4, xi, 2) && board[xi][3] == '*' && !check_if_move(xi, 4, xi, 3)){
 					flag = 1;
 					vm[xi][2] = 1;
 					if(output) cout << "OOO ";
 				}
 			}
 			if(oo[turn]){
-				if(!check() && king_can_go(turn, xi, 5) && king_can_go(turn, xi, 6)){
+				if(!check() && board[xi][5] == '*' && !check_if_move(xi, 4, xi, 5) && board[xi][6] == '*' && !check_if_move(xi, 4, xi, 6)){
 					flag = 1;
 					vm[xi][6] = 1;
 					if(output) cout << "OO ";
@@ -378,6 +324,9 @@ bool stalemate(){
 				if(N || b || n || B && Bcolor != ((i + j) & 1)) return 0;
 				b = 1;
 				bcolor = (i + j) & 1;
+			}
+			else{
+				return 0;
 			}
 		}
 	}
