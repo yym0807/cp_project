@@ -32,9 +32,13 @@ int Piece::getside(){
 	return side;
 }
 
+char Piece::getname(){
+	return p;
+}
+
 King::King(int xi, int yi, int si): Piece(xi, yi, 'k' - si * 32, si){}
 
-bool King::valid_moves(bool vm[][8], Board b){
+bool King::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
 	bool* oo = b.getoo();
 	bool* ooo = b.getooo();
@@ -61,7 +65,7 @@ bool King::valid_moves(bool vm[][8], Board b){
 
 Queen::Queen(int xi, int yi, int si): Piece(xi, yi, 'q' - si * 32, si){}
 
-bool Queen::valid_moves(bool vm[][8], Board b){
+bool Queen::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
 	bool flag = 0;
 	for(int i = 0; i < 8; i++){
@@ -85,7 +89,7 @@ bool Queen::valid_moves(bool vm[][8], Board b){
 
 Rook::Rook(int xi, int yi, int si): Piece(xi, yi, 'r' - si * 32, si){}
 
-bool Rook::valid_moves(bool vm[][8], Board b){
+bool Rook::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
 	bool flag = 0;
 	for(int i = 0; i < 4; i++){
@@ -109,7 +113,7 @@ bool Rook::valid_moves(bool vm[][8], Board b){
 
 Knight::Knight(int xi, int yi, int si): Piece(xi, yi, 'n' - si * 32, si){}
 
-bool Knight::valid_moves(bool vm[][8], Board b){
+bool Knight::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
 	bool flag = 0;
 	for(int i = 0; i < 8; i++){
@@ -123,7 +127,7 @@ bool Knight::valid_moves(bool vm[][8], Board b){
 
 Bishop::Bishop(int xi, int yi, int si): Piece(xi, yi, 'b' - si * 32, si){}
 
-bool Bishop::valid_moves(bool vm[][8], Board b){
+bool Bishop::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
 	bool flag = 0;
 	for(int i = 4; i < 8; i++){
@@ -147,7 +151,7 @@ bool Bishop::valid_moves(bool vm[][8], Board b){
 
 Pawn::Pawn(int xi, int yi, int si): Piece(xi, yi, 'i' - si * 32, si){}
 
-bool Pawn::valid_moves(bool vm[][8], Board b){
+bool Pawn::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
 	int passant = b.getpassant();
 	bool flag = 0;
@@ -199,12 +203,12 @@ bool Pawn::valid_moves(bool vm[][8], Board b){
 			vm[x-1][passant] = 1;
 		}
 	}
-	return flag;
+	return 1;
 }
 
 Air::Air(int xi, int yi): Piece(xi, yi, '*', -1){}
 
-bool Air::valid_moves(bool vm[][8], Board b){
+bool Air::valid_moves(bool vm[][8], Board &b){
 	return 0;
 }
 
@@ -261,7 +265,7 @@ Piece*** Board::getboard(){
 
 void Board::move(int xi, int yi, int xf, int yf){
 	if(*board[xi][yi] == "kK"[turn] && (yi-yf) * (yi-yf) > 1){ // OO or OOO
-		if(xf == 6){ // OO
+		if(yf == 6){ // OO
 			board[7*turn][4]->setxy(7*turn, 6);
 			board[7*turn][7]->setxy(7*turn, 5);
 			delete board[7*turn][6];
@@ -271,7 +275,7 @@ void Board::move(int xi, int yi, int xf, int yf){
 			board[7*turn][4] = new Air(7*turn, 4);
 			board[7*turn][7] = new Air(7*turn, 7);
 		}
-		else if(xi == 2){ // OOO
+		else if(yf == 2){ // OOO
 			board[7*turn][4]->setxy(7*turn, 2);
 			board[7*turn][0]->setxy(7*turn, 3);
 			delete board[7*turn][2];
@@ -351,32 +355,6 @@ void Board::move(int xi, int yi, int xf, int yf){
 	turn = !turn;
 }
 
-//void Board::Omove(int o){ // o = 2 -> OO, o = 3 -> OOO
-//	if(o == 2){
-//		board[7*turn][4]->setxy(7*turn, 6);
-//		board[7*turn][7]->setxy(7*turn, 5);
-//		delete board[7*turn][6];
-//		delete board[7*turn][5];
-//		board[7*turn][6] = board[7*turn][4];
-//		board[7*turn][5] = board[7*turn][7];
-//		board[7*turn][4] = new Air(7*turn, 4);
-//		board[7*turn][7] = new Air(7*turn, 7);
-//		
-//	}
-//	else if(o == 3){
-//		board[7*turn][4]->setxy(7*turn, 2);
-//		board[7*turn][0]->setxy(7*turn, 3);
-//		delete board[7*turn][2];
-//		delete board[7*turn][3];
-//		board[7*turn][2] = board[7*turn][4];
-//		board[7*turn][3] = board[7*turn][0];
-//		board[7*turn][4] = new Air(7*turn, 4);
-//		board[7*turn][0] = new Air(7*turn, 0);
-//	}
-//	oo[turn] = 0;
-//	ooo[turn] = 0;
-//}
-
 bool Board::checked(bool side){
 	int x, y;
 	for(x = 0; x < 8; x++){//找到國王位置 
@@ -442,6 +420,7 @@ bool Board::check_if_move(int xi, int yi, int xf, int yf){//判斷是否自殺
 	board[xi][yi] = board[xf][yf];
 	board[xf][yf] = tem;
 	return c;
+return 0;
 }
 
 bool Board::any_valid(){
@@ -510,5 +489,16 @@ bool Board::getturn(){
 
 int Board::getpassant(){
 	return passant;
+}
+
+void Board::print(){
+	for(int i = 0; i < 8; i++){
+			cout << 8 - i << " |";
+			for(int j = 0; j < 8; j++){
+				cout << board[i][j]->getname() << ' ';
+			}
+			cout << '\n';
+		}
+		cout << "  ________________\n   a b c d e f g h\n";
 }
 

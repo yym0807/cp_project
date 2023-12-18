@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib> 
 #include <cstring>
-#include "game.h"
+#include "game.cpp"
 using namespace std;
 
 int main(){
@@ -12,16 +12,9 @@ int main(){
 	while(!b.checkmate() && !b.stalemate()){
 		Piece*** board = b.getboard();
 		bool turn = b.getturn();
-		system("cls");
-		char m = 'Q';
-		for(int i = 0; i < 8; i++){
-			cout << 8 - i << " |";
-			for(int j = 0; j < 8; j++){
-				cout << board[i][j] << ' ';
-			}
-			cout << '\n';
-		}
-		cout << "  ________________\n   a b c d e f g h\n";
+//		system("cls");
+//		char m = 'Q';
+		b.print();
 		cout << '[' << side[turn] << "] Location of your piece: ";
 		cin >> s;
 		xi = '8' - s[1];

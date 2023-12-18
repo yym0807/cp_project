@@ -25,6 +25,7 @@ class Board{
 		bool* getoo();
 		bool getturn();
 		int getpassant();
+		void print();
 };
 
 class Piece{
@@ -36,7 +37,7 @@ class Piece{
 	public:
 		Piece(int, int, char, int);
 		~Piece();
-		virtual bool valid_moves(bool [][8], const Board){return 0;}
+		virtual bool valid_moves(bool [][8], Board&){return 0;}
 		bool operator==(char);
 		bool operator>=(char);
 		bool operator<=(char);
@@ -44,6 +45,7 @@ class Piece{
 		bool operator>(char);
 		void setxy(int, int);
 		int getside();
+		char getname();
 };
 
 
@@ -51,43 +53,43 @@ class Piece{
 class King: public Piece{
 	public:
 		King(int, int, int);
-		bool valid_moves(bool [][8], Board);
+		bool valid_moves(bool [][8], Board&);
 };
 
 class Queen: public Piece{
 	public:
 		Queen(int, int, int);
-		bool valid_moves(bool [][8], Board);
+		bool valid_moves(bool [][8], Board&);
 };
 
 class Rook: public Piece{
 	public:
 		Rook(int, int, int);
-		bool valid_moves(bool [][8], Board);
+		bool valid_moves(bool [][8], Board&);
 };
 
 class Knight: public Piece{
 	public:
 		Knight(int, int, int);
-		bool valid_moves(bool [][8], Board);
+		bool valid_moves(bool [][8], Board&);
 };
 
 class Bishop: public Piece{
 	public:
 		Bishop(int, int, int);
-		bool valid_moves(bool [][8], Board);
+		bool valid_moves(bool [][8], Board&);
 };
 
 class Pawn: public Piece{
 	public:
 		Pawn(int, int, int);
-		bool valid_moves(bool [][8], Board);
+		bool valid_moves(bool [][8], Board&);
 };
 
 class Air: public Piece{
 	public:
 		Air(int, int);
-		bool valid_moves(bool [][8], Board);
+		bool valid_moves(bool [][8], Board&);
 };
 
 #endif
