@@ -21,8 +21,7 @@ const int dirs[8][2] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}, {-1, 1}, {1, 1}, {1, -
 const int h[8][2] = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
 int passant = -2;
 
-int check(){
-	int checkcount = 0;
+bool check(){
 	int x, y;
 	for(x = 0; x < 8; x++){//找到國王位置 
 		for(y = 0; y < 8; y++){
@@ -33,14 +32,13 @@ int check(){
 	for(int i = 0; i < 8; i++){//king check
 		if(x+dirs[i][0] >= 0 && x+dirs[i][0] < 8 && y+dirs[i][1] >= 0 && y+dirs[i][1] < 8){
 			if(board[x+dirs[i][0]][y+dirs[i][1]] == "Kk"[turn]){
-				checkcount++;
-				break;
+				return 1;
 			}	
 		}
 	}
 	if(x > 0 && !turn || x < 7 && turn){//pawn check 
 		if(!turn && (y > 0 && board[x-1][y-1] == 'I' || y < 7 && board[x-1][y+1] == 'I') || turn && (y > 0 && board[x+1][y-1] == 'i' || y < 7 && board[x+1][y+1] == 'i')){
-			checkcount++;
+			return 1;
 		}
 	}
 	for(int i = 0; i < 4; i++){//直線武器 
@@ -51,7 +49,7 @@ int check(){
 				continue;
 			}
 			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Qq"[turn] || board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Rr"[turn]){
-				checkcount++;
+				return 1;
 			}
 			break;//有東西擋著就break 
 		}
@@ -64,7 +62,7 @@ int check(){
 				continue;
 			}
 			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Qq"[turn] || board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Bb"[turn]){
-				checkcount++;
+				return 1;
 			}
 			break;
 		}
@@ -72,18 +70,18 @@ int check(){
 	for(int i = 0; i < 8; i++){//knight check 
 		if(x+h[i][0] >= 0 && x+h[i][0] < 8 && y+h[i][1] >= 0 && y+h[i][1] < 8){
 			if(board[x+h[i][0]][y+h[i][1]] == "Nn"[turn]){
-				checkcount++;
+				return 1;
 			}
 		}
 	}
-	return checkcount;
+	return 0;
 }
 
 bool check_if_move(int xi, int yi, int xf, int yf){//判斷是否自殺 
 	char tem = board[xf][yf];
 	board[xf][yf] = board[xi][yi];
 	board[xi][yi] = '*';
-	int c = check();
+	bool c = check();
 	board[xi][yi] = board[xf][yf];
 	board[xf][yf] = tem;
 	return c;
