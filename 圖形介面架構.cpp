@@ -188,16 +188,13 @@ int main( int argc, char* args[] )
 				SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
 				for(int i = 0; i < 9; i++){
 					SDL_RenderDrawLine( gRenderer, ori_x, ori_y + i * gr_h, ori_x + bo_w, ori_y + i * gr_h );	
-				}		
-//				SDL_RenderDrawLine( gRenderer, ori_x, ori_y, ori_x + bo_w, ori_y);
-//				SDL_RenderDrawLine( gRenderer, ori_x, ori_y + bo_h, ori_x + bo_w, ori_y + bo_h);
+				}
+				
 				//Draw black vertical lines
 				SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
 				for(int i = 0; i < 9; i++){
 					SDL_RenderDrawLine( gRenderer, ori_x + i * gr_w, ori_y, ori_x + i * gr_w, ori_y + bo_h);	
 				}	
-//				SDL_RenderDrawLine( gRenderer, ori_x, ori_y, ori_x, ori_y + bo_h);
-//				SDL_RenderDrawLine( gRenderer, ori_x + bo_w, ori_y, ori_x + bo_w, ori_y + bo_h);
 				
 				//Update screen
 				SDL_RenderPresent( gRenderer );

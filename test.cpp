@@ -26,10 +26,7 @@ int main(){
 		cout << '[' << side[turn] << "] Your move: ";
 		cin >> s;
 		if(!strcmp(s, "OOO")){
-			if(*board[xi][yi] == 'k' && vm[7][2]){
-				b.move(xi, yi, xi, 2);
-			}
-			else if(*board[xi][yi] == 'K' && vm[0][2]){
+			if(*board[xi][yi] == KING && vm[7-board[xi][yi]->getside() * 7][2]){
 				b.move(xi, yi, xi, 2);
 			}
 			else{
@@ -41,10 +38,7 @@ int main(){
 			}
 		}
 		else if(!strcmp(s, "OO")){
-			if(*board[xi][yi] == 'k' && vm[7][6]){
-				b.move(xi, yi, xi, 6);
-			}
-			else if(*board[xi][yi] == 'K' && vm[0][6]){
+			if(*board[xi][yi] == KING && vm[7 - board[xi][yi]->getside() * 7][6]){
 				b.move(xi, yi, xi, 6);
 			}
 			else{

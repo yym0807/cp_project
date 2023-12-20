@@ -7,19 +7,19 @@ const int h[8][2] = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1
 const char side[2][6] = {"white", "black"};
 
 // class Piece
-Piece::Piece(int xi, int yi, char pi, int si): x(xi), y(yi), p(pi), side(si){}
+Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si){}
 
 Piece::~Piece(){}
 
-bool Piece::operator==(char c){
+bool Piece::operator==(int c){
 	return (p == c);
 }
 
-bool Piece::operator>=(char c){
+bool Piece::operator>=(int c){
 	return (p >= c);
 }
 
-bool Piece::operator<=(char c){
+bool Piece::operator<=(int c){
 	return (p <= c);
 }
 
@@ -32,11 +32,11 @@ int Piece::getside(){
 	return side;
 }
 
-char Piece::getname(){
+int Piece::getname(){
 	return p;
 }
 
-King::King(int xi, int yi, int si): Piece(xi, yi, 'k' - si * 32, si){}
+King::King(int xi, int yi, int si): Piece(xi, yi, KING, si){}
 
 bool King::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
@@ -49,13 +49,13 @@ bool King::valid_moves(bool vm[][8], Board &b){
 		}
 	}
 	if(ooo[side]){
-		if(!b.checked(side) && *board[x][1] == '*' && *board[x][2] == '*' && !b.check_if_move(x, 4, x, 2) && *board[x][3] == '*' && !b.check_if_move(x, 4, x, 3)){
+		if(!b.checked(side) && *board[x][1] == AIR && *board[x][2] == AIR && !b.check_if_move(x, 4, x, 2) && *board[x][3] == AIR && !b.check_if_move(x, 4, x, 3)){
 			flag = 1;
 			vm[x][2] = 1;
 		}
 	}
 	if(oo[side]){
-		if(!b.checked(side) && *board[x][5] == '*' && !b.check_if_move(x, 4, x, 5) && *board[x][6] == '*' && !b.check_if_move(x, 4, x, 6)){
+		if(!b.checked(side) && *board[x][5] == AIR && !b.check_if_move(x, 4, x, 5) && *board[x][6] == AIR && !b.check_if_move(x, 4, x, 6)){
 			flag = 1;
 			vm[x][6] = 1;
 		}
@@ -63,7 +63,7 @@ bool King::valid_moves(bool vm[][8], Board &b){
 	return flag;
 }
 
-Queen::Queen(int xi, int yi, int si): Piece(xi, yi, 'q' - si * 32, si){}
+Queen::Queen(int xi, int yi, int si): Piece(xi, yi, QUEEN, si){}
 
 bool Queen::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
@@ -71,7 +71,7 @@ bool Queen::valid_moves(bool vm[][8], Board &b){
 	for(int i = 0; i < 8; i++){
 		int t = 1;
 		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
-			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == '*' && !b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
+			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR && !b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
 				flag = 1;
 				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
 				t++;
@@ -87,7 +87,7 @@ bool Queen::valid_moves(bool vm[][8], Board &b){
 	return flag;
 }
 
-Rook::Rook(int xi, int yi, int si): Piece(xi, yi, 'r' - si * 32, si){}
+Rook::Rook(int xi, int yi, int si): Piece(xi, yi, ROOK, si){}
 
 bool Rook::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
@@ -95,7 +95,7 @@ bool Rook::valid_moves(bool vm[][8], Board &b){
 	for(int i = 0; i < 4; i++){
 		int t = 1;
 		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8 && !b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
-			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == '*'){
+			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
 				flag = 1;
 				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
 				t++;
@@ -111,7 +111,7 @@ bool Rook::valid_moves(bool vm[][8], Board &b){
 	return flag;
 }
 
-Knight::Knight(int xi, int yi, int si): Piece(xi, yi, 'n' - si * 32, si){}
+Knight::Knight(int xi, int yi, int si): Piece(xi, yi, KNIGHT, si){}
 
 bool Knight::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
@@ -125,7 +125,7 @@ bool Knight::valid_moves(bool vm[][8], Board &b){
 	return flag;
 }
 
-Bishop::Bishop(int xi, int yi, int si): Piece(xi, yi, 'b' - si * 32, si){}
+Bishop::Bishop(int xi, int yi, int si): Piece(xi, yi, BISHOP, si){}
 
 bool Bishop::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
@@ -133,7 +133,7 @@ bool Bishop::valid_moves(bool vm[][8], Board &b){
 	for(int i = 4; i < 8; i++){
 		int t = 1;
 		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8 && !b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
-			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == '*'){
+			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
 				flag = 1;
 				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
 				t++;
@@ -149,19 +149,19 @@ bool Bishop::valid_moves(bool vm[][8], Board &b){
 	return flag;
 }
 
-Pawn::Pawn(int xi, int yi, int si): Piece(xi, yi, 'i' - si * 32, si){}
+Pawn::Pawn(int xi, int yi, int si): Piece(xi, yi, PAWN, si){}
 
 bool Pawn::valid_moves(bool vm[][8], Board &b){
 	Piece*** board = b.getboard();
 	int passant = b.getpassant();
 	bool flag = 0;
 	if(side){
-		if(*board[x+1][y] == '*'){
+		if(*board[x+1][y] == AIR){
 			if(!b.check_if_move(x, y, x+1, y)){
 				flag = 1;
 				vm[x+1][y] = 1;
 			}
-			if(x == 1 && *board[x+2][y] == '*' && !b.check_if_move(x, y, x+2, y)){
+			if(x == 1 && *board[x+2][y] == AIR && !b.check_if_move(x, y, x+2, y)){
 				flag = 1;
 				vm[x+2][y] = 1;
 			}
@@ -180,12 +180,12 @@ bool Pawn::valid_moves(bool vm[][8], Board &b){
 		}
 	}
 	else{
-		if(*board[x-1][y] == '*'){
+		if(*board[x-1][y] == AIR){
 			if(!b.check_if_move(x, y, x-1, y)){
 				flag = 1;
 				vm[x-1][y] = 1;
 			}
-			if(x == 6 && *board[x-2][y] == '*' && !b.check_if_move(x, y, x-2, y)){
+			if(x == 6 && *board[x-2][y] == AIR && !b.check_if_move(x, y, x-2, y)){
 				flag = 1;
 				vm[x-2][y] = 1;
 			}
@@ -206,7 +206,7 @@ bool Pawn::valid_moves(bool vm[][8], Board &b){
 	return 1;
 }
 
-Air::Air(int xi, int yi): Piece(xi, yi, '*', -1){}
+Air::Air(int xi, int yi): Piece(xi, yi, AIR, -1){}
 
 bool Air::valid_moves(bool vm[][8], Board &b){
 	return 0;
@@ -264,7 +264,7 @@ Piece*** Board::getboard(){
 }
 
 void Board::move(int xi, int yi, int xf, int yf){
-	if(*board[xi][yi] == "kK"[turn] && (yi-yf) * (yi-yf) > 1){ // OO or OOO
+	if(*board[xi][yi] == KING && (yi-yf) * (yi-yf) > 1){ // OO or OOO
 		if(yf == 6){ // OO
 			board[7*turn][4]->setxy(7*turn, 6);
 			board[7*turn][7]->setxy(7*turn, 5);
@@ -294,7 +294,7 @@ void Board::move(int xi, int yi, int xf, int yf){
 		turn = !turn;
 		return;
 	}
-	if(xi == 6 && *board[xi][yi] == 'I' || xi == 1 && *board[xi][yi] == 'i'){
+	if(*board[xi][yi] == PAWN && xi == 1 + board[xi][yi]->getside() * 5){
 		// promotion
 		cout << '[' << side[turn] << "] Pawn promotion(Q, B, N, R): ";
 		char p;
@@ -321,7 +321,7 @@ void Board::move(int xi, int yi, int xf, int yf){
 		turn = !turn;
 		return;
 	}
-	if(*board[xi][yi] == "iI"[turn] && yi != yf && *board[xf][yf] == '*'){
+	if(*board[xi][yi] == PAWN && yi != yf && *board[xf][yf] == AIR){
 		//passant
 		delete board[xf][yf];
 		delete board[xi][yi];
@@ -332,17 +332,17 @@ void Board::move(int xi, int yi, int xf, int yf){
 		turn = !turn;
 		return;
 	}
-	if(*board[xi][yi] == "kK"[turn]){
+	if(*board[xi][yi] == KING){
 		oo[turn] = 0;
 		ooo[turn] = 0;
 	}
-	else if(*board[xi][yi] == "rR"[turn]){
+	else if(*board[xi][yi] == ROOK){
 		if(xi == 0 && yi == 0) ooo[0] = 0;
 		if(xi == 0 && yi == 7) oo[0] = 0;
 		if(xi == 7 && yi == 0) ooo[1] = 0;
 		if(xi == 7 && yi == 7) oo[1] = 0;
 	}
-	else if(xi == 1 && xf == 3 && *board[xi][yi] == 'I' || xi == 6 && xf == 4 && *board[xi][yi] == 'i'){
+	else if(*board[xi][yi] == PAWN && xi == 6 - board[xi][yi]->getside() * 5 && xf == 4 - board[xi][yi]->getside()){
 		passant = yi;
 	}
 	else{
@@ -359,30 +359,30 @@ bool Board::checked(bool side){
 	int x, y;
 	for(x = 0; x < 8; x++){//找到國王位置 
 		for(y = 0; y < 8; y++){
-			if(*board[x][y] == "kK"[side]) break;
+			if(*board[x][y] == KING && board[x][y]->getside() == side) break;
 		}
 		if(y < 8) break;
 	}
 	for(int i = 0; i < 8; i++){//king check
 		if(x+dirs[i][0] >= 0 && x+dirs[i][0] < 8 && y+dirs[i][1] >= 0 && y+dirs[i][1] < 8){
-			if(*board[x+dirs[i][0]][y+dirs[i][1]] == "Kk"[side]){
+			if(*board[x+dirs[i][0]][y+dirs[i][1]] == KING){
 				return 1;
 			}	
 		}
 	}
 	if(x > 0 && !side || x < 7 && side){//pawn check 
-		if(!side && (y > 0 && *board[x-1][y-1] == 'I' || y < 7 && *board[x-1][y+1] == 'I') || side && (y > 0 && *board[x+1][y-1] == 'i' || y < 7 && *board[x+1][y+1] == 'i')){
+		if(y > 0 && *board[x-1+side*2][y-1] == PAWN && board[x-1+side*2][y-1]->getside() == 1-side || y < 7 && *board[x-1+2*side][y+1] == PAWN && board[x-1+2*side][y+1]->getside() == 1-side){
 			return 1;
 		}
 	}
 	for(int i = 0; i < 4; i++){//直線武器 
 		int t = 1;
 		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
-			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == '*'){
+			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
 				t++;
 				continue;
 			}
-			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Qq"[side] || *board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Rr"[side]){
+			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t]->getside() == 1-side && (*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == QUEEN || *board[x+dirs[i][0]*t][y+dirs[i][1]*t] == ROOK)){
 				return 1;
 			}
 			break;//有東西擋著就break 
@@ -391,11 +391,11 @@ bool Board::checked(bool side){
 	for(int i = 4; i < 8; i++){//斜線武器 
 		int t = 1;
 		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
-			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == '*'){
+			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
 				t++;
 				continue;
 			}
-			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Qq"[side] || *board[x+dirs[i][0]*t][y+dirs[i][1]*t] == "Bb"[side]){
+			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t]->getside() == 1-side && (*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == QUEEN || *board[x+dirs[i][0]*t][y+dirs[i][1]*t] == BISHOP)){
 				return 1;
 			}
 			break;
@@ -403,7 +403,7 @@ bool Board::checked(bool side){
 	}
 	for(int i = 0; i < 8; i++){//knight check 
 		if(x+h[i][0] >= 0 && x+h[i][0] < 8 && y+h[i][1] >= 0 && y+h[i][1] < 8){
-			if(*board[x+h[i][0]][y+h[i][1]] == "Nn"[side]){
+			if(*board[x+h[i][0]][y+h[i][1]] == KNIGHT && board[x+h[i][0]][y+h[i][1]]->getside() == 1-side){
 				return 1;
 			}
 		}
@@ -420,7 +420,6 @@ bool Board::check_if_move(int xi, int yi, int xf, int yf){//判斷是否自殺
 	board[xi][yi] = board[xf][yf];
 	board[xf][yf] = tem;
 	return c;
-return 0;
 }
 
 bool Board::any_valid(){
@@ -444,28 +443,19 @@ bool Board::checkmate(){
 
 bool Board::stalemate(){
 	if(!any_valid() && !checked(turn)) return 1;
-	bool n = 0, N = 0, b = 0, B = 0;
+	bool N[2] = {}, B[2] = {};
 	bool bcolor, Bcolor;
 	for(int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
-			if(*board[i][j] == '*' || *board[i][j] == 'K' || *board[i][j] == 'k') continue;
-			else if(*board[i][j] == 'N'){
-				if(N || B || n || b) return 0;
-				N = 1;
+			if(*board[i][j] == AIR || *board[i][j] == KING) continue;
+			else if(*board[i][j] == KNIGHT){
+				if(N[0] || N[1] || B[0] || B[1]) return 0;
+				N[board[i][j]->getside()] = 1;
 			}
-			else if(*board[i][j] == 'n'){
-				if(N || B || n || b) return 0;
-				n = 1;
-			}
-			else if(*board[i][j] == 'B'){
-				if(N || B || n || b && bcolor != ((i + j) & 1)) return 0;
-				B = 1;
+			else if(*board[i][j] == BISHOP){
+				if(N[0] || N[1] || B[0] && (!board[i][j]->getside() || Bcolor != ((i + j) & 1)) || B[1] && (board[i][j]->getside() || Bcolor != ((i + j) & 1))) return 0;
+				B[board[i][j]->getside()] = 1;
 				Bcolor = (i + j) & 1;
-			}
-			else if(*board[i][j] == 'b'){
-				if(N || b || n || B && Bcolor != ((i + j) & 1)) return 0;
-				b = 1;
-				bcolor = (i + j) & 1;
 			}
 			else{
 				return 0;

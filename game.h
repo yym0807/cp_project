@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
+
 class Piece;
 
 class Board{
@@ -30,22 +32,23 @@ class Board{
 
 class Piece{
 	protected:
-		char p; // K = king, Q = queen, R = rook, N = knight, B = bishop, I = pawn, * = air uppercase for black, lowercase for white
+		int p;
+		 // K = king, Q = queen, R = rook, N = knight, B = bishop, I = pawn, * = air uppercase for black, lowercase for white
 		int side; // 0 for white, 1 for black, -1 for air
 		int x; // 8 ~ 1
 		int y; // a ~ h
 	public:
-		Piece(int, int, char, int);
+		Piece(int, int, int, int);
 		~Piece();
 		virtual bool valid_moves(bool [][8], Board&){return 0;}
-		bool operator==(char);
-		bool operator>=(char);
-		bool operator<=(char);
-		bool operator<(char);
-		bool operator>(char);
+		bool operator==(int);
+		bool operator>=(int);
+		bool operator<=(int);
+//		bool operator<(int);
+//		bool operator>(int);
 		void setxy(int, int);
 		int getside();
-		char getname();
+		int getname();
 };
 
 
