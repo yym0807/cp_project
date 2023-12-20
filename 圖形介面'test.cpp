@@ -4,7 +4,18 @@
 #include <stdio.h>
 #include <string>
 #include <cmath>
-#include "LTexture.cpp"
+#include "LTexture.h"
+
+const int SCREEN_WIDTH = 1000;
+const int SCREEN_HEIGHT = 750;
+//The window we'll be rendering to
+SDL_Window* gWindow = NULL;
+
+//The window renderer
+SDL_Renderer* gRenderer = NULL;
+
+//Globally used font
+TTF_Font* gFont = NULL;
 
 LTexture gTextTexture1;
 LTexture gTextTexture2;

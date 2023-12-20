@@ -10,6 +10,18 @@
 //LTexture gTextTexture1;
 //LTexture gTextTexture2;
 
+//Screen dimension constants
+extern const int SCREEN_WIDTH;
+extern const int SCREEN_HEIGHT;
+
+//The window we'll be rendering to
+extern SDL_Window* gWindow;
+
+//The window renderer
+extern SDL_Renderer* gRenderer;
+
+//Globally used font
+extern TTF_Font* gFont;
 
 LTexture::LTexture()
 {
