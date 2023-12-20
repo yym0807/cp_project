@@ -292,7 +292,7 @@ bool type(LTexture& gTextTexture, std::string textureText, SDL_Color textColor, 
 	bool success = true;
 
 	//Open the font
-	gFont = TTF_OpenFont( "16_true_type_fonts/lazy.ttf", fontsize );
+	gFont = TTF_OpenFont( "font/lazy.ttf", fontsize );
 	if( gFont == NULL )
 	{
 		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
