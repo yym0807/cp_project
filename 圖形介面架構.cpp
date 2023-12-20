@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string>
 #include <cmath>
-#include "game.cpp"
+#include "game.h"
 
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 750;
