@@ -3,9 +3,13 @@
 #include <stdio.h>
 #include <string>
 #include <cmath>
+#include "game.cpp"
 
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 750;
+const double bo_w = SCREEN_HEIGHT / 10 * 8, bo_h = SCREEN_HEIGHT / 10 * 8;
+const double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
+const double gr_w = bo_w / 8, gr_h = bo_h / 8;
 
 //Starts up SDL and creates window
 bool init();
@@ -128,22 +132,32 @@ SDL_Texture* loadTexture( std::string path )
 	return newTexture;
 }
 
+void draw_black_line(){
+	//Draw black horizontal lines
+	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
+	for(int i = 0; i < 9; i++){
+		SDL_RenderDrawLine( gRenderer, ori_x, ori_y + gr_h * i, ori_x + bo_w, ori_y + gr_h * i );	
+	}
+	
+	//Draw black vertical lines
+	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
+	for(int i = 0; i < 9; i++){
+		SDL_RenderDrawLine( gRenderer, ori_x + gr_w * i, ori_y, ori_x + gr_w * i, ori_y + bo_h);	
+	}
+}
+
 int main( int argc, char* args[] )
 {
 	//Start up SDL and create window
-	if( !init() )
-	{
+	if( !init() ){
 		printf( "Failed to initialize!\n" );
 	}
-	else
-	{
+	else{
 		//Load media
-		if( !loadMedia() )
-		{
+		if( !loadMedia() ){
 			printf( "Failed to load media!\n" );
 		}
-		else
-		{	
+		else{	
 			//Main loop flag
 			bool quit = false;
 
@@ -151,53 +165,130 @@ int main( int argc, char* args[] )
 			SDL_Event e;
 
 			//While application is running
-			double bo_w = SCREEN_HEIGHT / 10 * 8, bo_h = SCREEN_HEIGHT / 10 * 8;
-			double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
-			double gr_w = bo_w / 8, gr_h = bo_h / 8;
-			while( !quit )
-			{
-				//Handle events on queue
-				while( SDL_PollEvent( &e ) != 0 )
-				{
-					//User requests quit
-					if( e.type == SDL_QUIT )
-					{
-						quit = true;
-					}
-				}
-
-				//Clear screen
-				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-				SDL_RenderClear( gRenderer );
-				
-				//Render yellow filled quad
+			Board b;
+//			double bo_w = SCREEN_HEIGHT / 10 * 8, bo_h = SCREEN_HEIGHT / 10 * 8;
+//			double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
+//			double gr_w = bo_w / 8, gr_h = bo_h / 8;
+			bool is_downed = 0;
+			bool vm[8][8] = {};
+			bool clicked = 0;
+			int clicked_x, clicked_y;
+			
+			//Clear screen
+			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+			SDL_RenderClear( gRenderer );
+			
+			//Render yellow filled quad
 //				SDL_Rect fillRect = { ori_x, ori_y, bo_w, bo_h };
 //				SDL_SetRenderDrawColor( gRenderer, 255, 255, 224, 0xFF );		
 //				SDL_RenderFillRect( gRenderer, &fillRect );
-				for(int i = 0; i < 8; i++){
-					for(int j = 0; j < 8; j++){
-						if(i + j & 1){
-							SDL_Rect fillRect = { ori_x + i * gr_w, ori_y + j * gr_h, gr_w, gr_h };
-							SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );		
-							SDL_RenderFillRect( gRenderer, &fillRect );
-						}
+			for(int i = 0; i < 8; i++){
+				for(int j = 0; j < 8; j++){
+					if(i + j & 1){
+						SDL_Rect fillRect = { ori_x + gr_w * i, ori_y + gr_h * j, gr_w, gr_h };
+						SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );		
+						SDL_RenderFillRect( gRenderer, &fillRect );
 					}
 				}
-				
-				//Draw black horizontal lines
-				SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
-				for(int i = 0; i < 9; i++){
-					SDL_RenderDrawLine( gRenderer, ori_x, ori_y + i * gr_h, ori_x + bo_w, ori_y + i * gr_h );	
+			}
+			
+			draw_black_line();
+			
+			//Update screen
+			SDL_RenderPresent( gRenderer );
+			
+			while( !quit ){
+				//Handle events on queue
+				while( SDL_PollEvent( &e ) != 0 ){
+					//User requests quit
+					if( e.type == SDL_QUIT ){
+						quit = true;
+					}
+					else if(e.type == SDL_MOUSEBUTTONDOWN){
+						is_downed = 1;
+						clicked = 0;
+						int mx, my;
+						SDL_GetMouseState(&mx, &my);
+						int by = (mx - ori_x) / gr_w, bx = (my - ori_y) / gr_h;
+						for(int i = 0; i < 8; i++){
+							for(int j = 0; j < 8; j++){
+								SDL_Rect vmRect = { ori_x + gr_w * j, ori_y + gr_h * i, gr_w, gr_h };
+								if(i + j & 1){
+									SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+								}
+								else{
+									SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+								}
+								SDL_RenderFillRect( gRenderer, &vmRect );
+							}
+						}
+						if(bx >= 0 && bx < 8 && by >= 0 && by < 8){
+							if(vm[bx][by]){
+								b.move(clicked_x, clicked_y, bx, by);
+							}
+							if(b.getboard()[bx][by]->getside() == b.getturn()){
+								clicked = 1;
+								clicked_x = bx;
+								clicked_y = by;
+								b.getboard()[bx][by]->valid_moves(vm, b);
+								for(int i = 0; i < 8; i++){
+									for(int j = 0; j < 8; j++){
+										if(vm[i][j]){
+											SDL_Rect vmRect = { ori_x + gr_w * j, ori_y + gr_h * i, gr_w, gr_h };
+											if(i + j & 1){
+												SDL_SetRenderDrawColor( gRenderer, 0xDD, 0xAA, 0xDD, 0xFF );
+											}
+											else{
+												SDL_SetRenderDrawColor( gRenderer, 0xFC, 0xDD, 0xFC, 0xFF );
+											}
+											SDL_RenderFillRect( gRenderer, &vmRect );
+										}
+									} 
+								}
+							}
+							else{
+								for(int i = 0; i < 8; i++){
+									for(int j = 0; j < 8; j++){
+										vm[i][j] = 0;
+									}
+								}
+							}
+						}
+						draw_black_line();
+						SDL_RenderPresent( gRenderer );
+					}
+					else if(e.type == SDL_MOUSEBUTTONUP){
+						is_downed = 0;
+						int mx, my;
+						SDL_GetMouseState(&mx, &my);
+						int by = (mx - ori_x) / gr_w, bx = (my - ori_y) / gr_h;
+						if(clicked){
+							if(bx >= 0 && bx < 8 && by >= 0 && by < 8 && vm[bx][by]){
+								b.move(clicked_x, clicked_y, bx, by);
+								for(int i = 0; i < 8; i++){
+									for(int j = 0; j < 8; j++){
+										vm[i][j] = 0;
+										SDL_Rect vmRect = { ori_x + gr_w * j, ori_y + gr_h * i, gr_w, gr_h };
+										if(i + j & 1){
+											SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+										}
+										else{
+											SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+										}
+										SDL_RenderFillRect( gRenderer, &vmRect );
+									}
+								}
+								draw_black_line();
+								SDL_RenderPresent( gRenderer );
+							}
+						}
+					}
+					else if(e.type == SDL_MOUSEMOTION && is_downed){
+						int mx, my;
+						SDL_GetMouseState(&mx, &my);
+						// ¹Ï¤ù¸òµÛ·Æ¹« 
+					}
 				}
-				
-				//Draw black vertical lines
-				SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
-				for(int i = 0; i < 9; i++){
-					SDL_RenderDrawLine( gRenderer, ori_x + i * gr_w, ori_y, ori_x + i * gr_w, ori_y + bo_h);	
-				}	
-				
-				//Update screen
-				SDL_RenderPresent( gRenderer );
 			}
 		}
 	}

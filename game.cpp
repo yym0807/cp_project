@@ -5,11 +5,16 @@ using namespace std;
 const int dirs[8][2] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}, {-1, 1}, {1, 1}, {1, -1}, {-1, -1}}; // URDLUrDrDlUl
 const int h[8][2] = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
 const char side[2][6] = {"white", "black"};
-
+extern const int SCREEN_WIDTH;
+extern const int SCREEN_HEIGHT;
 // class Piece
-Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si){}
+Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si){
+	// 產生圖片
+}
 
-Piece::~Piece(){}
+Piece::~Piece(){
+	// 消掉圖片
+}
 
 bool Piece::operator==(int c){
 	return (p == c);
@@ -259,7 +264,7 @@ Board::~Board(){
 	delete [] board;
 }
 
-Piece*** Board::getboard(){
+Piece***& Board::getboard(){
 	return board;
 }
 
@@ -319,6 +324,7 @@ void Board::move(int xi, int yi, int xf, int yf){
 				cout << "ERROR\n";
 		}
 		turn = !turn;
+		cout << turn << '\n';
 		return;
 	}
 	if(*board[xi][yi] == PAWN && yi != yf && *board[xf][yf] == AIR){

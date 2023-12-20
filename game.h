@@ -15,9 +15,8 @@ class Board{
 	public:
 		Board();
 		~Board();
-		Piece*** getboard();
+		Piece***& getboard();
 		void move(int, int, int, int);
-//		void Omove(int);
 		bool checked(bool side);
 		bool check_if_move(int, int, int, int);
 		bool any_valid();
@@ -33,7 +32,6 @@ class Board{
 class Piece{
 	protected:
 		int p;
-		 // K = king, Q = queen, R = rook, N = knight, B = bishop, I = pawn, * = air uppercase for black, lowercase for white
 		int side; // 0 for white, 1 for black, -1 for air
 		int x; // 8 ~ 1
 		int y; // a ~ h
@@ -44,8 +42,6 @@ class Piece{
 		bool operator==(int);
 		bool operator>=(int);
 		bool operator<=(int);
-//		bool operator<(int);
-//		bool operator>(int);
 		void setxy(int, int);
 		int getside();
 		int getname();

@@ -58,41 +58,7 @@ int main(){
 				continue;
 			}
 			b.move(xi, yi, '8'-s[1], s[0]-'a');
-//			if(board[xi][yi] == 'K' || board[xi][yi] == 'k'){
-//				oo[board[xi][yi]=='K'] = 0;
-//				ooo[board[xi][yi]=='K'] = 0;
-//			}
-//			if(board[xi][yi] == 'R' || board[xi][yi] == 'r'){
-//				if(xi == 0 && yi == 0) ooo[0] = 0;
-//				if(xi == 0 && yi == 7) oo[0] = 0;
-//				if(xi == 7 && yi == 0) ooo[1] = 0;
-//				if(xi == 7 && yi == 7) oo[1] = 0;
-//			}
-//			if(xi == 1 && s[1] == '5' && board[xi][yi] == 'I' || xi == 6 && s[1] == '4' && board[xi][yi] == 'i'){
-//				passant = yi;
-//			}
-//			else{
-//				passant = 100;
-//			}
-//			if(xi == 6 && board[xi][yi] == 'I' || xi == 1 && board[xi][yi] == 'i'){
-//				cout << '[' << side[turn] << "] Pawn promotion(Q, B, N, R): ";
-//				char p;
-//				cin >> p;
-//				board['8'-s[1]][s[0]-'a'] = (char)(p + !turn * 32);
-//				board[xi][yi] = '*';
-//			}
-//			else if((board[xi][yi] == 'I' || board[xi][yi] == 'i') && yi != s[0]-'a' && board['8'-s[1]][s[0]-'a'] == '*'){
-//				//passant
-//				board['8'-s[1]][s[0]-'a'] = board[xi][yi];
-//				board[xi][yi] = '*';
-//				board[xi][s[0]-'a'] = '*';
-//			}
-//			else{
-//				board['8'-s[1]][s[0]-'a'] = board[xi][yi];
-//				board[xi][yi] = '*';
-//			}
 		}
-//		turn = !turn;
 	}
 	if(b.checkmate()){
 		cout << "Winner is " << side[!b.getturn()] << '\n';
