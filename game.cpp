@@ -20,14 +20,6 @@ bool Piece::operator==(int c){
 	return (p == c);
 }
 
-bool Piece::operator>=(int c){
-	return (p >= c);
-}
-
-bool Piece::operator<=(int c){
-	return (p <= c);
-}
-
 void Piece::setxy(int xf, int yf){
 	x = xf;
 	y = yf;

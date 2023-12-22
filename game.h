@@ -40,8 +40,6 @@ class Piece{
 		~Piece();
 		virtual bool valid_moves(bool [][8], Board&){return 0;}
 		bool operator==(int);
-		bool operator>=(int);
-		bool operator<=(int);
 		void setxy(int, int);
 		int getside();
 		int getname();
