@@ -89,7 +89,6 @@ void classic(){
 				num[i].render(ori_x - num[i].getWidth() * 3 / 2, ori_y + gr_h * (7 - i) + (gr_h - alph[i].getHeight()) / 2);
 			}
 			
-			
 			Board b;
 			//Update screen
 			SDL_RenderPresent( gRenderer );
