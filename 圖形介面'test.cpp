@@ -6,6 +6,8 @@
 #include <cmath>
 #include "LTexture.h"
 
+extern const int SCREEN_WIDTH;
+extern const int SCREEN_HEIGHT;
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 750;
 //The window we'll be rendering to
@@ -90,7 +92,7 @@ int main( int argc, char* args[] )
 				
 				//type
 				type(gTextTexture1, "123", {0, 0, 0}, 50, ( SCREEN_WIDTH - gTextTexture1.getWidth() ) / 2 + 100, ( SCREEN_HEIGHT - gTextTexture1.getHeight() ) / 2);
-				type(gTextTexture2, "abc", {0, 0, 0}, 50, ( SCREEN_WIDTH - gTextTexture1.getWidth() ) / 2, ( SCREEN_HEIGHT - gTextTexture1.getHeight() ) / 2);
+				type(gTextTexture2, "abc", {0, 0, 0}, 50, ( SCREEN_WIDTH - gTextTexture1.getWidth() ) / 2, ( SCREEN_HEIGHT - gTextTexture1.getHeight() ) / 2+300);
 				
 				//Update screen
 				SDL_RenderPresent( gRenderer );

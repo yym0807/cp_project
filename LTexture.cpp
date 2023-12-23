@@ -78,13 +78,15 @@ bool LTexture::loadFromFile( std::string path )
 	return mTexture != NULL;
 }
 
-bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColor )
+bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColor, bool language )
 {
 	//Get rid of preexisting texture
 	free();
 
 	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor );
+	SDL_Surface* textSurface;
+	if(language) textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor );
+	//else if(!language) textSurface = TTF_RenderUNICODE_Solid( gFont, unicode[], textColor );
 	if( textSurface == NULL )
 	{
 		printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
@@ -193,7 +195,7 @@ bool init()
 		}
 
 		//Create window
-		gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE );
+		gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if( gWindow == NULL )
 		{
 			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -241,23 +243,28 @@ bool loadMedia()
 	return success;
 }
 
-bool type(LTexture& gTextTexture, std::string textureText, SDL_Color textColor, int fontsize, double x, double y)
+bool type(LTexture& gTextTexture, std::string textureText, SDL_Color textColor, int fontsize, double x, double y, bool language)
 {
 	//Loading success flag
 	bool success = true;
 
 	//Open the font
-	gFont = TTF_OpenFont( "16_true_type_fonts/lazy.ttf", fontsize );
+	if(language){
+		gFont = TTF_OpenFont( "font/Lato-Regular.ttf", fontsize );
+	}
+	//else if(!language){
+	//	gFont = TTF_OpenFont( "font/SentyDragonPalace.ttf", fontsize );
+	//}
 	if( gFont == NULL )
 	{
-		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
+		printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
 		success = false;
 	}
 	else
 	{
 		//Render text
 		//SDL_Color textColor = { 0, 0, 0 };
-		if( !gTextTexture.loadFromRenderedText( textureText, textColor ) )
+		if( !gTextTexture.loadFromRenderedText( textureText, textColor, language) )
 		{
 			printf( "Failed to render text texture!\n" );
 			success = false;

@@ -30,7 +30,7 @@ class LTexture
 		bool loadFromFile( std::string path );
 		
 		//Creates image from font string
-		bool loadFromRenderedText( std::string textureText, SDL_Color textColor );
+		bool loadFromRenderedText( std::string textureText, SDL_Color textColor, bool language );
 
 		//Deallocates texture
 		void free();
@@ -60,7 +60,7 @@ class LTexture
 		int mHeight;
 };
 //type
-bool type(LTexture&, std::string, SDL_Color, int, double, double);
+bool type(LTexture&, std::string, SDL_Color, int, double, double, bool);
 
 #endif
 
