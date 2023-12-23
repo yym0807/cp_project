@@ -186,6 +186,7 @@ void classic()
 			int clicked_x, clicked_y;
 			int pointed_x = -1, pointed_y = -1;
 			bool mate = 0;
+			bool showwinner = 1;
 			
 			//Clear screen
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -249,7 +250,37 @@ void classic()
 							}
 							if(bx >= 0 && bx < 8 && by >= 0 && by < 8){
 								if(vm[bx][by]){
-									b.move(clicked_x, clicked_y, bx, by);
+									if(b.move(clicked_x, clicked_y, bx, by)){
+										int mmx, mmy, bbx, bby;
+										bool selected = 0;
+										while(!selected){
+											while( SDL_PollEvent( &e ) != 0 ){
+												if( e.type == SDL_MOUSEBUTTONDOWN ){
+													SDL_GetMouseState(&mmx, &mmy);
+													bby = (mmx - ori_x) / gr_w;
+													bbx = (mmy - ori_y) / gr_h;
+													if(bby == 8 && bbx - 4 * b.getturn() >= 0 && bbx - 4 * b.getturn() <= 3){
+														selected = 1;
+													}
+												}
+											}
+										}
+										b.promotion(bx, by, bbx - 4 * b.getturn());
+//										switch(bx - 4 * turn){
+//											case 0:
+//												board[xf][yf] = new Queen(xf, yf, turn);
+//												break;
+//											case 1:
+//												board[xf][yf] = new Rook(xf, yf, turn);
+//												break;
+//											case 2:
+//												board[xf][yf] = new Bishop(xf, yf, turn);
+//												break;
+//											case 3:
+//												board[xf][yf] = new Knight(xf, yf, turn);
+//												break;
+//										}
+									}
 									if(b.checkmate() || b.stalemate()) mate = 1;
 								}
 								for(int i = 0; i < 8; i++){
@@ -354,14 +385,13 @@ void classic()
 	//					}
 					}
 				}
-				bool o = 1;
-				if(o && b.checkmate()){
-					o = 0;
+				if(showwinner && b.checkmate()){
+					showwinner = 0;
 					const char side[2][6] = {"white", "black"};
 					printf("Winner is %s\n", side[!b.getturn()]);
 				}
-				else if(0 && b.stalemate()){
-					o = 0;
+				else if(showwinner && b.stalemate()){
+					showwinner = 0;
 					printf("It's a stalemate\n");
 				}
 			}
