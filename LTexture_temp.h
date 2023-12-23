@@ -27,10 +27,10 @@ class LTexture
 		~LTexture();
 
 		//Loads image at specified path
-		//bool loadFromFile( std::string path );
+		bool loadFromFile( std::string path );
 		
 		//Creates image from font string
-		//bool loadFromRenderedText( std::string textureText, int fontsize);
+		bool loadFromRenderedText( std::string textureText, int fontsize);
 
 		//Deallocates texture
 		void free();
@@ -50,36 +50,16 @@ class LTexture
 		//Gets image dimensions
 		int getWidth();
 		int getHeight();
-	//	bool loadFromRenderedText( std::string textureText, int fontsize);
-		virtual bool loadFromFile( std::string path ){return 0;}
-		virtual bool loadFromRenderedText( std::string textureText, int fontsize){return 0;}	
-	protected:
+
+	private:
 		//The actual hardware texture
 		SDL_Texture* mTexture;
+
+		//Image dimensions
 		int mWidth;
 		int mHeight;
-		//Image dimensions
-	private:
-		//int mWidth;
-		//int mHeight;
 };
 //type
-class Text: public LTexture{
-	public:
-//		Text();
-//		~Text();
-		bool loadFromRenderedText( std::string textureText, int fontsize);
-//		virtual bool loadFromFile( std::string path ){return 0;}	
-};
-
-class Image: public LTexture{
-	public:
-		Image();
-		bool loadFromFile( std::string path );
-//		virtual bool loadFromRenderedText( std::string textureText, int fontsize){return 0;}
-		
-};
-
+bool type(LTexture&, double, double);
 
 #endif
-

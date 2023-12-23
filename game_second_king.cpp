@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 #include "game.h"
 #include "Ltexture.h" 
 using namespace std;
@@ -39,6 +41,7 @@ Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si){
 			str = "img/pawn_" + fs[si];
 			break;
 	}
+//	cout << str << '\n';
 	if(pi != AIR){
 		img.loadFromFile(str);
 		SDL_Rect pRect = { ori_x + gr_w * yi + l_w, ori_y + gr_h * xi + l_w, gr_w - l_w, gr_h - l_w };
@@ -296,6 +299,22 @@ Board::Board(){
 			board[j][i] = new Air(j, i);
 		}
 	}
+	srand(time(0));
+	int a = rand() % 7;
+	a += (a >= 4);
+	delete board[0][a];
+	delete board[7][a];
+	SDL_Rect cRect = { ori_x + gr_w * a + l_w, ori_y + l_w, gr_w - l_w, gr_h - l_w };
+	if(a & 1) SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+	else SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	SDL_RenderFillRect( gRenderer, &cRect );
+	cRect = { ori_x + gr_w * a + l_w, ori_y + gr_h * 7 + l_w, gr_w - l_w, gr_h - l_w };
+	if(a & 1) SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	else SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+	SDL_RenderFillRect( gRenderer, &cRect );
+	board[0][a] = new King(0, a, 1);
+	board[7][a] = new King(7, a, 0);
+	
 	pm[0].loadFromFile("img/queen_w.bmp");
 	pm[1].loadFromFile("img/rook_w.bmp");
 	pm[2].loadFromFile("img/knight_w.bmp");
@@ -381,7 +400,7 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 		return 0;
 	}
 	if(*board[xi][yi] == KING){
-		if(x == 7 - 7 * turn && y == 4){
+		if(xi == 7 - 7 * turn && yi == 4){
 			oo[turn] = 0;
 			ooo[turn] = 0;
 		}
@@ -407,57 +426,65 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 }
 
 bool Board::checked(bool side){
-	int x, y;
-	for(x = 0; x < 8; x++){//找到國王位置 
-		for(y = 0; y < 8; y++){
-			if(*board[x][y] == KING && board[x][y]->getside() == side) break;
+	int x[2], y[2];
+	for(x[0] = 0; x[0] < 8; x[0]++){//找到國王位置 
+		for(y[0] = 0; y[0] < 8; y[0]++){
+			if(*board[x[0]][y[0]] == KING && board[x[0]][y[0]]->getside() == side) break;
 		}
-		if(y < 8) break;
+		if(y[0] < 8) break;
 	}
-	for(int i = 0; i < 8; i++){//king check
-		if(x+dirs[i][0] >= 0 && x+dirs[i][0] < 8 && y+dirs[i][1] >= 0 && y+dirs[i][1] < 8){
-			if(*board[x+dirs[i][0]][y+dirs[i][1]] == KING){
-				return 1;
-			}	
+	for(x[1] = x[0]; x[1] < 8; x[1]++){//找到國王位置 
+		for(y[1] = y[0]; y[1] < 8; y[1]++){
+			if(*board[x[1]][y[1]] == KING && board[x[1]][y[1]]->getside() == side) break;
 		}
+		if(y[1] < 8) break;
 	}
-	if(x > 0 && !side || x < 7 && side){//pawn check 
-		if(y > 0 && *board[x-1+side*2][y-1] == PAWN && board[x-1+side*2][y-1]->getside() == 1-side || y < 7 && *board[x-1+2*side][y+1] == PAWN && board[x-1+2*side][y+1]->getside() == 1-side){
-			return 1;
-		}
-	}
-	for(int i = 0; i < 4; i++){//直線武器 
-		int t = 1;
-		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
-			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
-				t++;
-				continue;
+	for(int g = 0; g < 2; g++){
+		for(int i = 0; i < 8; i++){//king check
+			if(x[g]+dirs[i][0] >= 0 && x[g]+dirs[i][0] < 8 && y[g]+dirs[i][1] >= 0 && y[g]+dirs[i][1] < 8){
+				if(*board[x[g]+dirs[i][0]][y[g]+dirs[i][1]] == KING && board[x[g]+dirs[i][0]][y[g]+dirs[i][1]]->getside() == 1-side){
+					return 1;
+				}	
 			}
-			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t]->getside() == 1-side && (*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == QUEEN || *board[x+dirs[i][0]*t][y+dirs[i][1]*t] == ROOK)){
-				return 1;
-			}
-			break;//有東西擋著就break 
 		}
-	}
-	for(int i = 4; i < 8; i++){//斜線武器 
-		int t = 1;
-		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
-			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
-				t++;
-				continue;
-			}
-			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t]->getside() == 1-side && (*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == QUEEN || *board[x+dirs[i][0]*t][y+dirs[i][1]*t] == BISHOP)){
-				return 1;
-			}
-			break;
-		}
-	}
-	for(int i = 0; i < 8; i++){//knight check 
-		if(x+h[i][0] >= 0 && x+h[i][0] < 8 && y+h[i][1] >= 0 && y+h[i][1] < 8){
-			if(*board[x+h[i][0]][y+h[i][1]] == KNIGHT && board[x+h[i][0]][y+h[i][1]]->getside() == 1-side){
+		if(x[g] > 0 && !side || x[g] < 7 && side){//pawn check 
+			if(y[g] > 0 && *board[x[g]-1+side*2][y[g]-1] == PAWN && board[x[g]-1+side*2][y[g]-1]->getside() == 1-side || y[g] < 7 && *board[x[g]-1+2*side][y[g]+1] == PAWN && board[x[g]-1+2*side][y[g]+1]->getside() == 1-side){
 				return 1;
 			}
 		}
+		for(int i = 0; i < 4; i++){//直線武器 
+			int t = 1;
+			while(x[g]+dirs[i][0]*t >= 0 && x[g]+dirs[i][0]*t < 8 && y[g]+dirs[i][1]*t >= 0 && y[g]+dirs[i][1]*t < 8){
+				if(*board[x[g]+dirs[i][0]*t][y[g]+dirs[i][1]*t] == AIR){
+					t++;
+					continue;
+				}
+				if(board[x[g]+dirs[i][0]*t][y[g]+dirs[i][1]*t]->getside() == 1-side && (*board[x[g]+dirs[i][0]*t][y[g]+dirs[i][1]*t] == QUEEN || *board[x[g]+dirs[i][0]*t][y[g]+dirs[i][1]*t] == ROOK)){
+					return 1;
+				}
+				break;//有東西擋著就break 
+			}
+		}
+		for(int i = 4; i < 8; i++){//斜線武器 
+			int t = 1;
+			while(x[g]+dirs[i][0]*t >= 0 && x[g]+dirs[i][0]*t < 8 && y[g]+dirs[i][1]*t >= 0 && y[g]+dirs[i][1]*t < 8){
+				if(*board[x[g]+dirs[i][0]*t][y[g]+dirs[i][1]*t] == AIR){
+					t++;
+					continue;
+				}
+				if(board[x[g]+dirs[i][0]*t][y[g]+dirs[i][1]*t]->getside() == 1-side && (*board[x[g]+dirs[i][0]*t][y[g]+dirs[i][1]*t] == QUEEN || *board[x[g]+dirs[i][0]*t][y[g]+dirs[i][1]*t] == BISHOP)){
+					return 1;
+				}
+				break;
+			}
+		}
+		for(int i = 0; i < 8; i++){//knight check 
+			if(x[g]+h[i][0] >= 0 && x[g]+h[i][0] < 8 && y[g]+h[i][1] >= 0 && y[g]+h[i][1] < 8){
+				if(*board[x[g]+h[i][0]][y[g]+h[i][1]] == KNIGHT && board[x[g]+h[i][0]][y[g]+h[i][1]]->getside() == 1-side){
+					return 1;
+				}
+			}
+		}	
 	}
 	return 0;
 }
@@ -532,16 +559,16 @@ int Board::getpassant(){
 	return passant;
 }
 
-void Board::print(){
-	for(int i = 0; i < 8; i++){
-			cout << 8 - i << " |";
-			for(int j = 0; j < 8; j++){
-				cout << board[i][j]->getname() << ' ';
-			}
-			cout << '\n';
-		}
-		cout << "  ________________\n   a b c d e f g h\n";
-}
+//void Board::print(){
+//	for(int i = 0; i < 8; i++){
+//			cout << 8 - i << " |";
+//			for(int j = 0; j < 8; j++){
+//				cout << board[i][j]->getname() << ' ';
+//			}
+//			cout << '\n';
+//		}
+//		cout << "  ________________\n   a b c d e f g h\n";
+//}
 
 void Board::renderpieces(){
 	for(int i = 0; i < 8; i++){

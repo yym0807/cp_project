@@ -79,6 +79,7 @@ void classic(){
 			
 			//add a~h 1~8 
 			Text alph[8], num[8];
+//			LTexture alph[8], num[8];
 			std::string alph_tb[8] = {"a", "b", "c", "d", "e", "f", "g", "h"};
 			std::string num_tb[8] = {"1", "2", "3", "4", "5", "6", "7", "8"};
 			for(int i = 0; i < 8; i++){

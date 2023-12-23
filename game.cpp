@@ -41,6 +41,7 @@ Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si){
 	}
 	if(pi != AIR){
 		img.loadFromFile(str);
+//		cout << str << '\n'; 
 		SDL_Rect pRect = { ori_x + gr_w * yi + l_w, ori_y + gr_h * xi + l_w, gr_w - l_w, gr_h - l_w };
 		img.render(ori_x + gr_w * yi + l_w, ori_y + gr_h * xi + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
 //		SDL_RenderPresent( gRenderer );

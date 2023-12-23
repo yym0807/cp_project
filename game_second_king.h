@@ -28,7 +28,7 @@ class Board{
 		bool* getoo();
 		bool getturn();
 		int getpassant();
-		void print();
+//		void print();
 		void renderpieces();
 		void promotion(int, int, int);
 		void renderpm(int);
