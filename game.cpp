@@ -66,6 +66,13 @@ int Piece::getname(){
 	return p;
 }
 
+void Piece::rerender(){
+	if(p != AIR){
+		SDL_Rect pRect = { ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, gr_w - l_w, gr_h - l_w };
+		img.render(ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+	}
+}
+
 King::King(int xi, int yi, int si): Piece(xi, yi, KING, si){}
 
 bool King::valid_moves(bool vm[][8], Board &b){
@@ -522,4 +529,12 @@ int Board::getpassant(){
 //		}
 //		cout << "  ________________\n   a b c d e f g h\n";
 //}
+
+void Board::renderpieces(){
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			board[i][j]->rerender();
+		}
+	}
+}
 

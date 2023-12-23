@@ -273,6 +273,7 @@ int main( int argc, char* args[] )
 								}
 							}
 						}
+						b.renderpieces();
 						SDL_RenderPresent( gRenderer );
 					}
 					else if(e.type == SDL_MOUSEBUTTONUP){
@@ -296,6 +297,7 @@ int main( int argc, char* args[] )
 										SDL_RenderFillRect( gRenderer, &vmRect );
 									}
 								}
+								b.renderpieces();
 								SDL_RenderPresent( gRenderer );
 							}
 						}

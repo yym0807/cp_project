@@ -34,7 +34,6 @@ LTexture::LTexture()
 LTexture::~LTexture()
 {
 	//Deallocate
-	printf("free");
 	free();
 }
 

@@ -28,6 +28,7 @@ class Board{
 		bool getturn();
 		int getpassant();
 		void print();
+		void renderpieces();
 };
 
 class Piece{
@@ -45,6 +46,7 @@ class Piece{
 		void setxy(int, int);
 		int getside();
 		int getname();
+		void rerender();
 };
 
 
