@@ -92,13 +92,13 @@ bool King::valid_moves(bool vm[][8], Board &b){
 		}
 	}
 	if(ooo[side]){
-		if(!b.checked(side) && *board[x][1] == AIR && *board[x][2] == AIR && !b.check_if_move(x, 4, x, 2) && *board[x][3] == AIR && !b.check_if_move(x, 4, x, 3)){
+		if(x == 7 - 7 * side && y == 4 && !b.checked(side) && *board[x][1] == AIR && *board[x][2] == AIR && !b.check_if_move(x, 4, x, 2) && *board[x][3] == AIR && !b.check_if_move(x, 4, x, 3)){
 			flag = 1;
 			vm[x][2] = 1;
 		}
 	}
 	if(oo[side]){
-		if(!b.checked(side) && *board[x][5] == AIR && !b.check_if_move(x, 4, x, 5) && *board[x][6] == AIR && !b.check_if_move(x, 4, x, 6)){
+		if(x == 7 - 7 * side && y == 4 && !b.checked(side) && *board[x][5] == AIR && !b.check_if_move(x, 4, x, 5) && *board[x][6] == AIR && !b.check_if_move(x, 4, x, 6)){
 			flag = 1;
 			vm[x][6] = 1;
 		}
@@ -381,8 +381,10 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 		return 0;
 	}
 	if(*board[xi][yi] == KING){
-		oo[turn] = 0;
-		ooo[turn] = 0;
+		if(x == 7 - 7 * turn && y == 4){
+			oo[turn] = 0;
+			ooo[turn] = 0;
+		}
 	}
 	else if(*board[xi][yi] == ROOK){
 		if(xi == 0 && yi == 0) ooo[0] = 0;
@@ -530,16 +532,16 @@ int Board::getpassant(){
 	return passant;
 }
 
-//void Board::print(){
-//	for(int i = 0; i < 8; i++){
-//			cout << 8 - i << " |";
-//			for(int j = 0; j < 8; j++){
-//				cout << board[i][j]->getname() << ' ';
-//			}
-//			cout << '\n';
-//		}
-//		cout << "  ________________\n   a b c d e f g h\n";
-//}
+void Board::print(){
+	for(int i = 0; i < 8; i++){
+			cout << 8 - i << " |";
+			for(int j = 0; j < 8; j++){
+				cout << board[i][j]->getname() << ' ';
+			}
+			cout << '\n';
+		}
+		cout << "  ________________\n   a b c d e f g h\n";
+}
 
 void Board::renderpieces(){
 	for(int i = 0; i < 8; i++){

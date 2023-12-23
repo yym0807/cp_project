@@ -4,8 +4,8 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = LTexture.o game.o 原版西洋棋.o
-LINKOBJ  = LTexture.o game.o 原版西洋棋.o
+OBJ      = game.o LTexture.o 三次將軍.o
+LINKOBJ  = game.o LTexture.o 三次將軍.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -L"SDL2-2.28.5/x86_64-w64-mingw32/lib" -L"SDL_bgi-3.0.0/bin/Mingw64" -L"SDL2_image-2.6.3/x86_64-w64-mingw32/lib" -L"SDL2_mixer-2.6.3/x86_64-w64-mingw32/lib" -L"SDL2_ttf-2.20.2/x86_64-w64-mingw32/lib" -lmingw32 -L/mingw64/bin -lSDL_bgi -lSDL2_ttf -lSDL2_mixer -lSDL2_image -lSDL2main -lSDL2
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"SDL2-2.28.5/x86_64-w64-mingw32/include/SDL2" -I"SDL2_image-2.6.3/x86_64-w64-mingw32/include/SDL2" -I"SDL_bgi-3.0.0/src" -I"SDL2_mixer-2.6.3/x86_64-w64-mingw32/include/SDL2" -I"SDL2_image-2.6.3/x86_64-w64-mingw32/include/SDL2" -I"SDL2_ttf-2.20.2/x86_64-w64-mingw32/include/SDL2"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"SDL2-2.28.5/x86_64-w64-mingw32/include/SDL2" -I"SDL2_image-2.6.3/x86_64-w64-mingw32/include/SDL2" -I"SDL_bgi-3.0.0/src" -I"SDL2_mixer-2.6.3/x86_64-w64-mingw32/include/SDL2" -I"SDL2_image-2.6.3/x86_64-w64-mingw32/include/SDL2" -I"SDL2_ttf-2.20.2/x86_64-w64-mingw32/include/SDL2"
@@ -24,11 +24,11 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
 
-LTexture.o: LTexture.cpp
-	$(CPP) -c LTexture.cpp -o LTexture.o $(CXXFLAGS)
-
 game.o: game.cpp
 	$(CPP) -c game.cpp -o game.o $(CXXFLAGS)
 
-原版西洋棋.o: 原版西洋棋.cpp
-	$(CPP) -c 原版西洋棋.cpp -o 原版西洋棋.o $(CXXFLAGS)
+LTexture.o: LTexture.cpp
+	$(CPP) -c LTexture.cpp -o LTexture.o $(CXXFLAGS)
+
+三次將軍.o: 三次將軍.cpp
+	$(CPP) -c 三次將軍.cpp -o 三次將軍.o $(CXXFLAGS)
