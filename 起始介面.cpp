@@ -19,10 +19,10 @@ SDL_Renderer* gRenderer = NULL;
 //Globally used font
 TTF_Font* gFont = NULL;
 
-LTexture title;
-LTexture description;
-LTexture mode[6] = {};
-LTexture info;
+Text title;
+Text description;
+Text mode[6] = {};
+Text info;
 
 int main( int argc, char* args[] )
 {
@@ -55,15 +55,15 @@ int main( int argc, char* args[] )
 			double mode_orix = (SCREEN_WIDTH - mode_w) / 2, mode_oriy = SCREEN_HEIGHT / 4;
 			
 			title.loadFromRenderedText( "Chess", 80);
-			type(title, ( SCREEN_WIDTH  - title.getWidth()  ) / 2, SCREEN_HEIGHT / 20);
+			title.render(( SCREEN_WIDTH  - title.getWidth()  ) / 2, SCREEN_HEIGHT / 20);
 			description.loadFromRenderedText( "Please choose the game mode", 35);
-			type(description, ( SCREEN_WIDTH - description.getWidth() ) / 2, SCREEN_HEIGHT / 6);
+			description.render(( SCREEN_WIDTH - description.getWidth()) / 2, SCREEN_HEIGHT / 6);
 			for(int i = 0; i < 6; i++){
 				modeRect[i] = { mode_orix, mode_oriy + mode_h * i, mode_w,  mode_h};
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 				SDL_RenderFillRect( gRenderer, &modeRect[i] );
 				mode[i].loadFromRenderedText( mode_title[i], 40);
-				type(mode[i], ( SCREEN_WIDTH - mode[i].getWidth() ) / 2, mode_oriy + mode_h * i + mode_h / 2 - mode[i].getHeight() / 2);
+				mode[i].render(( SCREEN_WIDTH - mode[i].getWidth() ) / 2, mode_oriy + mode_h * i + mode_h / 2 - mode[i].getHeight() / 2);
 			}
 			
 		
@@ -94,7 +94,7 @@ int main( int argc, char* args[] )
 							}
 							SDL_RenderFillRect( gRenderer, &modeRect[i] );
 							mode[i].loadFromRenderedText( mode_title[i], 40);
-							type(mode[i], ( SCREEN_WIDTH - mode[i].getWidth() ) / 2, mode_oriy + mode_h * i + mode_h / 2 - mode[i].getHeight() / 2);
+							mode[i].render(( SCREEN_WIDTH - mode[i].getWidth() ) / 2, mode_oriy + mode_h * i + mode_h / 2 - mode[i].getHeight() / 2);
 						}
 						
 					}

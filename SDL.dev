@@ -71,7 +71,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=起始介面 - 複製.cpp
+FileName=起始介面.cpp
 CompileCpp=1
 Folder=
 Compile=1
