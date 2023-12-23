@@ -317,24 +317,24 @@ Piece***& Board::getboard(){
 bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 	if(*board[xi][yi] == KING && (yi-yf) * (yi-yf) > 1){ // OO or OOO
 		if(yf == 6){ // OO
-			board[7*turn][4]->setxy(7*turn, 6);
-			board[7*turn][7]->setxy(7*turn, 5);
-			delete board[7*turn][6];
-			delete board[7*turn][5];
-			board[7*turn][6] = board[7*turn][4];
-			board[7*turn][5] = board[7*turn][7];
-			board[7*turn][4] = new Air(7*turn, 4);
-			board[7*turn][7] = new Air(7*turn, 7);
+			board[7-7*turn][4]->setxy(7-7*turn, 6);
+			board[7-7*turn][7]->setxy(7-7*turn, 5);
+			delete board[7-7*turn][6];
+			delete board[7-7*turn][5];
+			board[7-7*turn][6] = board[7-7*turn][4];
+			board[7-7*turn][5] = board[7-7*turn][7];
+			board[7-7*turn][4] = new Air(7-7*turn, 4);
+			board[7-7*turn][7] = new Air(7-7*turn, 7);
 		}
 		else if(yf == 2){ // OOO
-			board[7*turn][4]->setxy(7*turn, 2);
-			board[7*turn][0]->setxy(7*turn, 3);
-			delete board[7*turn][2];
-			delete board[7*turn][3];
-			board[7*turn][2] = board[7*turn][4];
-			board[7*turn][3] = board[7*turn][0];
-			board[7*turn][4] = new Air(7*turn, 4);
-			board[7*turn][0] = new Air(7*turn, 0);
+			board[7-7*turn][4]->setxy(7-7*turn, 2);
+			board[7-7*turn][0]->setxy(7-7*turn, 3);
+			delete board[7-7*turn][2];
+			delete board[7-7*turn][3];
+			board[7-7*turn][2] = board[7-7*turn][4];
+			board[7-7*turn][3] = board[7-7*turn][0];
+			board[7-7*turn][4] = new Air(7-7*turn, 4);
+			board[7-7*turn][0] = new Air(7-7*turn, 0);
 		}
 		else{
 			cout << "ERROR\n";
@@ -574,6 +574,9 @@ void Board::promotion(int x, int y, int s){
 	}
 	SDL_Rect pRect = { ori_x + gr_w * 8 + l_w, ori_y + l_w, gr_w - l_w, gr_h * 8 - l_w };
 	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	SDL_RenderFillRect( gRenderer, &pRect );
+	pRect = { ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, gr_w - l_w, gr_h - l_w };
+	if(x + y & 1) SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
 	SDL_RenderFillRect( gRenderer, &pRect );
 	turn = !turn;
 }

@@ -266,29 +266,20 @@ void classic()
 											}
 										}
 										b.promotion(bx, by, bbx - 4 * b.getturn());
-//										switch(bx - 4 * turn){
-//											case 0:
-//												board[xf][yf] = new Queen(xf, yf, turn);
-//												break;
-//											case 1:
-//												board[xf][yf] = new Rook(xf, yf, turn);
-//												break;
-//											case 2:
-//												board[xf][yf] = new Bishop(xf, yf, turn);
-//												break;
-//											case 3:
-//												board[xf][yf] = new Knight(xf, yf, turn);
-//												break;
-//										}
 									}
 									if(b.checkmate() || b.stalemate()) mate = 1;
-								}
-								for(int i = 0; i < 8; i++){
-									for(int j = 0; j < 8; j++){
-										vm[i][j] = 0;
+									for(int i = 0; i < 8; i++){
+										for(int j = 0; j < 8; j++){
+											vm[i][j] = 0;
+										}
 									}
 								}
-								if(b.getboard()[bx][by]->getside() == b.getturn()){
+								else if(b.getboard()[bx][by]->getside() == b.getturn()){
+									for(int i = 0; i < 8; i++){
+										for(int j = 0; j < 8; j++){
+											vm[i][j] = 0;
+										}
+									}
 									clicked = 1;
 									clicked_x = bx;
 									clicked_y = by;
