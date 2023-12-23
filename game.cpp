@@ -114,9 +114,11 @@ bool Queen::valid_moves(bool vm[][8], Board &b){
 	for(int i = 0; i < 8; i++){
 		int t = 1;
 		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
-			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR && !b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
-				flag = 1;
-				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
+				if(!b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
+					flag = 1;
+					vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+				}
 				t++;
 				continue;
 			}
@@ -137,10 +139,12 @@ bool Rook::valid_moves(bool vm[][8], Board &b){
 	bool flag = 0;
 	for(int i = 0; i < 4; i++){
 		int t = 1;
-		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8 && !b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
+		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
 			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
-				flag = 1;
-				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+				if(!b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
+					flag = 1;
+					vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+				}
 				t++;
 				continue;
 			}
@@ -175,10 +179,12 @@ bool Bishop::valid_moves(bool vm[][8], Board &b){
 	bool flag = 0;
 	for(int i = 4; i < 8; i++){
 		int t = 1;
-		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8 && !b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
+		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
 			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
-				flag = 1;
-				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+				if(!b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
+					flag = 1;
+					vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+				}
 				t++;
 				continue;
 			}
@@ -345,33 +351,20 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 		turn = !turn;
 		return 0;
 	}
-	if(*board[xi][yi] == PAWN && xi == 1 + board[xi][yi]->getside() * 5){
-		// promotion
-//		cout << '[' << side[turn] << "] Pawn promotion(Q, B, N, R): ";
-//		char p;
-//		cin >> p;
+	if(*board[xi][yi] == PAWN && xi == 1 + turn * 5){
 		delete board[xi][yi];
 		board[xi][yi] = new Air(xi, yi);
 		delete board[xf][yf];
 		board[xf][yf] = new Pawn(xf, yf, turn);
-//		bool selected = 0;
-//		if(!board[xi][yi]->getside()){
-//			pm[0] = new Queen(0, 8, 0);
-//			pm[1] = new Rook(1, 8, 0);
-//			pm[2] = new Knight(2, 8, 0);
-//			pm[3] = new Bishop(3, 8, 0);
-//		}
-//		else{
-//			pm[0] = new Queen(4, 8, 1);
-//			pm[1] = new Rook(5, 8, 1);
-//			pm[2] = new Knight(6, 8, 1);
-//			pm[3] = new Bishop(7, 8, 1);
-//		}
-//		turn = !turn;
-		for(int i = board[xf][yf]->getside() * 4; i < 4 + board[xf][yf]->getside() * 4; i++){
-			SDL_Rect pRect = { ori_x + gr_w * 8 + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
-			pm[i].render(ori_x + gr_w * 8 + l_w, ori_y + gr_h * i + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+		for(int i = turn * 4; i < 4 + turn * 4; i++){
+			SDL_Rect pRect = { ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+			pm[i].render(ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
 		}
+		SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
+		SDL_RenderDrawLine( gRenderer, ori_x + gr_w * 8.5, ori_y + gr_h * turn * 4, ori_x + gr_w * 8.5, ori_y + gr_h * (4 + turn * 4));
+		SDL_RenderDrawLine( gRenderer, ori_x + gr_w * 9.5, ori_y + gr_h * turn * 4, ori_x + gr_w * 9.5, ori_y + gr_h * (4 + turn * 4));
+		SDL_RenderDrawLine( gRenderer, ori_x + gr_w * 8.5, ori_y + gr_h * turn * 4, ori_x + gr_w * 9.5, ori_y + gr_h * turn * 4);
+		SDL_RenderDrawLine( gRenderer, ori_x + gr_w * 8.5, ori_y + gr_h * (4 + turn * 4), ori_x + gr_w * 9.5, ori_y + gr_h * (4 + turn * 4));
 		renderpieces();
 		SDL_RenderPresent( gRenderer );
 		return 1;
@@ -572,11 +565,16 @@ void Board::promotion(int x, int y, int s){
 			board[x][y] = new Knight(x, y, turn);
 			break;
 	}
-	SDL_Rect pRect = { ori_x + gr_w * 8 + l_w, ori_y + l_w, gr_w - l_w, gr_h * 8 - l_w };
+	SDL_Rect pRect = { ori_x + gr_w * 8.5, ori_y, gr_w + l_w, gr_h * 8 + l_w};
 	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderFillRect( gRenderer, &pRect );
 	pRect = { ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, gr_w - l_w, gr_h - l_w };
 	if(x + y & 1) SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
 	SDL_RenderFillRect( gRenderer, &pRect );
 	turn = !turn;
+}
+
+void Board::renderpm(int i){
+	SDL_Rect pRect = { ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+	pm[i].render(ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
 }
