@@ -50,26 +50,26 @@ class LTexture
 		//Gets image dimensions
 		int getWidth();
 		int getHeight();
-	
+	//	bool loadFromRenderedText( std::string textureText, int fontsize);
 	protected:
 		//The actual hardware texture
 		SDL_Texture* mTexture;
-		//Image dimensions
-	private:
 		int mWidth;
 		int mHeight;
+		//Image dimensions
+	private:
+		//int mWidth;
+		//int mHeight;
 };
 //type
 class Text: public LTexture{
 	public:
-		Text(){}
-		~Text(){}
 		bool loadFromRenderedText( std::string textureText, int fontsize);	
 };
 
-class image: public LTexture{
+//class image: public LTexture{
 	
-};
+//};
 
 
 #endif

@@ -78,6 +78,18 @@ void classic(){
 				SDL_RenderDrawLine( gRenderer, ori_x + gr_w * i, ori_y, ori_x + gr_w * i, ori_y + bo_h);	
 			}
 			
+			//add a~h 1~8 
+			Text alph[8], num[8];
+			std::string alph_tb[8] = {"a", "b", "c", "d", "e", "f", "g", "h"};
+			std::string num_tb[8] = {"1", "2", "3", "4", "5", "6", "7", "8"};
+			for(int i = 0; i < 8; i++){
+				alph[i].loadFromRenderedText(alph_tb[i], 30);
+				alph[i].render(ori_x + gr_w * i + (gr_w - alph[i].getWidth()) / 2, ori_y + bo_h);
+				num[i].loadFromRenderedText(num_tb[i], 30);
+				num[i].render(ori_x - num[i].getWidth() * 3 / 2, ori_y + gr_h * (7 - i) + (gr_h - alph[i].getHeight()) / 2);
+			}
+			
+			
 			Board b;
 			//Update screen
 			SDL_RenderPresent( gRenderer );
