@@ -50,18 +50,8 @@ ProductVersion=1.0.0.0
 AutoIncBuildNr=0
 SyncProduct=1
 
-[Unit4]
-FileName=LTexture.h
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit5]
-FileName=原版西洋棋.cpp
+FileName=game.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -81,7 +71,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=起始介面.cpp
+FileName=起始介面 - 複製.cpp
 CompileCpp=1
 Folder=
 Compile=1

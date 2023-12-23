@@ -78,14 +78,15 @@ bool LTexture::loadFromFile( std::string path )
 	return mTexture != NULL;
 }
 
-bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColor, bool language )
+bool LTexture::loadFromRenderedText( std::string textureText, int fontsize)
 {
 	//Get rid of preexisting texture
 	free();
-
+	gFont = TTF_OpenFont( "font/Lato-Regular.ttf", fontsize );
 	//Render text surface
 	SDL_Surface* textSurface;
-	if(language) textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor );
+	SDL_Color textColor = {0, 0, 0};
+	textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor );
 	//else if(!language) textSurface = TTF_RenderUNICODE_Solid( gFont, unicode[], textColor );
 	if( textSurface == NULL )
 	{
@@ -243,15 +244,13 @@ bool loadMedia()
 	return success;
 }
 
-bool type(LTexture& gTextTexture, std::string textureText, SDL_Color textColor, int fontsize, double x, double y, bool language)
+bool type(LTexture& gTextTexture, double x, double y)
 {
 	//Loading success flag
 	bool success = true;
 
 	//Open the font
-	if(language){
-		gFont = TTF_OpenFont( "font/Lato-Regular.ttf", fontsize );
-	}
+	//gFont = TTF_OpenFont( "font/Lato-Regular.ttf", fontsize );
 	//else if(!language){
 	//	gFont = TTF_OpenFont( "font/SentyDragonPalace.ttf", fontsize );
 	//}
@@ -260,16 +259,16 @@ bool type(LTexture& gTextTexture, std::string textureText, SDL_Color textColor, 
 		printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
 		success = false;
 	}
-	else
-	{
+	//else
+	//{
 		//Render text
 		//SDL_Color textColor = { 0, 0, 0 };
-		if( !gTextTexture.loadFromRenderedText( textureText, textColor, language) )
-		{
-			printf( "Failed to render text texture!\n" );
-			success = false;
-		}
-	}
+	//	if( !gTextTexture.loadFromRenderedText( textureText, textColor) )
+	//	{
+	//		printf( "Failed to render text texture!\n" );
+	//		success = false;
+	//	}
+	//}
 	gTextTexture.render(x, y);
 	
 
