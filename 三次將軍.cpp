@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string>
 #include <cmath>
-#include "game_three_check.h"
+#include "game.h"
 #include "LTexture.h"
 
 
