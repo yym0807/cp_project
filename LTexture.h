@@ -27,7 +27,7 @@ class LTexture
 		~LTexture();
 
 		//Loads image at specified path
-		bool loadFromFile( std::string path );
+		//bool loadFromFile( std::string path );
 		
 		//Creates image from font string
 		//bool loadFromRenderedText( std::string textureText, int fontsize);
@@ -67,9 +67,11 @@ class Text: public LTexture{
 		bool loadFromRenderedText( std::string textureText, int fontsize);	
 };
 
-//class image: public LTexture{
-	
-//};
+class Image: public LTexture{
+	public:
+		bool loadFromFile( std::string path );
+		
+};
 
 
 #endif

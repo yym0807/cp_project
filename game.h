@@ -13,7 +13,7 @@ class Board{
 		bool turn; // 0: white 1: black
 		int passant;
 		Piece*** board;
-		LTexture pm[8]; // for promotion
+		Image pm[8]; // for promotion
 	public:
 		Board();
 		~Board();
@@ -40,7 +40,7 @@ class Piece{
 		int side; // 0 for white, 1 for black, -1 for air
 		int x; // 8 ~ 1
 		int y; // a ~ h
-		LTexture img;
+		Image img;
 	public:
 		Piece(int, int, int, int);
 		~Piece();
