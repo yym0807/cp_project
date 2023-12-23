@@ -51,7 +51,7 @@ AutoIncBuildNr=0
 SyncProduct=1
 
 [Unit2]
-FileName=..\..\..\орн▒\cp_test\game.h
+FileName=game.h
 CompileCpp=1
 Folder=
 Compile=1

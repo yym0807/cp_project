@@ -1,5 +1,7 @@
 #include <iostream>
+#include <string>
 #include "game.h"
+#include "Ltexture.h" 
 using namespace std;
 
 const int dirs[8][2] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}, {-1, 1}, {1, 1}, {1, -1}, {-1, -1}}; // URDLUrDrDlUl
@@ -9,12 +11,34 @@ extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 // class Piece
 Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si){
-	// 產生圖片
+	string str;
+	string fs[2] = {"w.bmp", "b.bmp"};
+	switch(pi){
+		case KING:
+			str = "img/king_" + fs[si];
+			break;
+		case QUEEN:
+			str = "img/queen_" + fs[si];
+			break;
+		case ROOK:
+			str = "img/king_" + fs[si];
+			break;
+		case BISHOP:
+			str = "img/king_" + fs[si];
+			break;
+		case KNIGHT:
+			str = "img/king_" + fs[si];
+			break;
+		case PAWN:
+			str = "img/king_" + fs[si];
+			break;
+	}
+	if(pi != AIR){
+		img.loadFromFile(str);
+	}
 }
 
-Piece::~Piece(){
-	// 消掉圖片
-}
+Piece::~Piece(){}
 
 bool Piece::operator==(int c){
 	return (p == c);
@@ -479,14 +503,14 @@ int Board::getpassant(){
 	return passant;
 }
 
-void Board::print(){
-	for(int i = 0; i < 8; i++){
-			cout << 8 - i << " |";
-			for(int j = 0; j < 8; j++){
-				cout << board[i][j]->getname() << ' ';
-			}
-			cout << '\n';
-		}
-		cout << "  ________________\n   a b c d e f g h\n";
-}
+//void Board::print(){
+//	for(int i = 0; i < 8; i++){
+//			cout << 8 - i << " |";
+//			for(int j = 0; j < 8; j++){
+//				cout << board[i][j]->getname() << ' ';
+//			}
+//			cout << '\n';
+//		}
+//		cout << "  ________________\n   a b c d e f g h\n";
+//}
 

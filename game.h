@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "LTexture.h" 
 enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
 
 class Piece;
@@ -35,6 +36,7 @@ class Piece{
 		int side; // 0 for white, 1 for black, -1 for air
 		int x; // 8 ~ 1
 		int y; // a ~ h
+		LTexture img;
 	public:
 		Piece(int, int, int, int);
 		~Piece();
