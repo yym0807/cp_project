@@ -317,24 +317,24 @@ Piece***& Board::getboard(){
 bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 	if(*board[xi][yi] == KING && (yi-yf) * (yi-yf) > 1){ // OO or OOO
 		if(yf == 6){ // OO
-			board[7*turn][4]->setxy(7*turn, 6);
-			board[7*turn][7]->setxy(7*turn, 5);
-			delete board[7*turn][6];
-			delete board[7*turn][5];
-			board[7*turn][6] = board[7*turn][4];
-			board[7*turn][5] = board[7*turn][7];
-			board[7*turn][4] = new Air(7*turn, 4);
-			board[7*turn][7] = new Air(7*turn, 7);
+			board[7-7*turn][4]->setxy(7-7*turn, 6);
+			board[7-7*turn][7]->setxy(7-7*turn, 5);
+			delete board[7-7*turn][6];
+			delete board[7-7*turn][5];
+			board[7-7*turn][6] = board[7-7*turn][4];
+			board[7-7*turn][5] = board[7-7*turn][7];
+			board[7-7*turn][4] = new Air(7-7*turn, 4);
+			board[7-7*turn][7] = new Air(7-7*turn, 7);
 		}
 		else if(yf == 2){ // OOO
-			board[7*turn][4]->setxy(7*turn, 2);
-			board[7*turn][0]->setxy(7*turn, 3);
-			delete board[7*turn][2];
-			delete board[7*turn][3];
-			board[7*turn][2] = board[7*turn][4];
-			board[7*turn][3] = board[7*turn][0];
-			board[7*turn][4] = new Air(7*turn, 4);
-			board[7*turn][0] = new Air(7*turn, 0);
+			board[7-7*turn][4]->setxy(7-7*turn, 2);
+			board[7-7*turn][0]->setxy(7-7*turn, 3);
+			delete board[7-7*turn][2];
+			delete board[7-7*turn][3];
+			board[7-7*turn][2] = board[7-7*turn][4];
+			board[7-7*turn][3] = board[7-7*turn][0];
+			board[7-7*turn][4] = new Air(7-7*turn, 4);
+			board[7-7*turn][0] = new Air(7-7*turn, 0);
 		}
 		else{
 			cout << "ERROR\n";
