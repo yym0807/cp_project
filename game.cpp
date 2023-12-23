@@ -575,5 +575,8 @@ void Board::promotion(int x, int y, int s){
 	SDL_Rect pRect = { ori_x + gr_w * 8 + l_w, ori_y + l_w, gr_w - l_w, gr_h * 8 - l_w };
 	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderFillRect( gRenderer, &pRect );
+	pRect = { ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, gr_w - l_w, gr_h - l_w };
+	if(x + y & 1) SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+	SDL_RenderFillRect( gRenderer, &pRect );
 	turn = !turn;
 }
