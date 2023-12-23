@@ -29,7 +29,7 @@ SDL_Renderer* gRenderer = NULL;
 //Globally used font
 TTF_Font* gFont = NULL;
 
-void classic(){
+void three_check(){
 	//Start up SDL and create window
 	if( !init() ){
 		printf( "Failed to initialize!\n" );
@@ -285,6 +285,6 @@ void classic(){
 }
 
 int main( int argc, char* args[] ){
-	classic();
+	three_check();
 	return 0;
 }

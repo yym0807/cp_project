@@ -42,7 +42,6 @@ void classic(){
 		else{	
 			//Main loop flag
 			bool quit = false;
-
 			//Event handler
 			SDL_Event e;
 			

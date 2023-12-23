@@ -94,6 +94,8 @@ int LTexture::getHeight()
 	return mHeight;
 }
 
+Image::Image(): LTexture(){}
+
 bool Image::loadFromFile( std::string path )
 {
 	//Get rid of preexisting texture
@@ -134,6 +136,8 @@ bool Image::loadFromFile( std::string path )
 	mTexture = newTexture;
 	return mTexture != NULL;
 }
+
+//Text::Text(): LTexture(){}
 
 bool Text::loadFromRenderedText( std::string textureText, int fontsize)
 {

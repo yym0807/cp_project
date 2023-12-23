@@ -51,6 +51,8 @@ class LTexture
 		int getWidth();
 		int getHeight();
 	//	bool loadFromRenderedText( std::string textureText, int fontsize);
+//		virtual bool loadFromFile( std::string path ){return 0;}
+//		virtual bool loadFromRenderedText( std::string textureText, int fontsize){return 0;}	
 	protected:
 		//The actual hardware texture
 		SDL_Texture* mTexture;
@@ -64,11 +66,13 @@ class LTexture
 //type
 class Text: public LTexture{
 	public:
+//		Text();
 		bool loadFromRenderedText( std::string textureText, int fontsize);	
 };
 
 class Image: public LTexture{
 	public:
+		Image();
 		bool loadFromFile( std::string path );
 		
 };
