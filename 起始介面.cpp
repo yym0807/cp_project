@@ -66,7 +66,12 @@ int main( int argc, char* args[] )
 				mode[i].render(( SCREEN_WIDTH - mode[i].getWidth() ) / 2, mode_oriy + mode_h * i + mode_h / 2 - mode[i].getHeight() / 2);
 			}
 			
-		
+			info.loadFromRenderedText("Information", 30);
+			double info_orix =  SCREEN_WIDTH  - info.getWidth() * 1.25, info_oriy = SCREEN_HEIGHT - info.getHeight() * 2;
+			SDL_Rect infoRect = {info_orix, info_oriy, info.getWidth(), info.getHeight()};
+			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+			SDL_RenderDrawRect( gRenderer, &infoRect );
+			info.render(info_orix, info_oriy);
 			
 			SDL_RenderPresent( gRenderer );
 			//While application is running
@@ -84,6 +89,7 @@ int main( int argc, char* args[] )
 						int mx, my;
 						SDL_GetMouseState(&mx, &my);
 						int bx = (mx - mode_orix) / mode_w, by = (my - mode_oriy) / mode_h;
+						int cx = (mx - info_orix) / info.getWidth(), cy = (my - info_oriy) / info.getHeight();
 						for(int i = 0; i < 6; i++){
 							modeRect[i] = { mode_orix, mode_oriy + mode_h * i, mode_w,  mode_h};
 							if(bx != 0 || by != i){
@@ -96,7 +102,14 @@ int main( int argc, char* args[] )
 							mode[i].loadFromRenderedText( mode_title[i], 40);
 							mode[i].render(( SCREEN_WIDTH - mode[i].getWidth() ) / 2, mode_oriy + mode_h * i + mode_h / 2 - mode[i].getHeight() / 2);
 						}
-						
+						if(mx >= info_orix && cx == 0 && my >= info_oriy && cy == 0){
+							SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
+						}
+						else{
+							SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+						}
+						SDL_RenderDrawRect( gRenderer, &infoRect);
+						info.render(info_orix, info_oriy);
 					}
 				}				
 				
