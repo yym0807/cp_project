@@ -31,6 +31,7 @@ class Board{
 		void print();
 		void renderpieces();
 		void promotion(int, int, int);
+		void renderpm(int);
 };
 
 class Piece{
