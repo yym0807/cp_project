@@ -29,7 +29,7 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000000000000000000000000
-UnitCount=3
+UnitCount=0
 
 [VersionInfo]
 Major=1
@@ -60,18 +60,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit3]
-FileName=..\..\..\桌面\cp_test\圖形介面架構.cpp
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit4]
-FileName=..\..\..\桌面\cp_test\game.h
+FileName=LTexture.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -81,17 +71,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=..\..\..\桌面\cp_test\圖形介面架構.cpp
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit1]
-FileName=..\..\..\桌面\cp_test\game.cpp
+FileName=原版西洋棋.cpp
 CompileCpp=1
 Folder=
 Compile=1
