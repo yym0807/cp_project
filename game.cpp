@@ -114,9 +114,11 @@ bool Queen::valid_moves(bool vm[][8], Board &b){
 	for(int i = 0; i < 8; i++){
 		int t = 1;
 		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
-			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR && !b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
-				flag = 1;
-				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
+				if(!b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
+					flag = 1;
+					vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+				}
 				t++;
 				continue;
 			}
@@ -137,10 +139,12 @@ bool Rook::valid_moves(bool vm[][8], Board &b){
 	bool flag = 0;
 	for(int i = 0; i < 4; i++){
 		int t = 1;
-		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8 && !b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
+		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
 			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
-				flag = 1;
-				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+				if(!b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
+					flag = 1;
+					vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+				}
 				t++;
 				continue;
 			}
@@ -175,10 +179,12 @@ bool Bishop::valid_moves(bool vm[][8], Board &b){
 	bool flag = 0;
 	for(int i = 4; i < 8; i++){
 		int t = 1;
-		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8 && !b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
+		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
 			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
-				flag = 1;
-				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+				if(!b.check_if_move(x, y, x+dirs[i][0]*t, y+dirs[i][1]*t)){
+					flag = 1;
+					vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
+				}
 				t++;
 				continue;
 			}
