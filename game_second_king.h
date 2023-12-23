@@ -14,7 +14,6 @@ class Board{
 		int passant;
 		Piece*** board;
 		Image pm[8]; // for promotion
-//		LTexture pm[8];
 	public:
 		Board();
 		~Board();
@@ -42,7 +41,6 @@ class Piece{
 		int x; // 8 ~ 1
 		int y; // a ~ h
 		Image img;
-//		LTexture img;
 	public:
 		Piece(int, int, int, int);
 		~Piece();
