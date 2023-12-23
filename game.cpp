@@ -73,6 +73,11 @@ void Piece::rerender(){
 	}
 }
 
+//void Piece::renderxy(int mx, int my){
+//	SDL_Rect pRect = { mx - gr_w / 2, my - gr_h * x / 2, gr_w - l_w, gr_h - l_w };
+//	img.render(mx - gr_w / 2, my - gr_h * x / 2, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+//}
+
 King::King(int xi, int yi, int si): Piece(xi, yi, KING, si){}
 
 bool King::valid_moves(bool vm[][8], Board &b){
@@ -82,6 +87,7 @@ bool King::valid_moves(bool vm[][8], Board &b){
 	bool flag = 0;
 	for(int i = 0; i < 8; i++){
 		if(x+dirs[i][0] >= 0 && x+dirs[i][0] < 8 && y+dirs[i][1] >= 0 && y+dirs[i][1] < 8 && board[x+dirs[i][0]][y+dirs[i][1]]->getside() != side && !b.check_if_move(x, y, x+dirs[i][0], y+dirs[i][1])){
+			flag = 1;
 			vm[x+dirs[i][0]][y+dirs[i][1]] = 1;
 		}
 	}
@@ -211,7 +217,7 @@ bool Pawn::valid_moves(bool vm[][8], Board &b){
 			flag = 1;
 			vm[x+1][y-1] = 1;
 		}
-		if(x == 4 && (passant == y + 1 || passant == y - 1)){
+		if(x == 4 && (passant == y + 1 || passant == y - 1) && !b.check_if_move(x, y, x+1, passant)){
 			flag = 1;
 			vm[x+1][passant] = 1;
 		}
@@ -235,12 +241,12 @@ bool Pawn::valid_moves(bool vm[][8], Board &b){
 			flag = 1;
 			vm[x-1][y-1] = 1;
 		}
-		if(x == 3 && (passant == y + 1 || passant == y - 1)){
+		if(x == 3 && (passant == y + 1 || passant == y - 1) && !b.check_if_move(x, y, x-1, passant)){
 			flag = 1;
 			vm[x-1][passant] = 1;
 		}
 	}
-	return 1;
+	return flag;
 }
 
 Air::Air(int xi, int yi): Piece(xi, yi, AIR, -1){}
@@ -284,6 +290,14 @@ Board::Board(){
 			board[j][i] = new Air(j, i);
 		}
 	}
+	pm[0].loadFromFile("img/queen_w.bmp");
+	pm[1].loadFromFile("img/rook_w.bmp");
+	pm[2].loadFromFile("img/knight_w.bmp");
+	pm[3].loadFromFile("img/bishop_w.bmp");
+	pm[4].loadFromFile("img/queen_b.bmp");
+	pm[5].loadFromFile("img/rook_b.bmp");
+	pm[6].loadFromFile("img/knight_b.bmp");
+	pm[7].loadFromFile("img/bishop_b.bmp");
 }
 
 Board::~Board(){
@@ -300,7 +314,7 @@ Piece***& Board::getboard(){
 	return board;
 }
 
-void Board::move(int xi, int yi, int xf, int yf){
+bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 	if(*board[xi][yi] == KING && (yi-yf) * (yi-yf) > 1){ // OO or OOO
 		if(yf == 6){ // OO
 			board[7*turn][4]->setxy(7*turn, 6);
@@ -324,40 +338,43 @@ void Board::move(int xi, int yi, int xf, int yf){
 		}
 		else{
 			cout << "ERROR\n";
-			return;
+			return 0;
 		}
 		oo[turn] = 0;
 		ooo[turn] = 0;
 		turn = !turn;
-		return;
+		return 0;
 	}
 	if(*board[xi][yi] == PAWN && xi == 1 + board[xi][yi]->getside() * 5){
 		// promotion
-		cout << '[' << side[turn] << "] Pawn promotion(Q, B, N, R): ";
-		char p;
-		cin >> p;
+//		cout << '[' << side[turn] << "] Pawn promotion(Q, B, N, R): ";
+//		char p;
+//		cin >> p;
 		delete board[xi][yi];
 		board[xi][yi] = new Air(xi, yi);
 		delete board[xf][yf];
-		switch(p){
-			case 'Q':
-				board[xf][yf] = new Queen(xf, yf, turn);
-				break;
-			case 'R':
-				board[xf][yf] = new Rook(xf, yf, turn);
-				break;
-			case 'B':
-				board[xf][yf] = new Bishop(xf, yf, turn);
-				break;
-			case 'N':
-				board[xf][yf] = new Knight(xf, yf, turn);
-				break;
-			default:
-				cout << "ERROR\n";
+		board[xf][yf] = new Pawn(xf, yf, turn);
+//		bool selected = 0;
+//		if(!board[xi][yi]->getside()){
+//			pm[0] = new Queen(0, 8, 0);
+//			pm[1] = new Rook(1, 8, 0);
+//			pm[2] = new Knight(2, 8, 0);
+//			pm[3] = new Bishop(3, 8, 0);
+//		}
+//		else{
+//			pm[0] = new Queen(4, 8, 1);
+//			pm[1] = new Rook(5, 8, 1);
+//			pm[2] = new Knight(6, 8, 1);
+//			pm[3] = new Bishop(7, 8, 1);
+//		}
+//		turn = !turn;
+		for(int i = board[xf][yf]->getside() * 4; i < 4 + board[xf][yf]->getside() * 4; i++){
+			SDL_Rect pRect = { ori_x + gr_w * 8 + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+			pm[i].render(ori_x + gr_w * 8 + l_w, ori_y + gr_h * i + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
 		}
-		turn = !turn;
-		cout << turn << '\n';
-		return;
+		renderpieces();
+		SDL_RenderPresent( gRenderer );
+		return 1;
 	}
 	if(*board[xi][yi] == PAWN && yi != yf && *board[xf][yf] == AIR){
 		//passant
@@ -368,7 +385,7 @@ void Board::move(int xi, int yi, int xf, int yf){
 		board[xi][yi] = new Air(xi, yi);
 		board[xi][yf] = new Air(xi, yf);
 		turn = !turn;
-		return;
+		return 0;
 	}
 	if(*board[xi][yi] == KING){
 		oo[turn] = 0;
@@ -391,6 +408,7 @@ void Board::move(int xi, int yi, int xf, int yf){
 	board[xf][yf] = board[xi][yi];
 	board[xi][yi] = new Air(xi, yi);
 	turn = !turn;
+	return 0;
 }
 
 bool Board::checked(bool side){
@@ -465,7 +483,7 @@ bool Board::any_valid(){
 	for(int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
 			if(board[i][j]->getside() == turn){
-				if(board[i][j]->valid_moves(vm, *this)){
+				if(board[i][j]->valid_moves(vm, *this)){ 
 					return 1;
 				}
 			}
@@ -519,16 +537,16 @@ int Board::getpassant(){
 	return passant;
 }
 
-//void Board::print(){
-//	for(int i = 0; i < 8; i++){
-//			cout << 8 - i << " |";
-//			for(int j = 0; j < 8; j++){
-//				cout << board[i][j]->getname() << ' ';
-//			}
-//			cout << '\n';
-//		}
-//		cout << "  ________________\n   a b c d e f g h\n";
-//}
+void Board::print(){
+	for(int i = 0; i < 8; i++){
+			cout << 8 - i << " |";
+			for(int j = 0; j < 8; j++){
+				cout << board[i][j]->getname() << ' ';
+			}
+			cout << '\n';
+		}
+		cout << "  ________________\n   a b c d e f g h\n";
+}
 
 void Board::renderpieces(){
 	for(int i = 0; i < 8; i++){
@@ -538,3 +556,24 @@ void Board::renderpieces(){
 	}
 }
 
+void Board::promotion(int x, int y, int s){
+	delete board[x][y];
+	switch(s){
+		case 0:
+			board[x][y] = new Queen(x, y, turn);
+			break;
+		case 1:
+			board[x][y] = new Rook(x, y, turn);
+			break;
+		case 2:
+			board[x][y] = new Bishop(x, y, turn);
+			break;
+		case 3:
+			board[x][y] = new Knight(x, y, turn);
+			break;
+	}
+	SDL_Rect pRect = { ori_x + gr_w * 8 + l_w, ori_y + l_w, gr_w - l_w, gr_h * 8 - l_w };
+	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	SDL_RenderFillRect( gRenderer, &pRect );
+	turn = !turn;
+}

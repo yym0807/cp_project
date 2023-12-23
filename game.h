@@ -13,11 +13,12 @@ class Board{
 		bool turn; // 0: white 1: black
 		int passant;
 		Piece*** board;
+		LTexture pm[8]; // for promotion
 	public:
 		Board();
 		~Board();
 		Piece***& getboard();
-		void move(int, int, int, int);
+		bool move(int, int, int, int);
 		bool checked(bool side);
 		bool check_if_move(int, int, int, int);
 		bool any_valid();
@@ -29,6 +30,7 @@ class Board{
 		int getpassant();
 		void print();
 		void renderpieces();
+		void promotion(int, int, int);
 };
 
 class Piece{
@@ -47,6 +49,7 @@ class Piece{
 		int getside();
 		int getname();
 		void rerender();
+//		void renderxy(int, int);
 };
 
 
