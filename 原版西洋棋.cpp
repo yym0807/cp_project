@@ -159,7 +159,7 @@ TTF_Font* gFont = NULL;
 //	}
 //}
 
-int main( int argc, char* args[] )
+void classic()
 {
 	//Start up SDL and create window
 	if( !init() ){
@@ -181,10 +181,10 @@ int main( int argc, char* args[] )
 //			double bo_w = SCREEN_HEIGHT / 10 * 8, bo_h = SCREEN_HEIGHT / 10 * 8;
 //			double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 //			double gr_w = bo_w / 8, gr_h = bo_h / 8;
-			bool is_downed = 0;
 			bool vm[8][8] = {};
 			bool clicked = 0;
 			int clicked_x, clicked_y;
+			int pointed_x = -1, pointed_y = -1;
 			bool mate = 0;
 			
 			//Clear screen
@@ -228,11 +228,13 @@ int main( int argc, char* args[] )
 							quit = true;
 						}
 						else if(e.type == SDL_MOUSEBUTTONDOWN){
-							is_downed = 1;
 							clicked = 0;
 							int mx, my;
 							SDL_GetMouseState(&mx, &my);
 							int by = (mx - ori_x) / gr_w, bx = (my - ori_y) / gr_h;
+							if(mx < ori_x) by--;
+							if(my < ori_y) bx--;
+//							printf("%d %d\n", bx, by);
 							for(int i = 0; i < 8; i++){
 								for(int j = 0; j < 8; j++){
 									SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
@@ -276,14 +278,20 @@ int main( int argc, char* args[] )
 									}
 								}
 							}
+							if(clicked){
+								SDL_Rect cRect = { ori_x + gr_w * clicked_y + l_w, ori_y + gr_h * clicked_x + l_w, gr_w - l_w, gr_h - l_w };
+								SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
+								SDL_RenderFillRect( gRenderer, &cRect );
+							}
 							b.renderpieces();
 							SDL_RenderPresent( gRenderer );
 						}
 						else if(e.type == SDL_MOUSEBUTTONUP){
-							is_downed = 0;
 							int mx, my;
 							SDL_GetMouseState(&mx, &my);
 							int by = (mx - ori_x) / gr_w, bx = (my - ori_y) / gr_h;
+							if(mx < ori_x) by--;
+							if(my < ori_y) bx--;
 							if(clicked){
 								if(bx >= 0 && bx < 8 && by >= 0 && by < 8 && vm[bx][by]){
 									b.move(clicked_x, clicked_y, bx, by);
@@ -303,6 +311,38 @@ int main( int argc, char* args[] )
 									b.renderpieces();
 									SDL_RenderPresent( gRenderer );
 								}
+							}
+						}
+						else if(e.type == SDL_MOUSEMOTION){
+							int mx, my;
+							SDL_GetMouseState(&mx, &my);
+							int by = (mx - ori_x) / gr_w, bx = (my - ori_y) / gr_h;
+							if(mx < ori_x) by--;
+							if(my < ori_y) bx--;
+							if(bx >= 0 && bx < 8 && by >= 0 && by < 8 && (bx != pointed_x || by != pointed_y)){
+								SDL_Rect cRect = { ori_x + gr_w * pointed_y + l_w, ori_y + gr_h * pointed_x + l_w, gr_w - l_w, gr_h - l_w };
+								if(pointed_x >= 0 && pointed_x < 8 && pointed_y >= 0 && pointed_y < 8){
+									if(clicked && pointed_x == clicked_x && pointed_y == clicked_y) SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
+									else if(pointed_x + pointed_y & 1){
+										if(vm[pointed_x][pointed_y]) SDL_SetRenderDrawColor( gRenderer, 0xDD, 0xAA, 0xDD, 0xFF );
+										else SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+									}
+									else{
+										if(vm[pointed_x][pointed_y]) SDL_SetRenderDrawColor( gRenderer, 0xFC, 0xDD, 0xFC, 0xFF );
+										else SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+									}
+									SDL_RenderFillRect( gRenderer, &cRect );
+								}
+								
+								cRect = { ori_x + gr_w * by + l_w, ori_y + gr_h * bx + l_w, gr_w - l_w, gr_h - l_w };
+								if(bx + by & 1) SDL_SetRenderDrawColor( gRenderer, 0xDD, 0xAA, 0xAA, 0xFF );
+								else SDL_SetRenderDrawColor( gRenderer, 0xFC, 0xCC, 0xCC, 0xFF );
+								SDL_RenderFillRect( gRenderer, &cRect );
+								if(pointed_x >= 0 && pointed_y >= 0 && pointed_x < 8 && pointed_y < 8) b.getboard()[pointed_x][pointed_y]->rerender();
+								b.getboard()[bx][by]->rerender();
+								SDL_RenderPresent( gRenderer );
+								pointed_x = bx;
+								pointed_y = by;
 							}
 						}
 	//					else if(e.type == SDL_MOUSEMOTION && is_downed){
@@ -330,6 +370,9 @@ int main( int argc, char* args[] )
 
 	//Free resources and close SDL
 	close();
+}
 
+int main( int argc, char* args[] ){
+	classic();
 	return 0;
 }
