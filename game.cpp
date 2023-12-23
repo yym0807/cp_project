@@ -9,6 +9,12 @@ const int h[8][2] = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1
 const char side[2][6] = {"white", "black"};
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
+extern SDL_Renderer* gRenderer;
+const double bo_w = (double)SCREEN_HEIGHT / 10 * 8, bo_h = (double)SCREEN_HEIGHT / 10 * 8;
+const double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
+const double gr_w = bo_w / 8, gr_h = bo_h / 8;
+const double l_w = 1; // line width
+
 // class Piece
 Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si){
 	string str;
@@ -21,20 +27,23 @@ Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si){
 			str = "img/queen_" + fs[si];
 			break;
 		case ROOK:
-			str = "img/king_" + fs[si];
+			str = "img/rook_" + fs[si];
 			break;
 		case BISHOP:
-			str = "img/king_" + fs[si];
+			str = "img/bishop_" + fs[si];
 			break;
 		case KNIGHT:
-			str = "img/king_" + fs[si];
+			str = "img/knight_" + fs[si];
 			break;
 		case PAWN:
-			str = "img/king_" + fs[si];
+			str = "img/pawn_" + fs[si];
 			break;
 	}
 	if(pi != AIR){
 		img.loadFromFile(str);
+		SDL_Rect pRect = { ori_x + gr_w * yi + l_w, ori_y + gr_h * xi + l_w, gr_w - l_w, gr_h - l_w };
+		img.render(ori_x + gr_w * yi + l_w, ori_y + gr_h * xi + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+//		SDL_RenderPresent( gRenderer );
 	}
 }
 

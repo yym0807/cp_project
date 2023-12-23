@@ -178,7 +178,6 @@ int main( int argc, char* args[] )
 			SDL_Event e;
 
 			//While application is running
-			Board b;
 //			double bo_w = SCREEN_HEIGHT / 10 * 8, bo_h = SCREEN_HEIGHT / 10 * 8;
 //			double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 //			double gr_w = bo_w / 8, gr_h = bo_h / 8;
@@ -198,7 +197,7 @@ int main( int argc, char* args[] )
 			for(int i = 0; i < 8; i++){
 				for(int j = 0; j < 8; j++){
 					if(i + j & 1){
-						SDL_Rect fillRect = { ori_x + gr_w * i + l_w, ori_y + gr_h * j + l_w, gr_w - l_w, gr_h - l_w };
+						SDL_Rect fillRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
 						SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );		
 						SDL_RenderFillRect( gRenderer, &fillRect );
 					}
@@ -215,6 +214,7 @@ int main( int argc, char* args[] )
 				SDL_RenderDrawLine( gRenderer, ori_x + gr_w * i, ori_y, ori_x + gr_w * i, ori_y + bo_h);	
 			}
 			
+			Board b;
 			//Update screen
 			SDL_RenderPresent( gRenderer );
 			
