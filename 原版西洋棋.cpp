@@ -185,6 +185,7 @@ int main( int argc, char* args[] )
 			bool vm[8][8] = {};
 			bool clicked = 0;
 			int clicked_x, clicked_y;
+			bool mate = 0;
 			
 			//Clear screen
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -218,95 +219,110 @@ int main( int argc, char* args[] )
 			//Update screen
 			SDL_RenderPresent( gRenderer );
 			
-			while( !quit ){
+			while(!quit){
 				//Handle events on queue
-				while( SDL_PollEvent( &e ) != 0 ){
-					//User requests quit
-					if( e.type == SDL_QUIT ){
-						quit = true;
-					}
-					else if(e.type == SDL_MOUSEBUTTONDOWN){
-						is_downed = 1;
-						clicked = 0;
-						int mx, my;
-						SDL_GetMouseState(&mx, &my);
-						int by = (mx - ori_x) / gr_w, bx = (my - ori_y) / gr_h;
-						for(int i = 0; i < 8; i++){
-							for(int j = 0; j < 8; j++){
-								SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
-								if(i + j & 1){
-									SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
-								}
-								else{
-									SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-								}
-								SDL_RenderFillRect( gRenderer, &vmRect );
-							}
+				while(!mate){
+					while( SDL_PollEvent( &e ) != 0 ){
+						//User requests quit
+						if( e.type == SDL_QUIT ){
+							quit = true;
 						}
-						if(bx >= 0 && bx < 8 && by >= 0 && by < 8){
-							if(vm[bx][by]){
-								b.move(clicked_x, clicked_y, bx, by);
-							}
+						else if(e.type == SDL_MOUSEBUTTONDOWN){
+							is_downed = 1;
+							clicked = 0;
+							int mx, my;
+							SDL_GetMouseState(&mx, &my);
+							int by = (mx - ori_x) / gr_w, bx = (my - ori_y) / gr_h;
 							for(int i = 0; i < 8; i++){
 								for(int j = 0; j < 8; j++){
-									vm[i][j] = 0;
+									SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+									if(i + j & 1){
+										SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+									}
+									else{
+										SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+									}
+									SDL_RenderFillRect( gRenderer, &vmRect );
 								}
 							}
-							if(b.getboard()[bx][by]->getside() == b.getturn()){
-								clicked = 1;
-								clicked_x = bx;
-								clicked_y = by;
-								b.getboard()[bx][by]->valid_moves(vm, b);
-								for(int i = 0; i < 8; i++){
-									for(int j = 0; j < 8; j++){
-										if(vm[i][j]){
-											SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
-											if(i + j & 1){
-												SDL_SetRenderDrawColor( gRenderer, 0xDD, 0xAA, 0xDD, 0xFF );
-											}
-											else{
-												SDL_SetRenderDrawColor( gRenderer, 0xFC, 0xDD, 0xFC, 0xFF );
-											}
-											SDL_RenderFillRect( gRenderer, &vmRect );
-										}
-									} 
+							if(bx >= 0 && bx < 8 && by >= 0 && by < 8){
+								if(vm[bx][by]){
+									b.move(clicked_x, clicked_y, bx, by);
+									if(b.checkmate() || b.stalemate()) mate = 1;
 								}
-							}
-						}
-						b.renderpieces();
-						SDL_RenderPresent( gRenderer );
-					}
-					else if(e.type == SDL_MOUSEBUTTONUP){
-						is_downed = 0;
-						int mx, my;
-						SDL_GetMouseState(&mx, &my);
-						int by = (mx - ori_x) / gr_w, bx = (my - ori_y) / gr_h;
-						if(clicked){
-							if(bx >= 0 && bx < 8 && by >= 0 && by < 8 && vm[bx][by]){
-								b.move(clicked_x, clicked_y, bx, by);
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
 										vm[i][j] = 0;
-										SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
-										if(i + j & 1){
-											SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
-										}
-										else{
-											SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-										}
-										SDL_RenderFillRect( gRenderer, &vmRect );
 									}
 								}
-								b.renderpieces();
-								SDL_RenderPresent( gRenderer );
+								if(b.getboard()[bx][by]->getside() == b.getturn()){
+									clicked = 1;
+									clicked_x = bx;
+									clicked_y = by;
+									b.getboard()[bx][by]->valid_moves(vm, b);
+									for(int i = 0; i < 8; i++){
+										for(int j = 0; j < 8; j++){
+											if(vm[i][j]){
+												SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+												if(i + j & 1){
+													SDL_SetRenderDrawColor( gRenderer, 0xDD, 0xAA, 0xDD, 0xFF );
+												}
+												else{
+													SDL_SetRenderDrawColor( gRenderer, 0xFC, 0xDD, 0xFC, 0xFF );
+												}
+												SDL_RenderFillRect( gRenderer, &vmRect );
+											}
+										} 
+									}
+								}
+							}
+							b.renderpieces();
+							SDL_RenderPresent( gRenderer );
+						}
+						else if(e.type == SDL_MOUSEBUTTONUP){
+							is_downed = 0;
+							int mx, my;
+							SDL_GetMouseState(&mx, &my);
+							int by = (mx - ori_x) / gr_w, bx = (my - ori_y) / gr_h;
+							if(clicked){
+								if(bx >= 0 && bx < 8 && by >= 0 && by < 8 && vm[bx][by]){
+									b.move(clicked_x, clicked_y, bx, by);
+									for(int i = 0; i < 8; i++){
+										for(int j = 0; j < 8; j++){
+											vm[i][j] = 0;
+											SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+											if(i + j & 1){
+												SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+											}
+											else{
+												SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+											}
+											SDL_RenderFillRect( gRenderer, &vmRect );
+										}
+									}
+									b.renderpieces();
+									SDL_RenderPresent( gRenderer );
+								}
 							}
 						}
+	//					else if(e.type == SDL_MOUSEMOTION && is_downed){
+	//						int mx, my;
+	//						SDL_GetMouseState(&mx, &my);
+	//						b.getboard()[clicked_x][clicked_y]->renderxy(mx, my);
+	//						SDL_RenderPresent( gRenderer );
+	//						// 圖片跟著滑鼠 
+	//					}
 					}
-					else if(e.type == SDL_MOUSEMOTION && is_downed){
-						int mx, my;
-						SDL_GetMouseState(&mx, &my);
-						// 圖片跟著滑鼠 
-					}
+				}
+				bool o = 1;
+				if(o && b.checkmate()){
+					o = 0;
+					const char side[2][6] = {"white", "black"};
+					printf("Winner is %s\n", side[!b.getturn()]);
+				}
+				else if(0 && b.stalemate()){
+					o = 0;
+					printf("It's a stalemate\n");
 				}
 			}
 		}

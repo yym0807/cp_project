@@ -47,6 +47,7 @@ class Piece{
 		int getside();
 		int getname();
 		void rerender();
+//		void renderxy(int, int);
 };
 
 

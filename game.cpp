@@ -73,6 +73,11 @@ void Piece::rerender(){
 	}
 }
 
+//void Piece::renderxy(int mx, int my){
+//	SDL_Rect pRect = { mx - gr_w / 2, my - gr_h * x / 2, gr_w - l_w, gr_h - l_w };
+//	img.render(mx - gr_w / 2, my - gr_h * x / 2, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+//}
+
 King::King(int xi, int yi, int si): Piece(xi, yi, KING, si){}
 
 bool King::valid_moves(bool vm[][8], Board &b){
@@ -211,7 +216,7 @@ bool Pawn::valid_moves(bool vm[][8], Board &b){
 			flag = 1;
 			vm[x+1][y-1] = 1;
 		}
-		if(x == 4 && (passant == y + 1 || passant == y - 1)){
+		if(x == 4 && (passant == y + 1 || passant == y - 1) && !b.check_if_move(x, y, x+1, passant)){
 			flag = 1;
 			vm[x+1][passant] = 1;
 		}
@@ -235,12 +240,12 @@ bool Pawn::valid_moves(bool vm[][8], Board &b){
 			flag = 1;
 			vm[x-1][y-1] = 1;
 		}
-		if(x == 3 && (passant == y + 1 || passant == y - 1)){
+		if(x == 3 && (passant == y + 1 || passant == y - 1) && !b.check_if_move(x, y, x-1, passant)){
 			flag = 1;
 			vm[x-1][passant] = 1;
 		}
 	}
-	return 1;
+	return flag;
 }
 
 Air::Air(int xi, int yi): Piece(xi, yi, AIR, -1){}
@@ -356,7 +361,6 @@ void Board::move(int xi, int yi, int xf, int yf){
 				cout << "ERROR\n";
 		}
 		turn = !turn;
-		cout << turn << '\n';
 		return;
 	}
 	if(*board[xi][yi] == PAWN && yi != yf && *board[xf][yf] == AIR){
@@ -465,7 +469,7 @@ bool Board::any_valid(){
 	for(int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
 			if(board[i][j]->getside() == turn){
-				if(board[i][j]->valid_moves(vm, *this)){
+				if(board[i][j]->valid_moves(vm, *this)){ 
 					return 1;
 				}
 			}
