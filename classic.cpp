@@ -197,7 +197,7 @@ void classic(){
 								clicked = 1;
 								clicked_x = bx;
 								clicked_y = by;
-								b.getboard()[bx][by]->valid_moves(vm, b);
+								b.getboard()[bx][by]->valid_moves(vm, b, 1);
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
 										if(vm[i][j]){

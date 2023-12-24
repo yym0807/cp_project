@@ -187,11 +187,13 @@ bool Rook::valid_moves(bool vm[][8], Board &b, bool consider_check){
 Knight::Knight(int xi, int yi, int si): Piece(xi, yi, KNIGHT, si){}
 
 bool Knight::valid_moves(bool vm[][8], Board &b, bool consider_check){
+	printf("*%d\n", consider_check);
 	if(freeze) return 0;
 	Piece*** board = b.getboard();
 	bool flag = 0;
 	for(int i = 0; i < 8; i++){
 		if(x+h[i][0] >= 0 && x+h[i][0] < 8 && y+h[i][1] >= 0 && y+h[i][1] < 8 && board[x+h[i][0]][y+h[i][1]]->getside() != side && !(consider_check && b.check_if_move(x, y, x+h[i][0], y+h[i][1]))){
+			printf("%d\n",b.check_if_move(x, y, x+h[i][0], y+h[i][1]));
 			flag = 1;
 			vm[x+h[i][0]][y+h[i][1]] = 1;
 		}
@@ -619,7 +621,7 @@ bool Board::any_valid(){
 	for(int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
 			if(board[i][j]->getside() == turn){
-				if(board[i][j]->valid_moves(vm, *this)){ 
+				if(board[i][j]->valid_moves(vm, *this, 1)){ 
 					return 1;
 				}
 			}
