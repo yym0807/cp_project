@@ -3,12 +3,24 @@
 
 #include "LTexture.h" 
 enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
+enum {BOMB, FREEZE, PENETRATE, NONE};
 
 class Piece;
 
 class Board;
 
 void renderpm(Board&, int);
+
+class Card{
+	private:
+		Image cardimg[6];
+		bool used[6];
+	public:
+		Card();
+		void rendercards();
+		void use(int);
+		bool valid_card(int);
+};
 
 class Board{
 	friend void renderpm(Board&, int);
@@ -37,6 +49,7 @@ class Board{
 //		void print();
 		void renderpieces();
 		void promotion(int, int, int);
+		bool king_died(bool);
 //		void renderpm(int);
 };
 
@@ -46,6 +59,7 @@ class Piece{
 		int side; // 0 for white, 1 for black, -1 for air
 		int x; // 8 ~ 1
 		int y; // a ~ h
+		bool freeze;
 		Image img;
 //		LTexture img;
 	public:
@@ -58,6 +72,9 @@ class Piece{
 //		int getname();
 		void rerender();
 		virtual void loadResultImage(std::string){}
+		bool getfreeze();
+		bool freezed();
+		bool unfreezed();
 //		void renderxy(int, int);
 };
 
