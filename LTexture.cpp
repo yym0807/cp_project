@@ -131,13 +131,10 @@ bool Image::loadFromFile( std::string path )
 		//Get rid of old loaded surface
 		SDL_FreeSurface( loadedSurface );
 	}
-//	printf("CD\n"); 
 	//Return success
 	mTexture = newTexture;
 	return mTexture != NULL;
 }
-
-//Text::Text(): LTexture(){}
 
 bool Text::loadFromRenderedText( std::string textureText, int fontsize)
 {
@@ -148,29 +145,18 @@ bool Text::loadFromRenderedText( std::string textureText, int fontsize)
 	SDL_Surface* textSurface;
 	SDL_Color textColor = {0, 0, 0};
 	textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor );
-	//else if(!language) textSurface = TTF_RenderUNICODE_Solid( gFont, unicode[], textColor );
-	if( 3 > 5 )
+	
+	//Create texture from surface pixels
+    mTexture = SDL_CreateTextureFromSurface( gRenderer, textSurface );
+	if( mTexture != NULL )
 	{
-		printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
+		//Get image dimensions
+		mWidth = textSurface->w;
+		mHeight = textSurface->h;
 	}
-	else
-	{
-		//Create texture from surface pixels
-        mTexture = SDL_CreateTextureFromSurface( gRenderer, textSurface );
-		if( mTexture == NULL )
-		{
-			printf( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
-		}
-		else
-		{
-			//Get image dimensions
-			mWidth = textSurface->w;
-			mHeight = textSurface->h;
-		}
 
-		//Get rid of old surface
-		SDL_FreeSurface( textSurface );
-	}
+	//Get rid of old surface
+	SDL_FreeSurface( textSurface );
 	
 	//Return success
 	return mTexture != NULL;
@@ -252,25 +238,11 @@ bool type(LTexture& gTextTexture, double x, double y)
 	bool success = true;
 
 	//Open the font
-	//gFont = TTF_OpenFont( "font/Lato-Regular.ttf", fontsize );
-	//else if(!language){
-	//	gFont = TTF_OpenFont( "font/SentyDragonPalace.ttf", fontsize );
-	//}
 	if( gFont == NULL )
 	{
 		printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
 		success = false;
 	}
-	//else
-	//{
-		//Render text
-		//SDL_Color textColor = { 0, 0, 0 };
-	//	if( !gTextTexture.loadFromRenderedText( textureText, textColor) )
-	//	{
-	//		printf( "Failed to render text texture!\n" );
-	//		success = false;
-	//	}
-	//}
 	gTextTexture.render(x, y);
 	
 
@@ -279,9 +251,6 @@ bool type(LTexture& gTextTexture, double x, double y)
 
 void close()
 {
-	//Free loaded images
-	//gTextTexture.free();
-
 	//Free global font
 	TTF_CloseFont( gFont );
 	gFont = NULL;

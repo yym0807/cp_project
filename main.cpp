@@ -12,11 +12,12 @@
 #include "blindfolded.h"
 #include "colorblindness.h"
 #include "information_page.h"
-//enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
+
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 750;
+
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
 
@@ -133,7 +134,6 @@ int main( int argc, char* args[] )
 							switch(by){
 								case 0:
 									classic();
-//									printf("123");
 									break;
 								case 1:		
 									three_check();
@@ -153,21 +153,17 @@ int main( int argc, char* args[] )
 							}
 							
 						}
-						
 						int cx = (mx - info_orix) / info.getWidth(), cy = (my - info_oriy) / info.getHeight();
 						if(mx >= info_orix && cx == 0 && my >= info_oriy && cy == 0){
 							information_page();
-							
 						}
 						reset();
 					}
-				}				
-				
+				}
 				SDL_RenderPresent( gRenderer );
 			}
 		}
 	}
-
 	//Free resources and close SDL
 	close();
 

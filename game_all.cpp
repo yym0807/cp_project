@@ -45,10 +45,8 @@ Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si), fre
 	}
 	if(pi != AIR){
 		img.loadFromFile(str);
-//		cout << str << '\n'; 
 		SDL_Rect pRect = { ori_x + gr_w * yi + l_w, ori_y + gr_h * xi + l_w, gr_w - l_w, gr_h - l_w };
 		img.render(ori_x + gr_w * yi + l_w, ori_y + gr_h * xi + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
-//		SDL_RenderPresent( gRenderer );
 	}
 }
 
@@ -66,10 +64,6 @@ void Piece::setxy(int xf, int yf){
 int Piece::getside(){
 	return side;
 }
-
-//int Piece::getname(){
-//	return p;
-//}
 
 void Piece::rerender(){
 	if(p != AIR){
@@ -149,10 +143,6 @@ bool Piece::unfreezed(){
 	}
 	
 }
-//void Piece::renderxy(int mx, int my){
-//	SDL_Rect pRect = { mx - gr_w / 2, my - gr_h * x / 2, gr_w - l_w, gr_h - l_w };
-//	img.render(mx - gr_w / 2, my - gr_h * x / 2, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
-//}
 
 King::King(int xi, int yi, int si): Piece(xi, yi, KING, si){}
 
@@ -186,8 +176,6 @@ bool King::valid_moves(bool vm[][8], Board &b, bool consider_check){
 //loadResultImage
 void King::loadResultImage(std::string str){
 	img.loadFromFile(str);
-//	SDL_Rect pRect{}
-//	img.render(ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
 }
 
 Queen::Queen(int xi, int yi, int si): Piece(xi, yi, QUEEN, si){}
@@ -425,7 +413,6 @@ void Board::unloadimage(){
 	for(int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
 			board[i][j]->img.free();
-//			printf("123");
 		}
 	}
 }
@@ -556,62 +543,6 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 	return 0;
 }
 
-//bool Board::checked(bool side){
-//	int x, y;
-//	for(x = 0; x < 8; x++){//找到國王位置 
-//		for(y = 0; y < 8; y++){
-//			if(*board[x][y] == KING && board[x][y]->getside() == side) break;
-//		}
-//		if(y < 8) break;
-//	}
-//	for(int i = 0; i < 8; i++){//king check
-//		if(x+dirs[i][0] >= 0 && x+dirs[i][0] < 8 && y+dirs[i][1] >= 0 && y+dirs[i][1] < 8){
-//			if(*board[x+dirs[i][0]][y+dirs[i][1]] == KING){
-//				return 1;
-//			}	
-//		}
-//	}
-//	if(x > 0 && !side || x < 7 && side){//pawn check 
-//		if(y > 0 && *board[x-1+side*2][y-1] == PAWN && board[x-1+side*2][y-1]->getside() == 1-side || y < 7 && *board[x-1+2*side][y+1] == PAWN && board[x-1+2*side][y+1]->getside() == 1-side){
-//			return 1;
-//		}
-//	}
-//	for(int i = 0; i < 4; i++){//直線武器 
-//		int t = 1;
-//		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
-//			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
-//				t++;
-//				continue;
-//			}
-//			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t]->getside() == 1-side && (*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == QUEEN || *board[x+dirs[i][0]*t][y+dirs[i][1]*t] == ROOK)){
-//				return 1;
-//			}
-//			break;//有東西擋著就break 
-//		}
-//	}
-//	for(int i = 4; i < 8; i++){//斜線武器 
-//		int t = 1;
-//		while(x+dirs[i][0]*t >= 0 && x+dirs[i][0]*t < 8 && y+dirs[i][1]*t >= 0 && y+dirs[i][1]*t < 8){
-//			if(*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == AIR){
-//				t++;
-//				continue;
-//			}
-//			if(board[x+dirs[i][0]*t][y+dirs[i][1]*t]->getside() == 1-side && (*board[x+dirs[i][0]*t][y+dirs[i][1]*t] == QUEEN || *board[x+dirs[i][0]*t][y+dirs[i][1]*t] == BISHOP)){
-//				return 1;
-//			}
-//			break;
-//		}
-//	}
-//	for(int i = 0; i < 8; i++){//knight check 
-//		if(x+h[i][0] >= 0 && x+h[i][0] < 8 && y+h[i][1] >= 0 && y+h[i][1] < 8){
-//			if(*board[x+h[i][0]][y+h[i][1]] == KNIGHT && board[x+h[i][0]][y+h[i][1]]->getside() == 1-side){
-//				return 1;
-//			}
-//		}
-//	}
-//	return 0;
-//}
-
 bool Board::checked(bool side){
 	int x[2], y[2];
 	int kc = 0;
@@ -623,16 +554,7 @@ bool Board::checked(bool side){
 			}
 		}
 		if(kc == 2) break;
-//		if(y[0] < 8) break;
 	}
-//	y[1] = y[0] + 1;
-//	for(x[1] = x[0]; x[1] < 8; x[1]++){//找到國王位置 
-//		for(; y[1] < 8; y[1]++){
-//			if(*board[x[1]][y[1]] == King1 && board[x[1]][y[1]]->getside() == side) break;
-//		}
-//		if(y[1] < 8) break;
-//		y[1] = 0;
-//	}
 	for(int g = 0; g < kc; g++){
 		for(int i = 0; i < 8; i++){//king check
 			if(x[g]+dirs[i][0] >= 0 && x[g]+dirs[i][0] < 8 && y[g]+dirs[i][1] >= 0 && y[g]+dirs[i][1] < 8){
@@ -753,17 +675,6 @@ int Board::getpassant(){
 	return passant;
 }
 
-//void Board::print(){
-//	for(int i = 0; i < 8; i++){
-//			cout << 8 - i << " |";
-//			for(int j = 0; j < 8; j++){
-//				cout << board[i][j]->getname() << ' ';
-//			}
-//			cout << '\n';
-//		}
-//		cout << "  ________________\n   a b c d e f g h\n";
-//}
-
 void Board::renderpieces(){
 	for(int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
@@ -808,16 +719,6 @@ bool Board::king_died(bool side){
 	return 1;
 }
 
-//void Board::renderpm(int i){
-//	SDL_Rect pRect = { ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
-//	pm[i].render(ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
-//}
-
-void renderpm(Board& b, int i){
-	SDL_Rect pRect = { ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
-	b.pm[i].render(ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
-}
-
 Card::Card(){
 	for(int i = 0; i < 6; i++) used[i] = 0;
 	std::string card_str[3] = {"img/bomb.png", "img/freeze.png", "img/penetrate.png"};
@@ -853,6 +754,11 @@ void Card::use(int i){
 
 bool Card::valid_card(int i){
 	return !used[i];
+}
+
+void renderpm(Board& b, int i){
+	SDL_Rect pRect = { ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+	b.pm[i].render(ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
 }
 
 void randomsecondking(Board& b){
