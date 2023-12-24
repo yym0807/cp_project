@@ -10,13 +10,14 @@ const char side[2][6] = {"white", "black"};
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 extern SDL_Renderer* gRenderer;
+extern int choosing;
 const double bo_w = (double)SCREEN_HEIGHT / 10 * 8, bo_h = (double)SCREEN_HEIGHT / 10 * 8;
-const double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
+const double ori_x = (SCREEN_HEIGHT - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 const double gr_w = bo_w / 8, gr_h = bo_h / 8;
 const double l_w = 1; // line width
 
 // class Piece
-Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si){
+Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si), freeze(0){
 	string str;
 	string fs[2] = {"w.png", "b.png"};
 	switch(pi){
@@ -74,6 +75,15 @@ void Piece::rerender(){
 	}
 }
 
+bool Piece::getfreeze(){
+	return freeze;
+}
+bool Piece::freezed(){
+	freeze = 1;
+}
+bool Piece::unfreezed(){
+	freeze = 0;
+}
 //void Piece::renderxy(int mx, int my){
 //	SDL_Rect pRect = { mx - gr_w / 2, my - gr_h * x / 2, gr_w - l_w, gr_h - l_w };
 //	img.render(mx - gr_w / 2, my - gr_h * x / 2, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
@@ -82,6 +92,7 @@ void Piece::rerender(){
 King::King(int xi, int yi, int si): Piece(xi, yi, KING, si){}
 
 bool King::valid_moves(bool vm[][8], Board &b){
+	if(freeze) return 0;
 	Piece*** board = b.getboard();
 	bool* oo = b.getoo();
 	bool* ooo = b.getooo();
@@ -117,6 +128,7 @@ void King::loadResultImage(std::string str){
 Queen::Queen(int xi, int yi, int si): Piece(xi, yi, QUEEN, si){}
 
 bool Queen::valid_moves(bool vm[][8], Board &b){
+	if(freeze) return 0;
 	Piece*** board = b.getboard();
 	bool flag = 0;
 	for(int i = 0; i < 8; i++){
@@ -134,7 +146,8 @@ bool Queen::valid_moves(bool vm[][8], Board &b){
 				flag = 1;
 				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
 			}
-			break;
+			if(choosing != PENETRATE) break;
+			else t++;
 		}
 	}
 	return flag;
@@ -143,6 +156,7 @@ bool Queen::valid_moves(bool vm[][8], Board &b){
 Rook::Rook(int xi, int yi, int si): Piece(xi, yi, ROOK, si){}
 
 bool Rook::valid_moves(bool vm[][8], Board &b){
+	if(freeze) return 0;
 	Piece*** board = b.getboard();
 	bool flag = 0;
 	for(int i = 0; i < 4; i++){
@@ -160,7 +174,8 @@ bool Rook::valid_moves(bool vm[][8], Board &b){
 				flag = 1;
 				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
 			}
-			break;
+			if(choosing != PENETRATE) break;
+			else t++;
 		}
 	}
 	return flag;
@@ -169,6 +184,7 @@ bool Rook::valid_moves(bool vm[][8], Board &b){
 Knight::Knight(int xi, int yi, int si): Piece(xi, yi, KNIGHT, si){}
 
 bool Knight::valid_moves(bool vm[][8], Board &b){
+	if(freeze) return 0;
 	Piece*** board = b.getboard();
 	bool flag = 0;
 	for(int i = 0; i < 8; i++){
@@ -183,6 +199,7 @@ bool Knight::valid_moves(bool vm[][8], Board &b){
 Bishop::Bishop(int xi, int yi, int si): Piece(xi, yi, BISHOP, si){}
 
 bool Bishop::valid_moves(bool vm[][8], Board &b){
+	if(freeze) return 0;
 	Piece*** board = b.getboard();
 	bool flag = 0;
 	for(int i = 4; i < 8; i++){
@@ -200,7 +217,8 @@ bool Bishop::valid_moves(bool vm[][8], Board &b){
 				flag = 1;
 				vm[x+dirs[i][0]*t][y+dirs[i][1]*t] = 1;
 			}
-			break;
+			if(choosing != PENETRATE) break;
+			else t++;
 		}
 	}
 	return flag;
@@ -209,6 +227,7 @@ bool Bishop::valid_moves(bool vm[][8], Board &b){
 Pawn::Pawn(int xi, int yi, int si): Piece(xi, yi, PAWN, si){}
 
 bool Pawn::valid_moves(bool vm[][8], Board &b){
+	if(freeze) return 0;
 	Piece*** board = b.getboard();
 	int passant = b.getpassant();
 	bool flag = 0;
@@ -222,6 +241,10 @@ bool Pawn::valid_moves(bool vm[][8], Board &b){
 				flag = 1;
 				vm[x+2][y] = 1;
 			}
+		}
+		if(choosing == PENETRATE && x == 1 && *board[x+2][y] == AIR && !b.check_if_move(x, y, x+2, y)){
+			flag = 1;
+			vm[x+2][y] = 1;
 		}
 		if(y < 7 && board[x+1][y+1]->getside() == 0 && !b.check_if_move(x, y, x+1, y+1)){
 			flag = 1;
@@ -246,6 +269,10 @@ bool Pawn::valid_moves(bool vm[][8], Board &b){
 				flag = 1;
 				vm[x-2][y] = 1;
 			}
+		}
+		if(choosing == PENETRATE && x == 6 && *board[x-2][y] == AIR && !b.check_if_move(x, y, x-2, y)){
+			flag = 1;
+			vm[x-2][y] = 1;
 		}
 		if(y < 7 && board[x-1][y+1]->getside() == 1 && !b.check_if_move(x, y, x-1, y+1)){
 			flag = 1;
@@ -357,6 +384,14 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 		oo[turn] = 0;
 		ooo[turn] = 0;
 		turn = !turn;
+		if(choosing == BOMB){
+			delete board[xf][yf];
+			board[xf][yf] = new Air(xf, yf);
+			for(int i = 0; i < 8; i++){
+				delete board[xf+dirs[i][0]][yf+dirs[i][1]];
+				board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+			} 
+		}
 		return 0;
 	}
 	if(*board[xi][yi] == PAWN && xi == 1 + turn * 5){
@@ -375,7 +410,16 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 		SDL_RenderDrawLine( gRenderer, ori_x + gr_w * 8.5, ori_y + gr_h * (4 + turn * 4), ori_x + gr_w * 9.5, ori_y + gr_h * (4 + turn * 4));
 		renderpieces();
 		SDL_RenderPresent( gRenderer );
-		return 1;
+		if(choosing == BOMB){
+			delete board[xf][yf];
+			board[xf][yf] = new Air(xf, yf);
+			for(int i = 0; i < 8; i++){
+				delete board[xf+dirs[i][0]][yf+dirs[i][1]];
+				board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+			}
+			return 0;
+		}
+		else return 1;
 	}
 	if(*board[xi][yi] == PAWN && yi != yf && *board[xf][yf] == AIR){
 		//passant
@@ -386,6 +430,14 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 		board[xi][yi] = new Air(xi, yi);
 		board[xi][yf] = new Air(xi, yf);
 		turn = !turn;
+		if(choosing == BOMB){
+			delete board[xf][yf];
+			board[xf][yf] = new Air(xf, yf);
+			for(int i = 0; i < 8; i++){
+				delete board[xf+dirs[i][0]][yf+dirs[i][1]];
+				board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+			} 
+		}
 		return 0;
 	}
 	if(*board[xi][yi] == KING){
@@ -409,6 +461,14 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 	board[xf][yf] = board[xi][yi];
 	board[xi][yi] = new Air(xi, yi);
 	turn = !turn;
+	if(choosing == BOMB){
+		delete board[xf][yf];
+		board[xf][yf] = new Air(xf, yf);
+		for(int i = 0; i < 8; i++){
+			delete board[xf+dirs[i][0]][yf+dirs[i][1]];
+			board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+		} 
+	}
 	return 0;
 }
 
@@ -582,6 +642,17 @@ void Board::promotion(int x, int y, int s){
 	turn = !turn;
 }
 
+bool Board::king_died(bool side){
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			if(*board[i][j] == KING && board[i][j]->getside() == side){
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
+
 //void Board::renderpm(int i){
 //	SDL_Rect pRect = { ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
 //	pm[i].render(ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
@@ -590,4 +661,41 @@ void Board::promotion(int x, int y, int s){
 void renderpm(Board& b, int i){
 	SDL_Rect pRect = { ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
 	b.pm[i].render(ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * i + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+}
+
+Card::Card(){
+	for(int i = 0; i < 6; i++) used[i] = 0;
+	std::string card_str[3] = {"img/bomb.png", "img/freeze.png", "img/penetrate.png"};
+	for(int i = 0; i < 3; i++){
+		cardimg[i].loadFromFile(card_str[i]);
+		SDL_Rect pRect = { ori_x + gr_w * 9 + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+		cardimg[i].render(ori_x + gr_w * 9 + l_w, ori_y + gr_h * i + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+		cardimg[i+3].loadFromFile(card_str[i]);
+		pRect = { ori_x + gr_w * 9 + l_w, ori_y + gr_h * (i+5) + l_w, gr_w - l_w, gr_h - l_w };
+		cardimg[i+3].render(ori_x + gr_w * 9 + l_w, ori_y + gr_h * (i+5) + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+	}
+}
+
+void Card::rendercards(){
+	std::string card_str[3] = {"img/bomb.png", "img/freeze.png", "img/penetrate.png"};
+	for(int i = 0; i < 3; i++){
+		if(!used[i]){
+			cardimg[i].loadFromFile(card_str[i]);
+			SDL_Rect pRect = { ori_x + gr_w * 9 + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+			cardimg[i].render(ori_x + gr_w * 9 + l_w, ori_y + gr_h * i + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+		}
+		if(!used[i+3]){
+			cardimg[i+3].loadFromFile(card_str[i]);
+			SDL_Rect pRect = { ori_x + gr_w * 9 + l_w, ori_y + gr_h * (i+5) + l_w, gr_w - l_w, gr_h - l_w };
+			cardimg[i+3].render(ori_x + gr_w * 9 + l_w, ori_y + gr_h * (i+5) + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+		}
+	}
+}
+
+void Card::use(int i){
+	used[i] = 1;
+}
+
+bool Card::valid_card(int i){
+	return !used[i];
 }

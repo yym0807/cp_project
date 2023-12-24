@@ -12,9 +12,11 @@ extern const int SCREEN_HEIGHT;
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 750;
 const double bo_w = (double)SCREEN_HEIGHT / 10 * 8, bo_h = (double)SCREEN_HEIGHT / 10 * 8;
-const double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
+const double ori_x = (SCREEN_HEIGHT - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 const double gr_w = bo_w / 8, gr_h = bo_h / 8;
 const double l_w = 1; // line width
+extern int choosing;
+int choosing = NONE;
 
 extern SDL_Window* gWindow;
 extern SDL_Renderer* gRenderer;
@@ -52,6 +54,7 @@ void classic(){
 			int pointed_x = -1, pointed_y = -1;
 			bool mate = 0;
 			
+			
 			//Clear screen
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 			SDL_RenderClear( gRenderer );
@@ -88,8 +91,13 @@ void classic(){
 				num[i].loadFromRenderedText(num_tb[i], 30);
 				num[i].render(ori_x - num[i].getWidth() * 3 / 2, ori_y + gr_h * (7 - i) + (gr_h - alph[i].getHeight()) / 2);
 			}
-			
+//			Image cards;
+//			std::string card_str[3] = {"img/bomb.png", "img/freeze.png", "img/penetrate.png"};
+//			for(int i = 0; i < 3; i++){
+//				
+//			}
 			Board b;
+			Card c;
 			
 			Text result; 
 			
@@ -120,6 +128,32 @@ void classic(){
 									SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 								}
 								SDL_RenderFillRect( gRenderer, &vmRect );
+							}
+						}
+						SDL_Rect csRect = { ori_x + gr_w * 9, ori_y, gr_w * 8 + l_w, gr_h * 8 + l_w };
+						SDL_RenderFillRect( gRenderer, &csRect );
+						if(by >= 9 && by < 10 && bx >= 5 - 5 * b.getturn() && bx <= 7 - 5 * b.getturn() && c.valid_card(bx + 2 * b.getturn() - 2)){
+							printf("%d\n", bx + 2 * b.getturn() - 2);
+							for(int i = 0; i < 8; i++){
+								for(int j = 0; j < 8; j++){
+									vm[i][j] = 0;
+								}
+							}
+							if(choosing == bx + 5 * b.getturn() - 5){
+//								SDL_Rect cRect = { ori_x + gr_w * 9 + l_w, ori_y + gr_h * (bx + 5 * b.getturn() - 5) + l_w, gr_w - l_w, gr_h - l_w };
+//								SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+//								SDL_RenderFillRect( gRenderer, &cRect );
+								clicked = 0;
+								choosing = NONE;
+							}
+							else{
+//								SDL_Rect cRect = { ori_x + gr_w * 9 + l_w, ori_y + gr_h * (bx + 5 * b.getturn() - 5) + l_w, gr_w - l_w, gr_h - l_w };
+//								SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
+//								SDL_RenderFillRect( gRenderer, &cRect );
+								clicked = 1;
+								clicked_x = bx;
+								clicked_y = by;
+								choosing = bx + 5 * b.getturn() - 5;
 							}
 						}
 						if(bx >= 0 && bx < 8 && by >= 0 && by < 8){
@@ -167,7 +201,13 @@ void classic(){
 									}
 									b.promotion(bx, by, bbx - 4 * b.getturn());
 								}
-								if(b.checkmate() || b.stalemate()) mate = 1;
+								choosing = NONE;
+								for(int i = 0; i < 8; i++){
+									for(int j = 0; j < 8; j++){
+										if(b.getboard()[i][j]->getside() == 1-b.getturn()) b.getboard()[i][j]->unfreezed();
+									}
+								}
+								if(b.stalemate() || b.king_died(0) || b.king_died(1)) mate = 1;
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
 										vm[i][j] = 0;
@@ -199,6 +239,10 @@ void classic(){
 									} 
 								}
 							}
+							else if(b.getboard()[bx][by]->getside() == 1 - b.getturn() && choosing == FREEZE){
+								b.getboard()[bx][by]->freezed();
+								c.use(FREEZE + 3 - 3 * b.getturn());
+							}
 						}
 						if(clicked){
 							SDL_Rect cRect = { ori_x + gr_w * clicked_y + l_w, ori_y + gr_h * clicked_x + l_w, gr_w - l_w, gr_h - l_w };
@@ -206,6 +250,7 @@ void classic(){
 							SDL_RenderFillRect( gRenderer, &cRect );
 						}
 						b.renderpieces();
+						c.rendercards();
 						SDL_RenderPresent( gRenderer );
 					}
 					else if(e.type == SDL_MOUSEBUTTONUP){
@@ -227,6 +272,9 @@ void classic(){
 										}
 										SDL_RenderFillRect( gRenderer, &vmRect );
 									}
+								}
+								if(choosing == PENETRATE || choosing == BOMB){
+									c.use(choosing + 3 - 3 * b.getturn());
 								}
 								if(b.move(clicked_x, clicked_y, bx, by)){
 									// promotion
@@ -271,13 +319,19 @@ void classic(){
 									}
 									b.promotion(bx, by, bbx - 4 * b.getturn());
 								}
+								choosing = NONE;
+								for(int i = 0; i < 8; i++){
+									for(int j = 0; j < 8; j++){
+										if(b.getboard()[i][j]->getside() == 1-b.getturn()) b.getboard()[i][j]->unfreezed();
+									}
+								}
 								clicked = 0;
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
 										vm[i][j] = 0;
 									}
 								}
-								if(b.checkmate() || b.stalemate()) mate = 1;
+								if(b.stalemate() || b.king_died(0) || b.king_died(1)) mate = 1;
 								b.renderpieces();
 								SDL_RenderPresent( gRenderer );
 							}
@@ -317,37 +371,38 @@ void classic(){
 					}
 				}
 			}
-			if(b.checkmate()){
-//					const char side[2][6] = {"white", "black"};
-//					printf("Winner is %s\n", side[!b.getturn()]);
-				const std::string side[2] = {"white", "black"};
-				const std::string side_a[2] = {"w", "b"};
-				result.loadFromRenderedText("Winner is " + side[!b.getturn()], 35);
-				result.render((SCREEN_WIDTH - result.getWidth()) / 2, SCREEN_HEIGHT / 20 - result.getHeight() / 2);				
-				int x, y;
-				for(x = 0; x < 8; x++){//找到國王位置 
-					for(y = 0; y < 8; y++){
-						if(*b.getboard()[x][y] == KING && b.getboard()[x][y]->getside() == !b.getturn()) break;
-					}
-					if(y < 8) break;
-				}
-				b.getboard()[x][y]->loadResultImage("img/king_" + side_a[!b.getturn()] + "_win.png");
-				b.getboard()[x][y]->rerender();
-				for(x = 0; x < 8; x++){//找到國王位置 
-					for(y = 0; y < 8; y++){
-						if(*b.getboard()[x][y] == KING && b.getboard()[x][y]->getside() == b.getturn()) break;
-					}
-					if(y < 8) break;
-				}
-				b.getboard()[x][y]->loadResultImage("img/king_" + side_a[b.getturn()] + "_lose.png");
-				b.getboard()[x][y]->rerender();
-				SDL_RenderPresent( gRenderer );	
-			}
-			else if(b.stalemate()){
+			if(b.stalemate() || b.king_died(0) && b.king_died(1)){
 //					printf("It's a stalemate\n");
 				result.loadFromRenderedText("It's a draw", 35);
 				result.render((SCREEN_WIDTH - result.getWidth()) / 2, SCREEN_HEIGHT / 20 - result.getHeight() / 2);
 				SDL_RenderPresent( gRenderer );
+			}
+			else if(b.king_died(0) || b.king_died(1)){
+				bool win_side = b.king_died(0);
+//					const char side[2][6] = {"white", "black"};
+//					printf("Winner is %s\n", side[!b.getturn()]);
+				const std::string side[2] = {"white", "black"};
+				const std::string side_a[2] = {"w", "b"};
+				result.loadFromRenderedText("Winner is " + side[win_side], 35);
+				result.render((SCREEN_WIDTH - result.getWidth()) / 2, SCREEN_HEIGHT / 20 - result.getHeight() / 2);				
+				int x, y;
+				for(x = 0; x < 8; x++){//找到國王位置 
+					for(y = 0; y < 8; y++){
+						if(*b.getboard()[x][y] == KING && b.getboard()[x][y]->getside() == win_side) break;
+					}
+					if(y < 8) break;
+				}
+				b.getboard()[x][y]->loadResultImage("img/king_" + side_a[win_side] + "_win.png");
+				b.getboard()[x][y]->rerender();
+//				for(x = 0; x < 8; x++){//找到國王位置 
+//					for(y = 0; y < 8; y++){
+//						if(*b.getboard()[x][y] == KING && b.getboard()[x][y]->getside() == b.getturn()) break;
+//					}
+//					if(y < 8) break;
+//				}
+//				b.getboard()[x][y]->loadResultImage("img/king_" + side_a[b.getturn()] + "_lose.png");
+//				b.getboard()[x][y]->rerender();
+				SDL_RenderPresent( gRenderer );	
 			}
 			while(!quit && !back){
 				//Handle events on queue
