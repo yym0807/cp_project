@@ -144,14 +144,14 @@ void three_check(){
 															SDL_Rect pRect = { ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * last_bbx + l_w, gr_w - l_w, gr_h - l_w };
 															SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 															SDL_RenderFillRect( gRenderer, &pRect );
-															b.renderpm(last_bbx);
+															renderpm(b, last_bbx);
 														}
 														if((mmx - ori_x) * 2 >= 17 * gr_w && (mmx - ori_x) * 2 <= 19 * gr_w && bbx - 4 * b.getturn() >= 0 && bbx - 4 * b.getturn() <= 3){
 															last_written = 1;
 															SDL_Rect pRect = { ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * bbx + l_w, gr_w - l_w, gr_h - l_w };
 															SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
 															SDL_RenderFillRect( gRenderer, &pRect );
-															b.renderpm(bbx);
+															renderpm(b, bbx);
 														}
 														else{
 															last_written = 0;

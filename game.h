@@ -6,7 +6,12 @@ enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
 
 class Piece;
 
+class Board;
+
+void renderpm(Board&, int);
+
 class Board{
+	friend void renderpm(Board&, int);
 	private:
 		bool oo[2];
 		bool ooo[2];
@@ -32,7 +37,7 @@ class Board{
 //		void print();
 		void renderpieces();
 		void promotion(int, int, int);
-		void renderpm(int);
+//		void renderpm(int);
 };
 
 class Piece{
