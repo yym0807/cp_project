@@ -89,6 +89,13 @@ void three_check(){
 				num[i].loadFromRenderedText(num_tb[i], 30);
 				num[i].render(ori_x - num[i].getWidth() * 3 / 2, ori_y + gr_h * (7 - i) + (gr_h - alph[i].getHeight()) / 2);
 			}
+			Text home;
+			home.loadFromRenderedText("Home", 30);
+			double home_orix =  (ori_x - home.getWidth()) / 2 + 12 * gr_w, home_oriy = (ori_y - home.getHeight()) / 2 + 9 * gr_h;
+			SDL_Rect homeRect = {home_orix, home_oriy, home.getWidth(), home.getHeight()};
+			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+			SDL_RenderDrawRect( gRenderer, &homeRect );
+			home.render(home_orix, home_oriy);
 			
 			Board b;
 			Text result;
@@ -217,6 +224,10 @@ void three_check(){
 						}
 						b.renderpieces();
 						SDL_RenderPresent( gRenderer );
+						int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
+						if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
+							back = 1;
+						}
 					}
 					else if(e.type == SDL_MOUSEBUTTONUP){
 						int mx, my;
@@ -321,13 +332,25 @@ void three_check(){
 								SDL_RenderFillRect( gRenderer, &cRect );
 								b.getboard()[pointed_x][pointed_y]->rerender();
 							}
-							SDL_RenderPresent( gRenderer );
 							pointed_x = bx;
 							pointed_y = by;
 						}
+						int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
+						if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
+							SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
+						}
+						else{
+							SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+						}
+						SDL_RenderDrawRect( gRenderer, &homeRect);
+						home.render(home_orix, home_oriy);
+						SDL_RenderPresent( gRenderer );
 					}
 				}
 			}
+			if(back){
+				return;
+			} 
 			if(b.checkmate() || checkcount[b.getturn()] >= 3){
 //					const char side[2][6] = {"white", "black"};
 //					printf("Winner is %s\n", side[!b.getturn()]);
@@ -367,9 +390,9 @@ void three_check(){
 					if( e.type == SDL_QUIT ){
 						quit = true;
 					}
-					// detect back
 				}
 			}
+			if(back) return;
 		}
 	}
 

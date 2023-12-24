@@ -339,7 +339,6 @@ void classic(){
 								SDL_RenderFillRect( gRenderer, &cRect );
 								b.getboard()[pointed_x][pointed_y]->rerender();
 							}
-							SDL_RenderPresent( gRenderer );
 							pointed_x = bx;
 							pointed_y = by;
 						}
@@ -356,10 +355,7 @@ void classic(){
 					}
 				}
 			}
-			printf("123");
 			if(back){
-				printf("123\n");
-				printf("456\n");
 				return;
 			} 
 			if(b.checkmate()){
@@ -410,7 +406,6 @@ void classic(){
 							back = 1;
 						}
 					}
-					// detect back
 				}
 			}
 			if(back) return;
