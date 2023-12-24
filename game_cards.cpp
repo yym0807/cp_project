@@ -650,7 +650,7 @@ bool Board::king_died(bool side){
 			}
 		}
 	}
-	return 0;
+	return 1;
 }
 
 //void Board::renderpm(int i){

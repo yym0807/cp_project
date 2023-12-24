@@ -130,34 +130,41 @@ void classic(){
 								SDL_RenderFillRect( gRenderer, &vmRect );
 							}
 						}
-						SDL_Rect csRect = { ori_x + gr_w * 9, ori_y, gr_w * 8 + l_w, gr_h * 8 + l_w };
-						SDL_RenderFillRect( gRenderer, &csRect );
+//						SDL_Rect csRect = { ori_x + gr_w * 9, ori_y, gr_w * 8 + l_w, gr_h * 8 + l_w };
+//						SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+//						SDL_RenderFillRect( gRenderer, &csRect );
 						if(by >= 9 && by < 10 && bx >= 5 - 5 * b.getturn() && bx <= 7 - 5 * b.getturn() && c.valid_card(bx + 2 * b.getturn() - 2)){
-							printf("%d\n", bx + 2 * b.getturn() - 2);
 							for(int i = 0; i < 8; i++){
 								for(int j = 0; j < 8; j++){
 									vm[i][j] = 0;
 								}
 							}
 							if(choosing == bx + 5 * b.getturn() - 5){
-//								SDL_Rect cRect = { ori_x + gr_w * 9 + l_w, ori_y + gr_h * (bx + 5 * b.getturn() - 5) + l_w, gr_w - l_w, gr_h - l_w };
-//								SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-//								SDL_RenderFillRect( gRenderer, &cRect );
-								clicked = 0;
+								SDL_Rect csRect = { ori_x + gr_w * 9, ori_y, gr_w * 8 + l_w, gr_h * 8 + l_w };
+								SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+								SDL_RenderFillRect( gRenderer, &csRect );
 								choosing = NONE;
 							}
 							else{
 //								SDL_Rect cRect = { ori_x + gr_w * 9 + l_w, ori_y + gr_h * (bx + 5 * b.getturn() - 5) + l_w, gr_w - l_w, gr_h - l_w };
 //								SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
 //								SDL_RenderFillRect( gRenderer, &cRect );
-								clicked = 1;
-								clicked_x = bx;
-								clicked_y = by;
+								if(choosing != NONE){
+									SDL_Rect csRect = { ori_x + gr_w * 9, ori_y, gr_w * 8 + l_w, gr_h * 8 + l_w };
+									SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+									SDL_RenderFillRect( gRenderer, &csRect );
+								}
 								choosing = bx + 5 * b.getturn() - 5;
+								SDL_Rect cRect = { ori_x + gr_w * 9 + l_w, ori_y + gr_h * bx + l_w, gr_w - l_w, gr_h - l_w };
+								SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
+								SDL_RenderFillRect( gRenderer, &cRect );
 							}
 						}
 						if(bx >= 0 && bx < 8 && by >= 0 && by < 8){
 							if(vm[bx][by]){
+								if(choosing == PENETRATE || choosing == BOMB){
+									c.use(choosing + 3 - 3 * b.getturn());
+								}
 								if(b.move(clicked_x, clicked_y, bx, by)){
 									// promotion
 									int mmx, mmy, bbx, bby, last_bbx = -1, last_written = 0;
@@ -201,7 +208,12 @@ void classic(){
 									}
 									b.promotion(bx, by, bbx - 4 * b.getturn());
 								}
-								choosing = NONE;
+								if(choosing != NONE){
+									SDL_Rect csRect = { ori_x + gr_w * 9, ori_y, gr_w * 8 + l_w, gr_h * 8 + l_w };
+									SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+									SDL_RenderFillRect( gRenderer, &csRect );
+									choosing = NONE;
+								}
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
 										if(b.getboard()[i][j]->getside() == 1-b.getturn()) b.getboard()[i][j]->unfreezed();
@@ -242,6 +254,9 @@ void classic(){
 							else if(b.getboard()[bx][by]->getside() == 1 - b.getturn() && choosing == FREEZE){
 								b.getboard()[bx][by]->freezed();
 								c.use(FREEZE + 3 - 3 * b.getturn());
+								SDL_Rect csRect = { ori_x + gr_w * 9, ori_y, gr_w * 8 + l_w, gr_h * 8 + l_w };
+								SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+								SDL_RenderFillRect( gRenderer, &csRect );
 							}
 						}
 						if(clicked){
@@ -319,7 +334,12 @@ void classic(){
 									}
 									b.promotion(bx, by, bbx - 4 * b.getturn());
 								}
-								choosing = NONE;
+								if(choosing != NONE){
+									SDL_Rect csRect = { ori_x + gr_w * 9, ori_y, gr_w * 8 + l_w, gr_h * 8 + l_w };
+									SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+									SDL_RenderFillRect( gRenderer, &csRect );
+									choosing = NONE;
+								}
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
 										if(b.getboard()[i][j]->getside() == 1-b.getturn()) b.getboard()[i][j]->unfreezed();
