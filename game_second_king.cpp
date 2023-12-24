@@ -20,7 +20,7 @@ const double l_w = 1; // line width
 // class Piece
 Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si){
 	string str;
-	string fs[2] = {"w.bmp", "b.bmp"};
+	string fs[2] = {"w.png", "b.png"};
 	switch(pi){
 		case KING:
 			str = "img/king_" + fs[si];
@@ -315,14 +315,14 @@ Board::Board(){
 	board[0][a] = new King(0, a, 1);
 	board[7][a] = new King(7, a, 0);
 	
-	pm[0].loadFromFile("img/queen_w.bmp");
-	pm[1].loadFromFile("img/rook_w.bmp");
-	pm[2].loadFromFile("img/knight_w.bmp");
-	pm[3].loadFromFile("img/bishop_w.bmp");
-	pm[4].loadFromFile("img/queen_b.bmp");
-	pm[5].loadFromFile("img/rook_b.bmp");
-	pm[6].loadFromFile("img/knight_b.bmp");
-	pm[7].loadFromFile("img/bishop_b.bmp");
+	pm[0].loadFromFile("img/queen_w.png");
+	pm[1].loadFromFile("img/rook_w.png");
+	pm[2].loadFromFile("img/knight_w.png");
+	pm[3].loadFromFile("img/bishop_w.png");
+	pm[4].loadFromFile("img/queen_b.png");
+	pm[5].loadFromFile("img/rook_b.png");
+	pm[6].loadFromFile("img/knight_b.png");
+	pm[7].loadFromFile("img/bishop_b.png");
 }
 
 Board::~Board(){
