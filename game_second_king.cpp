@@ -65,9 +65,9 @@ int Piece::getside(){
 	return side;
 }
 
-int Piece::getname(){
-	return p;
-}
+//int Piece::getname(){
+//	return p;
+//}
 
 void Piece::rerender(){
 	if(p != AIR){
@@ -107,6 +107,13 @@ bool King::valid_moves(bool vm[][8], Board &b){
 		}
 	}
 	return flag;
+}
+
+//loadResultImage
+void King::loadResultImage(std::string str){
+	img.loadFromFile(str);
+//	SDL_Rect pRect{}
+//	img.render(ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
 }
 
 Queen::Queen(int xi, int yi, int si): Piece(xi, yi, QUEEN, si){}
@@ -433,13 +440,14 @@ bool Board::checked(bool side){
 		}
 		if(y[0] < 8) break;
 	}
+	y[1] = y[0] + 1;
 	for(x[1] = x[0]; x[1] < 8; x[1]++){//§ä¨ì°ê¤ý¦ì¸m 
-		for(y[1] = y[0] + 1; y[1] < 8; y[1]++){
+		for(; y[1] < 8; y[1]++){
 			if(*board[x[1]][y[1]] == KING && board[x[1]][y[1]]->getside() == side) break;
 		}
 		if(y[1] < 8) break;
+		y[1] = 0;
 	}
-	cout << x[0] << ' ' << y[0] << ' ' << x[1] << ' ' << y[1] << '\n'; 
 	for(int g = 0; g < 2; g++){
 		for(int i = 0; i < 8; i++){//king check
 			if(x[g]+dirs[i][0] >= 0 && x[g]+dirs[i][0] < 8 && y[g]+dirs[i][1] >= 0 && y[g]+dirs[i][1] < 8){

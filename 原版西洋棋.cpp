@@ -42,6 +42,7 @@ void classic(){
 		else{	
 			//Main loop flag
 			bool quit = false;
+			bool back = false;
 			//Event handler
 			SDL_Event e;
 			
@@ -50,7 +51,6 @@ void classic(){
 			int clicked_x, clicked_y;
 			int pointed_x = -1, pointed_y = -1;
 			bool mate = 0;
-			bool showwinner = 1;
 			
 			//Clear screen
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -96,7 +96,7 @@ void classic(){
 			//Update screen
 			SDL_RenderPresent( gRenderer );
 			
-			while(!quit && !mate){
+			while(!quit && !back && !mate){
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
@@ -317,8 +317,7 @@ void classic(){
 					}
 				}
 			}
-			if(showwinner && b.checkmate()){
-				showwinner = 0;
+			if(b.checkmate()){
 //					const char side[2][6] = {"white", "black"};
 //					printf("Winner is %s\n", side[!b.getturn()]);
 				const std::string side[2] = {"white", "black"};
@@ -344,21 +343,20 @@ void classic(){
 				b.getboard()[x][y]->rerender();
 				SDL_RenderPresent( gRenderer );	
 			}
-			else if(showwinner && b.stalemate()){
-				showwinner = 0;
+			else if(b.stalemate()){
 //					printf("It's a stalemate\n");
 				result.loadFromRenderedText("It's a draw", 35);
 				result.render((SCREEN_WIDTH - result.getWidth()) / 2, SCREEN_HEIGHT / 20 - result.getHeight() / 2);
 				SDL_RenderPresent( gRenderer );
 			}
-			while(!quit){
+			while(!quit && !back){
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
 					if( e.type == SDL_QUIT ){
 						quit = true;
 					}
-					// detect quit
+					// detect back
 				}
 			}
 		}

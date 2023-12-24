@@ -39,10 +39,10 @@ void three_check(){
 		if( !loadMedia() ){
 			printf( "Failed to load media!\n" );
 		}
-		else{	
+		else{
 			//Main loop flag
 			bool quit = false;
-
+			bool back = false;
 			//Event handler
 			SDL_Event e;
 			
@@ -52,7 +52,6 @@ void three_check(){
 			int pointed_x = -1, pointed_y = -1;
 			bool mate = 0;
 			int checkcount[2] = {};
-			bool showwinner = 1;
 			
 			//Clear screen
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -96,7 +95,7 @@ void three_check(){
 			//Update screen
 			SDL_RenderPresent( gRenderer );
 			
-			while(!quit && !mate && checkcount[b.getturn()] < 3){
+			while(!quit && !back && !mate && checkcount[b.getturn()] < 3){
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
@@ -317,8 +316,7 @@ void three_check(){
 					}
 				}
 			}
-			if(showwinner && (b.checkmate() || checkcount[b.getturn()] >= 3)){
-				showwinner = 0;
+			if(b.checkmate() || checkcount[b.getturn()] >= 3){
 //					const char side[2][6] = {"white", "black"};
 //					printf("Winner is %s\n", side[!b.getturn()]);
 				const std::string side[2] = {"white", "black"};
@@ -344,21 +342,20 @@ void three_check(){
 				b.getboard()[x][y]->rerender();
 				SDL_RenderPresent( gRenderer );	
 			}
-			else if(showwinner && b.stalemate()){
-				showwinner = 0;
+			else if(b.stalemate()){
 //					printf("It's a stalemate\n");
 				result.loadFromRenderedText("It's a draw", 35);
 				result.render((SCREEN_WIDTH - result.getWidth()) / 2, SCREEN_HEIGHT / 20 - result.getHeight() / 2);
 				SDL_RenderPresent( gRenderer );
 			}
-			while(!quit){
+			while(!quit && !back){
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
 					if( e.type == SDL_QUIT ){
 						quit = true;
 					}
-					// detect quit
+					// detect back
 				}
 			}
 		}
