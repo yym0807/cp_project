@@ -33,16 +33,16 @@ extern TTF_Font* gFont;
 int chance[2] = {3, 3};
 std::string life[4] = {"0", "1", "2", "3"};
 Text life_w, life_b;
-SDL_Rect space = {ori_x + bo_w + 100, ori_y, 150, bo_h};
+SDL_Rect space = {ori_x + bo_w + 150, ori_y, 150, bo_h};
 
 void showchance(){
 	SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderFillRect( gRenderer, &space );
 	SDL_RenderPresent( gRenderer );
 	life_w.loadFromRenderedText("life: " + life[chance[0]], 50);
-	life_w.render(ori_x + bo_w + 100, ori_y + bo_h / 4 * 3);
+	life_w.render(ori_x + bo_w + 150, ori_y + bo_h / 4 * 3);
 	life_b.loadFromRenderedText("life: " + life[chance[1]], 50);
-	life_b.render(ori_x + bo_w + 100, ori_y + bo_h / 4);
+	life_b.render(ori_x + bo_w + 150, ori_y + bo_h / 4);
 	SDL_RenderPresent( gRenderer );
 //	printf("%d%d", chance[0], chance[1]);
 }
@@ -83,6 +83,7 @@ void colorblindness(){
 			for(int i = 0; i < 8; i++){
 				b.getboard()[1][i]->reloadImage("img/pawn_w.png");
 			}
+			b.changepmtowhite();
 			//Clear screen
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 			SDL_RenderClear( gRenderer );
@@ -212,7 +213,7 @@ void colorblindness(){
 									}
 									b.promotion(bx, by, bbx - 4 * b.getturn());
 								}
-								if(*b.getboard()[bx][by] == PAWN)
+								if(*b.getboard()[bx][by] == PAWN) b.getboard()[bx][by]->reloadImage("img/pawn_w.png"); 
 								clicked = 0;
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
@@ -252,7 +253,7 @@ void colorblindness(){
 										} 
 									}
 								}
-								else{
+								else if(b.getboard()[bx][by]->getside() == 1 - b.getturn()){
 									chance[b.getturn()]--;
 									showchance();
 									if(!chance[0] || !chance[1]) mate = 1;

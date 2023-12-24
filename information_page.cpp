@@ -33,7 +33,7 @@ void information_page(){
 		"        2. Penetrate: One of your pieces can penetrate any pieces for one round.",
 		"        3. Bomb: All the pieces on the 9 squares around it (include itself) disappear.",
 		"Blindfolded: All you can see is a board. Play the game without seeing pieces.",
-		"Color Blindness: All pieces have the same color."
+		"Color Blindness: All pieces have the same color. Don't make more than 3 mistakes."
 	};
 	//Load media
 	if( !loadMedia() )
@@ -54,7 +54,7 @@ void information_page(){
 		title.loadFromRenderedText("Information", 60);
 		title.render(( SCREEN_WIDTH  - title.getWidth()  ) / 2, SCREEN_HEIGHT / 20);
 		for(int i = 0; i < 9; i++){
-			mode[i].loadFromRenderedText(mode_text[i], 28);
+			mode[i].loadFromRenderedText(mode_text[i], 25);
 			mode[i].render(15, SCREEN_HEIGHT / 12 + title.getHeight() + i * mode[i].getHeight() * 2);
 		}
 		

@@ -719,6 +719,13 @@ bool Board::king_died(bool side){
 	return 1;
 }
 
+void Board::changepmtowhite(){
+	pm[4].loadFromFile("img/queen_w.png");
+	pm[5].loadFromFile("img/rook_w.png");
+	pm[6].loadFromFile("img/knight_w.png");
+	pm[7].loadFromFile("img/bishop_w.png");
+}
+
 Card::Card(){
 	for(int i = 0; i < 6; i++) used[i] = 0;
 	std::string card_str[3] = {"img/bomb.png", "img/freeze.png", "img/penetrate.png"};

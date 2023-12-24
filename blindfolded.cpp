@@ -124,6 +124,7 @@ void blindfolded(){
 					if(bx >= 0 && bx < 8 && by >= 0 && by < 8){
 						if(vm[bx][by]){
 							if(b.move(clicked_x, clicked_y, bx, by)){
+								b.getboard()[bx][by]->reloadImage("img/pawn_w.png");
 								// promotion
 								int mmx, mmy, bbx, bby, last_bbx = -1, last_written = 0;
 								bool selected = 0;
@@ -163,6 +164,11 @@ void blindfolded(){
 									}
 								}
 								b.promotion(bx, by, bbx - 4 * b.getturn());
+								printf("%d %d\n", bx, by);
+								if(*b.getboard()[bx][by] == KNIGHT) b.getboard()[bx][by]->reloadImage("img/knight_w.png");
+								if(*b.getboard()[bx][by] == BISHOP) b.getboard()[bx][by]->reloadImage("img/bishop_w.png");
+								if(*b.getboard()[bx][by] == ROOK) b.getboard()[bx][by]->reloadImage("img/rook_w.png");
+								if(*b.getboard()[bx][by] == QUEEN) b.getboard()[bx][by]->reloadImage("img/queen_w.png");
 							}
 							SDL_Rect vmRect = { ori_x + gr_w * by + l_w, ori_y + gr_h * bx + l_w, gr_w - l_w, gr_h - l_w };
 							if(bx + by & 1){
@@ -287,6 +293,11 @@ void blindfolded(){
 									}
 								}
 								b.promotion(bx, by, bbx - 4 * b.getturn());
+								printf("*%d %d\n", bx, by);
+								if(*b.getboard()[bx][by] == KNIGHT) b.getboard()[bx][by]->reloadImage("img/knight_w.png");
+								if(*b.getboard()[bx][by] == BISHOP) b.getboard()[bx][by]->reloadImage("img/bishop_w.png");
+								if(*b.getboard()[bx][by] == ROOK) b.getboard()[bx][by]->reloadImage("img/rook_w.png");
+								if(*b.getboard()[bx][by] == QUEEN) b.getboard()[bx][by]->reloadImage("img/queen_w.png");
 							}
 							SDL_Rect vmRect = { ori_x + gr_w * by + l_w, ori_y + gr_h * bx + l_w, gr_w - l_w, gr_h - l_w };
 							if(bx + by & 1){

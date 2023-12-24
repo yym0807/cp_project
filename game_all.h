@@ -52,6 +52,7 @@ class Board{
 		void renderpieces();
 		void promotion(int, int, int);
 		bool king_died(bool);
+		void changepmtowhite();
 };
 
 class Piece{
