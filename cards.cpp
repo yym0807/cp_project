@@ -207,6 +207,7 @@ void cards(){
 									}
 									b.promotion(bx, by, bbx - 4 * b.getturn());
 								}
+								clicked = 0;
 								if(choosing != NONE){
 									SDL_Rect csRect = { ori_x + gr_w * 9, ori_y, gr_w * 8 + l_w, gr_h * 8 + l_w };
 									SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
