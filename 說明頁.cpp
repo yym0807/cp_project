@@ -30,9 +30,9 @@ int main( int argc, char* args[] )
 		"3 Check: Don't be checkmated. Also, don't be checked 3 times.",
 		"Second King: Choose another piece to be your second king.",
 		"Card Chess: You have several cards to help you beat your opponent:",
-		"1. Freeze: Freeze a piece of your opponent for one round.",
-		"2. Penetrate: One of your pieces can penetrate any pieces for one round.",
-		"3. Bomb: All the pieces on the 9 squares around it (include itself) disappear.",
+		"        1. Freeze: Freeze a piece of your opponent for one round.",
+		"        2. Penetrate: One of your pieces can penetrate any pieces for one round.",
+		"        3. Bomb: All the pieces on the 9 squares around it (include itself) disappear.",
 		"Blindfolded: All you can see is a board. Play the game without seeing pieces.",
 		"Color Blindness: All pieces have the same color."
 	};
