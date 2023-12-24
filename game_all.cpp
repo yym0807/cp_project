@@ -464,8 +464,10 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 			delete board[xf][yf];
 			board[xf][yf] = new Air(xf, yf);
 			for(int i = 0; i < 8; i++){
-				delete board[xf+dirs[i][0]][yf+dirs[i][1]];
-				board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+				if(xf+dirs[i][0] >= 0 && xf+dirs[i][0] < 8 && yf+dirs[i][1] >= 0 && yf+dirs[i][1] < 8){
+					delete board[xf+dirs[i][0]][yf+dirs[i][1]];
+					board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+				}
 			} 
 		}
 		return 0;
@@ -490,8 +492,10 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 			delete board[xf][yf];
 			board[xf][yf] = new Air(xf, yf);
 			for(int i = 0; i < 8; i++){
-				delete board[xf+dirs[i][0]][yf+dirs[i][1]];
-				board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+				if(xf+dirs[i][0] >= 0 && xf+dirs[i][0] < 8 && yf+dirs[i][1] >= 0 && yf+dirs[i][1] < 8){
+					delete board[xf+dirs[i][0]][yf+dirs[i][1]];
+					board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+				}
 			}
 			return 0;
 		}
@@ -510,8 +514,10 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 			delete board[xf][yf];
 			board[xf][yf] = new Air(xf, yf);
 			for(int i = 0; i < 8; i++){
-				delete board[xf+dirs[i][0]][yf+dirs[i][1]];
-				board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+				if(xf+dirs[i][0] >= 0 && xf+dirs[i][0] < 8 && yf+dirs[i][1] >= 0 && yf+dirs[i][1] < 8){
+					delete board[xf+dirs[i][0]][yf+dirs[i][1]];
+					board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+				}
 			} 
 		}
 		return 0;
@@ -541,8 +547,10 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 		delete board[xf][yf];
 		board[xf][yf] = new Air(xf, yf);
 		for(int i = 0; i < 8; i++){
-			delete board[xf+dirs[i][0]][yf+dirs[i][1]];
-			board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+			if(xf+dirs[i][0] >= 0 && xf+dirs[i][0] < 8 && yf+dirs[i][1] >= 0 && yf+dirs[i][1] < 8){
+				delete board[xf+dirs[i][0]][yf+dirs[i][1]];
+				board[xf+dirs[i][0]][yf+dirs[i][1]] = new Air(xf+dirs[i][0], yf+dirs[i][1]);
+			}
 		} 
 	}
 	return 0;
