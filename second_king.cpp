@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string>
 #include <cmath>
-#include "game.h"
-#include "game_second_king.h"
+#include "game_all.h"
+//#include "game_second_king.h"
 #include "LTexture.h"
 
 
@@ -13,7 +13,7 @@ extern const int SCREEN_HEIGHT;
 //const int SCREEN_WIDTH = 1000;
 //const int SCREEN_HEIGHT = 750;
 const double bo_w = (double)SCREEN_HEIGHT / 10 * 8, bo_h = (double)SCREEN_HEIGHT / 10 * 8;
-const double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
+const double ori_x = (SCREEN_HEIGHT - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 const double gr_w = bo_w / 8, gr_h = bo_h / 8;
 const double l_w = 1; // line width
 
@@ -87,8 +87,10 @@ void second_king(){
 				num[i].loadFromRenderedText(num_tb[i], 30);
 				num[i].render(ori_x - num[i].getWidth() * 3 / 2, ori_y + gr_h * (7 - i) + (gr_h - alph[i].getHeight()) / 2);
 			}
-			Board b;
 			
+			Board b;
+			// get random second king
+			randomsecondking(b);
 			Text result;
 			//Update screen
 			SDL_RenderPresent( gRenderer );

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string>
 #include <cmath>
-#include "game.h"
+#include "game_all.h"
 #include "LTexture.h"
 #include "three_check.h"
 
@@ -13,7 +13,7 @@ extern const int SCREEN_HEIGHT;
 //const int SCREEN_WIDTH = 1000;
 //const int SCREEN_HEIGHT = 750;
 const double bo_w = (double)SCREEN_HEIGHT / 10 * 8, bo_h = (double)SCREEN_HEIGHT / 10 * 8;
-const double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
+const double ori_x = (SCREEN_HEIGHT - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 const double gr_w = bo_w / 8, gr_h = bo_h / 8;
 const double l_w = 1; // line width
 
@@ -32,7 +32,7 @@ extern TTF_Font* gFont;
 
 void three_check(){
 	//Start up SDL and create window
-	if( !init() ){
+	if( 3 > 5 ){
 		printf( "Failed to initialize!\n" );
 	}
 	else{
@@ -104,6 +104,7 @@ void three_check(){
 						quit = true;
 					}
 					else if(e.type == SDL_MOUSEBUTTONDOWN){
+						printf("AB\n");
 						clicked = 0;
 						int mx, my;
 						SDL_GetMouseState(&mx, &my);

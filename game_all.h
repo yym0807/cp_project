@@ -1,5 +1,5 @@
-#ifndef GAME_CARD_H
-#define GAME_CARD_H
+#ifndef GAME_ALL_H
+#define GAME_ALL_H
 
 #include "LTexture.h" 
 enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
@@ -10,6 +10,8 @@ class Piece;
 class Board;
 
 void renderpm(Board&, int);
+
+void randomsecondking(Board&);
 
 class Card{
 	private:
@@ -66,7 +68,7 @@ class Piece{
 	public:
 		Piece(int, int, int, int);
 		~Piece();
-		virtual bool valid_moves(bool [][8], Board&){return 0;}
+		virtual bool valid_moves(bool [][8], Board&, bool consider_check = 1){return 0;}
 		bool operator==(int);
 		void setxy(int, int);
 		int getside();
@@ -84,44 +86,44 @@ class Piece{
 class King: public Piece{
 	public:
 		King(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		bool valid_moves(bool [][8], Board&, bool consider_check = 1);
 		void loadResultImage(std::string);
 };
 
 class Queen: public Piece{
 	public:
 		Queen(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		bool valid_moves(bool [][8], Board&, bool consider_check = 1);
 };
 
 class Rook: public Piece{
 	public:
 		Rook(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		bool valid_moves(bool [][8], Board&, bool consider_check = 1);
 };
 
 class Knight: public Piece{
 	public:
 		Knight(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		bool valid_moves(bool [][8], Board&, bool consider_check = 1);
 };
 
 class Bishop: public Piece{
 	public:
 		Bishop(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		bool valid_moves(bool [][8], Board&, bool consider_check = 1);
 };
 
 class Pawn: public Piece{
 	public:
 		Pawn(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		bool valid_moves(bool [][8], Board&, bool consider_check = 1);
 };
 
 class Air: public Piece{
 	public:
 		Air(int, int);
-		bool valid_moves(bool [][8], Board&);
+		bool valid_moves(bool [][8], Board&, bool consider_check = 1);
 };
 
 #endif

@@ -320,21 +320,6 @@ Board1::Board1(){
 			board[j][i] = new Air1(j, i);
 		}
 	}
-	srand(time(0));
-	int a = rand() % 7;
-	a += (a >= 4);
-	delete board[0][a];
-	delete board[7][a];
-	SDL_Rect cRect = { ori_x + gr_w * a + l_w, ori_y + l_w, gr_w - l_w, gr_h - l_w };
-	if(a & 1) SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
-	else SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	SDL_RenderFillRect( gRenderer, &cRect );
-	cRect = { ori_x + gr_w * a + l_w, ori_y + gr_h * 7 + l_w, gr_w - l_w, gr_h - l_w };
-	if(a & 1) SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	else SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
-	SDL_RenderFillRect( gRenderer, &cRect );
-	board[0][a] = new King1(0, a, 1);
-	board[7][a] = new King1(7, a, 0);
 	
 	pm[0].loadFromFile("img/queen_w.png");
 	pm[1].loadFromFile("img/rook_w.png");

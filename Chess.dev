@@ -51,7 +51,7 @@ AutoIncBuildNr=0
 SyncProduct=1
 
 [Unit4]
-FileName=information_page.h
+FileName=game_all.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -61,7 +61,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=LTexture.h
+FileName=classic.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -71,7 +71,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=second_king.h
+FileName=information_page.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -81,17 +81,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=second_king.h
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit6]
-FileName=three_check.cpp
+FileName=cards.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -101,7 +91,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=game.cpp
+FileName=second_king.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -111,7 +101,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=game.h
+FileName=second_king.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -131,7 +121,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit10]
-FileName=classic.h
+FileName=three_check.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -141,7 +131,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=second_king.cpp
+FileName=cards.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -150,8 +140,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
-FileName=second_king.cpp
+[Unit3]
+FileName=game_all.cpp
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit7]
+FileName=main.cpp
 CompileCpp=1
 Folder=
 Compile=1

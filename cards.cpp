@@ -3,37 +3,36 @@
 #include <stdio.h>
 #include <string>
 #include <cmath>
-#include "game_cards.h"
+#include "game_all.h"
 #include "LTexture.h"
 
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
-const int SCREEN_WIDTH = 1000;
-const int SCREEN_HEIGHT = 750;
+//const int SCREEN_WIDTH = 1000;
+//const int SCREEN_HEIGHT = 750;
 const double bo_w = (double)SCREEN_HEIGHT / 10 * 8, bo_h = (double)SCREEN_HEIGHT / 10 * 8;
 const double ori_x = (SCREEN_HEIGHT - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 const double gr_w = bo_w / 8, gr_h = bo_h / 8;
 const double l_w = 1; // line width
 extern int choosing;
-int choosing = NONE;
 
 extern SDL_Window* gWindow;
 extern SDL_Renderer* gRenderer;
 extern TTF_Font* gFont;
 
 //The window we'll be rendering to
-SDL_Window* gWindow = NULL;
+//SDL_Window* gWindow = NULL;
 
 //The window renderer
-SDL_Renderer* gRenderer = NULL;
+//SDL_Renderer* gRenderer = NULL;
 
 //Globally used font
-TTF_Font* gFont = NULL;
+//TTF_Font* gFont = NULL;
 
-void classic(){
+void cards(){
 	//Start up SDL and create window
-	if( !init() ){
+	if( 3 > 5 ){
 		printf( "Failed to initialize!\n" );
 	}
 	else{
@@ -235,7 +234,7 @@ void classic(){
 								clicked = 1;
 								clicked_x = bx;
 								clicked_y = by;
-								b.getboard()[bx][by]->valid_moves(vm, b);
+								b.getboard()[bx][by]->valid_moves(vm, b, 0);
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
 										if(vm[i][j]){
@@ -439,9 +438,4 @@ void classic(){
 
 	//Free resources and close SDL
 	close();
-}
-
-int main( int argc, char* args[] ){
-	classic();
-	return 0;
 }

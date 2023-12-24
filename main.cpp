@@ -8,7 +8,8 @@
 #include "classic.h"
 #include "three_check.h"
 #include "second_king.h"
-#include "information_page.h" 
+#include "cards.h"
+#include "information_page.h"
 //enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
@@ -131,13 +132,16 @@ int main( int argc, char* args[] )
 								case 0:
 									classic();
 //									printf("123");
-//									break;
+									break;
 								case 1:		
 									three_check();
-//									break;
+									break;
 								case 2:
 									second_king();
-//									break;
+									break;
+								case 3:
+									cards();
+									break;
 													
 							}
 							
