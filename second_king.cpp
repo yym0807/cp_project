@@ -103,7 +103,7 @@ void second_king(){
 			//Update screen
 			SDL_RenderPresent( gRenderer );
 			
-			while(!quit && !mate){
+			while(!quit && !mate && !back){
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
