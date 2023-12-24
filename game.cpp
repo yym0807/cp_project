@@ -63,9 +63,9 @@ int Piece::getside(){
 	return side;
 }
 
-int Piece::getname(){
-	return p;
-}
+//int Piece::getname(){
+//	return p;
+//}
 
 void Piece::rerender(){
 	if(p != AIR){
@@ -108,10 +108,11 @@ bool King::valid_moves(bool vm[][8], Board &b){
 }
 
 //loadResultImage
-//void King::loadResultImage(std::string str){
-//	img.loadFromFile(str);
-//	img.render(ori_x + gr_w * yi + l_w, ori_y + gr_h * xi + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
-//}
+void King::loadResultImage(std::string str){
+	img.loadFromFile(str);
+//	SDL_Rect pRect{}
+//	img.render(ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+}
 
 Queen::Queen(int xi, int yi, int si): Piece(xi, yi, QUEEN, si){}
 

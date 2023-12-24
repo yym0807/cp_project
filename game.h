@@ -55,8 +55,9 @@ class Piece{
 		bool operator==(int);
 		void setxy(int, int);
 		int getside();
-		int getname();
+//		int getname();
 		void rerender();
+		virtual void loadResultImage(std::string){}
 //		void renderxy(int, int);
 };
 
@@ -66,7 +67,7 @@ class King: public Piece{
 	public:
 		King(int, int, int);
 		bool valid_moves(bool [][8], Board&);
-//		void loadResultImage(std::string);
+		void loadResultImage(std::string);
 };
 
 class Queen: public Piece{
