@@ -68,7 +68,7 @@ void information_page(){
 				mode[i].render(15, SCREEN_HEIGHT / 12 + title.getHeight() + i * mode[i].getHeight() * 2);
 			}
 			
-			back.loadFromRenderedText("Back", 30);
+			back.loadFromRenderedText("Home", 30);
 			double back_orix =  SCREEN_WIDTH  - back.getWidth() * 1.25, back_oriy = SCREEN_HEIGHT - back.getHeight() * 1.5;
 			SDL_Rect backRect = {back_orix, back_oriy, back.getWidth(), back.getHeight()};
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );

@@ -3,14 +3,15 @@
 #include <stdio.h>
 #include <string>
 #include <cmath>
-#include "game_second_king.h"
+#include "game.h"
+#include "classic.h"
 #include "LTexture.h"
 
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
-const int SCREEN_WIDTH = 1000;
-const int SCREEN_HEIGHT = 750;
+//const int SCREEN_WIDTH = 1000;
+//const int SCREEN_HEIGHT = 750;
 const double bo_w = (double)SCREEN_HEIGHT / 10 * 8, bo_h = (double)SCREEN_HEIGHT / 10 * 8;
 const double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 const double gr_w = bo_w / 8, gr_h = bo_h / 8;
@@ -21,17 +22,17 @@ extern SDL_Renderer* gRenderer;
 extern TTF_Font* gFont;
 
 //The window we'll be rendering to
-SDL_Window* gWindow = NULL;
+//SDL_Window* gWindow = NULL;
 
 //The window renderer
-SDL_Renderer* gRenderer = NULL;
+//SDL_Renderer* gRenderer = NULL;
 
 //Globally used font
-TTF_Font* gFont = NULL;
+//TTF_Font* gFont = NULL;
 
 void classic(){
 	//Start up SDL and create window
-	if( !init() ){
+	if( 3 > 5 ){
 		printf( "Failed to initialize!\n" );
 	}
 	else{
@@ -42,6 +43,7 @@ void classic(){
 		else{	
 			//Main loop flag
 			bool quit = false;
+			bool back = false;
 			//Event handler
 			SDL_Event e;
 			
@@ -78,6 +80,7 @@ void classic(){
 			
 			//add a~h 1~8 
 			Text alph[8], num[8];
+//			LTexture alph[8], num[8];
 			std::string alph_tb[8] = {"a", "b", "c", "d", "e", "f", "g", "h"};
 			std::string num_tb[8] = {"1", "2", "3", "4", "5", "6", "7", "8"};
 			for(int i = 0; i < 8; i++){
@@ -86,13 +89,27 @@ void classic(){
 				num[i].loadFromRenderedText(num_tb[i], 30);
 				num[i].render(ori_x - num[i].getWidth() * 3 / 2, ori_y + gr_h * (7 - i) + (gr_h - alph[i].getHeight()) / 2);
 			}
-			Board b;
 			
-			Text result;
+			Text home;
+			home.loadFromRenderedText("Home", 30);
+			double home_orix =  (ori_x  - home.getWidth()) / 2, home_oriy = (ori_y - home.getHeight()) / 2;
+			SDL_Rect homeRect = {home_orix, home_oriy, home.getWidth(), home.getHeight()};
+			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+			SDL_RenderDrawRect( gRenderer, &homeRect );
+			home.render(home_orix, home_oriy);
+			
+			
+			
+			
+			Board b;
+				
+			Text result; 
+			
 			//Update screen
 			SDL_RenderPresent( gRenderer );
 			
-			while(!quit && !mate){
+			while(!quit && !back && !mate){
+//			while(!quit && !mate){
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
@@ -103,6 +120,7 @@ void classic(){
 						clicked = 0;
 						int mx, my;
 						SDL_GetMouseState(&mx, &my);
+	
 						int by = (mx - ori_x) / gr_w, bx = (my - ori_y) / gr_h;
 						if(mx < ori_x) by--;
 						if(my < ori_y) bx--;
@@ -142,6 +160,7 @@ void classic(){
 														SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 														SDL_RenderFillRect( gRenderer, &pRect );
 														renderpm(b, last_bbx);
+//															b.renderpm(last_bbx);
 													}
 													if((mmx - ori_x) * 2 >= 17 * gr_w && (mmx - ori_x) * 2 <= 19 * gr_w && bbx - 4 * b.getturn() >= 0 && bbx - 4 * b.getturn() <= 3){
 														last_written = 1;
@@ -149,6 +168,7 @@ void classic(){
 														SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
 														SDL_RenderFillRect( gRenderer, &pRect );
 														renderpm(b, bbx);
+//															b.renderpm(bbx);
 													}
 													else{
 														last_written = 0;
@@ -201,6 +221,11 @@ void classic(){
 						}
 						b.renderpieces();
 						SDL_RenderPresent( gRenderer );
+						int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
+						if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
+							back = 1;
+						}
+
 					}
 					else if(e.type == SDL_MOUSEBUTTONUP){
 						int mx, my;
@@ -308,9 +333,24 @@ void classic(){
 							pointed_x = bx;
 							pointed_y = by;
 						}
+						int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
+						if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
+							SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
+						}
+						else{
+							SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+						}
+						SDL_RenderDrawRect( gRenderer, &homeRect);
+						home.render(home_orix, home_oriy);
+						SDL_RenderPresent( gRenderer );
 					}
 				}
 			}
+			printf("123");
+			if(back){
+				
+				return;
+			} 
 			if(b.checkmate()){
 //					const char side[2][6] = {"white", "black"};
 //					printf("Winner is %s\n", side[!b.getturn()]);
@@ -327,31 +367,11 @@ void classic(){
 				}
 				b.getboard()[x][y]->loadResultImage("img/king_" + side_a[!b.getturn()] + "_win.png");
 				b.getboard()[x][y]->rerender();
-				y++;
-				for(; x < 8; x++){//找到國王位置 
-					for(; y < 8; y++){
-						if(*b.getboard()[x][y] == KING && b.getboard()[x][y]->getside() == !b.getturn()) break;
-					}
-					if(y < 8) break;
-					y = 0;
-				}
-				b.getboard()[x][y]->loadResultImage("img/king_" + side_a[!b.getturn()] + "_win.png");
-				b.getboard()[x][y]->rerender();
 				for(x = 0; x < 8; x++){//找到國王位置 
 					for(y = 0; y < 8; y++){
 						if(*b.getboard()[x][y] == KING && b.getboard()[x][y]->getside() == b.getturn()) break;
 					}
 					if(y < 8) break;
-				}
-				b.getboard()[x][y]->loadResultImage("img/king_" + side_a[b.getturn()] + "_lose.png");
-				b.getboard()[x][y]->rerender();
-				y++;
-				for(; x < 8; x++){//找到國王位置 
-					for(; y < 8; y++){
-						if(*b.getboard()[x][y] == KING && b.getboard()[x][y]->getside() == b.getturn()) break;
-					}
-					if(y < 8) break;
-					y = 0;
 				}
 				b.getboard()[x][y]->loadResultImage("img/king_" + side_a[b.getturn()] + "_lose.png");
 				b.getboard()[x][y]->rerender();
@@ -363,16 +383,26 @@ void classic(){
 				result.render((SCREEN_WIDTH - result.getWidth()) / 2, SCREEN_HEIGHT / 20 - result.getHeight() / 2);
 				SDL_RenderPresent( gRenderer );
 			}
-			while(!quit){
+			while(!quit && !back){
+//			while(!quit){
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
 					if( e.type == SDL_QUIT ){
 						quit = true;
 					}
-					// detect quit
+					else if(e.type == SDL_MOUSEBUTTONDOWN){
+						int mx, my;
+						SDL_GetMouseState(&mx, &my);
+						int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
+						if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
+							back = 1;
+						}
+					}
+					// detect back
 				}
 			}
+			if(back) return;
 		}
 	}
 
@@ -380,7 +410,7 @@ void classic(){
 	close();
 }
 
-int main( int argc, char* args[] ){
-	classic();
-	return 0;
-}
+//int main( int argc, char* args[] ){
+//	classic();
+//	return 0;
+//}

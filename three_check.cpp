@@ -5,12 +5,13 @@
 #include <cmath>
 #include "game.h"
 #include "LTexture.h"
+#include "three_check.h"
 
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
-const int SCREEN_WIDTH = 1000;
-const int SCREEN_HEIGHT = 750;
+//const int SCREEN_WIDTH = 1000;
+//const int SCREEN_HEIGHT = 750;
 const double bo_w = (double)SCREEN_HEIGHT / 10 * 8, bo_h = (double)SCREEN_HEIGHT / 10 * 8;
 const double ori_x = (SCREEN_WIDTH - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 const double gr_w = bo_w / 8, gr_h = bo_h / 8;
@@ -21,15 +22,15 @@ extern SDL_Renderer* gRenderer;
 extern TTF_Font* gFont;
 
 //The window we'll be rendering to
-SDL_Window* gWindow = NULL;
+//SDL_Window* gWindow = NULL;
 
 //The window renderer
-SDL_Renderer* gRenderer = NULL;
+//SDL_Renderer* gRenderer = NULL;
 
 //Globally used font
-TTF_Font* gFont = NULL;
+//TTF_Font* gFont = NULL;
 
-void classic(){
+void three_check(){
 	//Start up SDL and create window
 	if( !init() ){
 		printf( "Failed to initialize!\n" );
@@ -39,7 +40,7 @@ void classic(){
 		if( !loadMedia() ){
 			printf( "Failed to load media!\n" );
 		}
-		else{	
+		else{
 			//Main loop flag
 			bool quit = false;
 			bool back = false;
@@ -51,6 +52,7 @@ void classic(){
 			int clicked_x, clicked_y;
 			int pointed_x = -1, pointed_y = -1;
 			bool mate = 0;
+			int checkcount[2] = {};
 			
 			//Clear screen
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -79,7 +81,6 @@ void classic(){
 			
 			//add a~h 1~8 
 			Text alph[8], num[8];
-//			LTexture alph[8], num[8];
 			std::string alph_tb[8] = {"a", "b", "c", "d", "e", "f", "g", "h"};
 			std::string num_tb[8] = {"1", "2", "3", "4", "5", "6", "7", "8"};
 			for(int i = 0; i < 8; i++){
@@ -90,13 +91,12 @@ void classic(){
 			}
 			
 			Board b;
-			
-			Text result; 
-			
+			Text result;
+			 
 			//Update screen
 			SDL_RenderPresent( gRenderer );
 			
-			while(!quit && !back && !mate){
+			while(!quit && !back && !mate && checkcount[b.getturn()] < 3){
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
@@ -146,7 +146,6 @@ void classic(){
 														SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 														SDL_RenderFillRect( gRenderer, &pRect );
 														renderpm(b, last_bbx);
-//															b.renderpm(last_bbx);
 													}
 													if((mmx - ori_x) * 2 >= 17 * gr_w && (mmx - ori_x) * 2 <= 19 * gr_w && bbx - 4 * b.getturn() >= 0 && bbx - 4 * b.getturn() <= 3){
 														last_written = 1;
@@ -154,7 +153,6 @@ void classic(){
 														SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
 														SDL_RenderFillRect( gRenderer, &pRect );
 														renderpm(b, bbx);
-//															b.renderpm(bbx);
 													}
 													else{
 														last_written = 0;
@@ -168,6 +166,7 @@ void classic(){
 									b.promotion(bx, by, bbx - 4 * b.getturn());
 								}
 								if(b.checkmate() || b.stalemate()) mate = 1;
+								if(b.checked(b.getturn())) checkcount[b.getturn()]++;
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
 										vm[i][j] = 0;
@@ -278,6 +277,7 @@ void classic(){
 									}
 								}
 								if(b.checkmate() || b.stalemate()) mate = 1;
+								if(b.checked(b.getturn())) checkcount[b.getturn()]++;
 								b.renderpieces();
 								SDL_RenderPresent( gRenderer );
 							}
@@ -317,7 +317,7 @@ void classic(){
 					}
 				}
 			}
-			if(b.checkmate()){
+			if(b.checkmate() || checkcount[b.getturn()] >= 3){
 //					const char side[2][6] = {"white", "black"};
 //					printf("Winner is %s\n", side[!b.getturn()]);
 				const std::string side[2] = {"white", "black"};
@@ -366,7 +366,7 @@ void classic(){
 	close();
 }
 
-int main( int argc, char* args[] ){
-	classic();
-	return 0;
-}
+//int main( int argc, char* args[] ){
+//	three_check();
+//	return 0;
+//}

@@ -2,27 +2,27 @@
 #define GAME_S_K_H
 
 #include "LTexture.h" 
-enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
+//enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
 
-class Piece;
+class Piece1;
 
-class Board;
+class Board1;
 
-void renderpm(Board&, int);
+void renderpm(Board1&, int);
 
-class Board{
-	friend void renderpm(Board&, int);
+class Board1{
+	friend void renderpm(Board1&, int);
 	private:
 		bool oo[2];
 		bool ooo[2];
 		bool turn; // 0: white 1: black
 		int passant;
-		Piece*** board;
+		Piece1*** board;
 		Image pm[8]; // for promotion
 	public:
-		Board();
-		~Board();
-		Piece***& getboard();
+		Board1();
+		~Board1();
+		Piece1***& getboard();
 		bool move(int, int, int, int);
 		bool checked(bool side);
 		bool check_if_move(int, int, int, int);
@@ -38,7 +38,7 @@ class Board{
 		void promotion(int, int, int);
 };
 
-class Piece{
+class Piece1{
 	protected:
 		int p;
 		int side; // 0 for white, 1 for black, -1 for air
@@ -46,9 +46,9 @@ class Piece{
 		int y; // a ~ h
 		Image img;
 	public:
-		Piece(int, int, int, int);
-		~Piece();
-		virtual bool valid_moves(bool [][8], Board&){return 0;}
+		Piece1(int, int, int, int);
+		~Piece1();
+		virtual bool valid_moves(bool [][8], Board1&){return 0;}
 		bool operator==(int);
 		void setxy(int, int);
 		int getside();
@@ -60,47 +60,47 @@ class Piece{
 
 
 
-class King: public Piece{
+class King1: public Piece1{
 	public:
-		King(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		King1(int, int, int);
+		bool valid_moves(bool [][8], Board1&);
 		void loadResultImage(std::string);
 };
 
-class Queen: public Piece{
+class Queen1: public Piece1{
 	public:
-		Queen(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		Queen1(int, int, int);
+		bool valid_moves(bool [][8], Board1&);
 };
 
-class Rook: public Piece{
+class Rook1: public Piece1{
 	public:
-		Rook(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		Rook1(int, int, int);
+		bool valid_moves(bool [][8], Board1&);
 };
 
-class Knight: public Piece{
+class Knight1: public Piece1{
 	public:
-		Knight(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		Knight1(int, int, int);
+		bool valid_moves(bool [][8], Board1&);
 };
 
-class Bishop: public Piece{
+class Bishop1: public Piece1{
 	public:
-		Bishop(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		Bishop1(int, int, int);
+		bool valid_moves(bool [][8], Board1&);
 };
 
-class Pawn: public Piece{
+class Pawn1: public Piece1{
 	public:
-		Pawn(int, int, int);
-		bool valid_moves(bool [][8], Board&);
+		Pawn1(int, int, int);
+		bool valid_moves(bool [][8], Board1&);
 };
 
-class Air: public Piece{
+class Air1: public Piece1{
 	public:
-		Air(int, int);
-		bool valid_moves(bool [][8], Board&);
+		Air1(int, int);
+		bool valid_moves(bool [][8], Board1&);
 };
 
 #endif
