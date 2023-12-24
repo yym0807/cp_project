@@ -229,6 +229,7 @@ void cards(){
 								}
 							}
 							else if(b.getboard()[bx][by]->getside() == 1 - b.getturn() && choosing == FREEZE){
+								choosing = NONE;
 								b.getboard()[bx][by]->freezed();
 								c.use(FREEZE + 3 - 3 * b.getturn());
 								SDL_Rect csRect = { ori_x + gr_w * 9, ori_y, gr_w * 8 + l_w, gr_h * 8 + l_w };
