@@ -174,29 +174,38 @@ void three_check(){
 									}
 								}
 							}
-							else if(b.getboard()[bx][by]->getside() == b.getturn()){
+							else{
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
 										vm[i][j] = 0;
 									}
 								}
-								clicked = 1;
-								clicked_x = bx;
-								clicked_y = by;
-								b.getboard()[bx][by]->valid_moves(vm, b, 1);
-								for(int i = 0; i < 8; i++){
-									for(int j = 0; j < 8; j++){
-										if(vm[i][j]){
-											SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
-											if(i + j & 1){
-												SDL_SetRenderDrawColor( gRenderer, 0xDD, 0xAA, 0xDD, 0xFF );
+								if(b.getboard()[bx][by]->getside() == b.getturn()){
+									clicked = 1;
+									clicked_x = bx;
+									clicked_y = by;
+									b.getboard()[bx][by]->valid_moves(vm, b, 1);
+									for(int i = 0; i < 8; i++){
+										for(int j = 0; j < 8; j++){
+											if(vm[i][j]){
+												SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+												if(i + j & 1){
+													SDL_SetRenderDrawColor( gRenderer, 0xDD, 0xAA, 0xDD, 0xFF );
+												}
+												else{
+													SDL_SetRenderDrawColor( gRenderer, 0xFC, 0xDD, 0xFC, 0xFF );
+												}
+												SDL_RenderFillRect( gRenderer, &vmRect );
 											}
-											else{
-												SDL_SetRenderDrawColor( gRenderer, 0xFC, 0xDD, 0xFC, 0xFF );
-											}
-											SDL_RenderFillRect( gRenderer, &vmRect );
-										}
-									} 
+										} 
+									}
+								}
+							} 
+						}
+						else{
+							for(int i = 0; i < 8; i++){
+								for(int j = 0; j < 8; j++){
+									vm[i][j] = 0;
 								}
 							}
 						}

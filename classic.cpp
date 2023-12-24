@@ -182,35 +182,39 @@ void classic(){
 									b.promotion(bx, by, bbx - 4 * b.getturn());
 								}
 								if(b.checkmate() || b.stalemate()) mate = 1;
+							}
+							else{
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
 										vm[i][j] = 0;
+									}
+								}
+								if(b.getboard()[bx][by]->getside() == b.getturn()){
+									clicked = 1;
+									clicked_x = bx;
+									clicked_y = by;
+									b.getboard()[bx][by]->valid_moves(vm, b, 1);
+									for(int i = 0; i < 8; i++){
+										for(int j = 0; j < 8; j++){
+											if(vm[i][j]){
+												SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+												if(i + j & 1){
+													SDL_SetRenderDrawColor( gRenderer, 0xDD, 0xAA, 0xDD, 0xFF );
+												}
+												else{
+													SDL_SetRenderDrawColor( gRenderer, 0xFC, 0xDD, 0xFC, 0xFF );
+												}
+												SDL_RenderFillRect( gRenderer, &vmRect );
+											}
+										} 
 									}
 								}
 							}
-							else if(b.getboard()[bx][by]->getside() == b.getturn()){
-								for(int i = 0; i < 8; i++){
-									for(int j = 0; j < 8; j++){
-										vm[i][j] = 0;
-									}
-								}
-								clicked = 1;
-								clicked_x = bx;
-								clicked_y = by;
-								b.getboard()[bx][by]->valid_moves(vm, b, 1);
-								for(int i = 0; i < 8; i++){
-									for(int j = 0; j < 8; j++){
-										if(vm[i][j]){
-											SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
-											if(i + j & 1){
-												SDL_SetRenderDrawColor( gRenderer, 0xDD, 0xAA, 0xDD, 0xFF );
-											}
-											else{
-												SDL_SetRenderDrawColor( gRenderer, 0xFC, 0xDD, 0xFC, 0xFF );
-											}
-											SDL_RenderFillRect( gRenderer, &vmRect );
-										}
-									} 
+						}
+						else{
+							for(int i = 0; i < 8; i++){
+								for(int j = 0; j < 8; j++){
+									vm[i][j] = 0;
 								}
 							}
 						}
@@ -222,7 +226,7 @@ void classic(){
 						b.renderpieces();
 						SDL_RenderPresent( gRenderer );
 						int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
-						if(mx >= home_orix && cx == 12 && my >= home_oriy && cy == 9){
+						if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
 							back = 1;
 						}
 
@@ -348,7 +352,8 @@ void classic(){
 			}
 			printf("123");
 			if(back){
-				
+				printf("123\n");
+				printf("456\n");
 				return;
 			} 
 			if(b.checkmate()){
