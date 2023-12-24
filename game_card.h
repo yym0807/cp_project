@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef GAME_CARD_H
+#define GAME_CARD_H
 
 #include "LTexture.h" 
 enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
