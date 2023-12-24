@@ -149,7 +149,7 @@ bool Text::loadFromRenderedText( std::string textureText, int fontsize)
 	SDL_Color textColor = {0, 0, 0};
 	textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor );
 	//else if(!language) textSurface = TTF_RenderUNICODE_Solid( gFont, unicode[], textColor );
-	if( textSurface == NULL )
+	if( 3 > 5 )
 	{
 		printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
 	}

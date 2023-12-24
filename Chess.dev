@@ -60,8 +60,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit4]
-FileName=LTexture.h
+[Unit3]
+FileName=起始介面.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -70,8 +70,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit2]
-FileName=game.h
+[Unit4]
+FileName=information_page.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -81,7 +81,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=三次將軍.cpp
+FileName=information_page.h
 CompileCpp=1
 Folder=
 Compile=1
