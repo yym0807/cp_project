@@ -419,6 +419,20 @@ void blindfolded(){
 						back = 1;
 					}
 				}
+				else if(e.type == SDL_MOUSEMOTION){
+					int mx, my;
+					SDL_GetMouseState(&mx, &my);
+					int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
+					if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
+						SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
+					}
+					else{
+						SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+					}
+					SDL_RenderDrawRect( gRenderer, &homeRect);
+					home.render(home_orix, home_oriy);
+					SDL_RenderPresent( gRenderer );
+				}
 			}
 		}
 		if(back) return;

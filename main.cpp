@@ -150,16 +150,13 @@ int main( int argc, char* args[] )
 							}
 							
 						}
-						
 						int cx = (mx - info_orix) / info.getWidth(), cy = (my - info_oriy) / info.getHeight();
 						if(mx >= info_orix && cx == 0 && my >= info_oriy && cy == 0){
 							information_page();
-							
 						}
 						reset();
 					}
-				}				
-				
+				}
 				SDL_RenderPresent( gRenderer );
 			}
 		}
