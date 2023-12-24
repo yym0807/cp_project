@@ -82,10 +82,67 @@ bool Piece::getfreeze(){
 	return freeze;
 }
 bool Piece::freezed(){
+	string str;
+	string fs[2] = {"w_frozen.png", "b_frozen.png"};
+	switch(p){
+		case KING:
+			str = "img/king_" + fs[side];
+			break;
+		case QUEEN:
+			str = "img/queen_" + fs[side];
+			break;
+		case ROOK:
+			str = "img/rook_" + fs[side];
+			break;
+		case BISHOP:
+			str = "img/bishop_" + fs[side];
+			break;
+		case KNIGHT:
+			str = "img/knight_" + fs[side];
+			break;
+		case PAWN:
+			str = "img/pawn_" + fs[side];
+			break;
+	}
+	if(p != AIR){
+		img.loadFromFile(str);
+		SDL_Rect pRect = { ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, gr_w - l_w, gr_h - l_w };
+		img.render(ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+	}
 	freeze = 1;
 }
 bool Piece::unfreezed(){
-	freeze = 0;
+	if(freeze){
+		freeze = 0;
+		string str;
+		string fs[2] = {"w.png", "b.png"};
+		switch(p){
+			case KING:
+				str = "img/king_" + fs[side];
+				break;
+			case QUEEN:
+				str = "img/queen_" + fs[side];
+				break;
+			case ROOK:
+				str = "img/rook_" + fs[side];
+				break;
+			case BISHOP:
+				str = "img/bishop_" + fs[side];
+				break;
+			case KNIGHT:
+				str = "img/knight_" + fs[side];
+				break;
+			case PAWN:
+				str = "img/pawn_" + fs[side];
+				break;
+		}
+		if(p != AIR){
+			img.loadFromFile(str);
+			SDL_Rect pRect = { ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, gr_w - l_w, gr_h - l_w };
+			img.render(ori_x + gr_w * y + l_w, ori_y + gr_h * x + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+		}
+	}
+	
 }
 //void Piece::renderxy(int mx, int my){
 //	SDL_Rect pRect = { mx - gr_w / 2, my - gr_h * x / 2, gr_w - l_w, gr_h - l_w };
@@ -187,13 +244,11 @@ bool Rook::valid_moves(bool vm[][8], Board &b, bool consider_check){
 Knight::Knight(int xi, int yi, int si): Piece(xi, yi, KNIGHT, si){}
 
 bool Knight::valid_moves(bool vm[][8], Board &b, bool consider_check){
-	printf("*%d\n", consider_check);
 	if(freeze) return 0;
 	Piece*** board = b.getboard();
 	bool flag = 0;
 	for(int i = 0; i < 8; i++){
 		if(x+h[i][0] >= 0 && x+h[i][0] < 8 && y+h[i][1] >= 0 && y+h[i][1] < 8 && board[x+h[i][0]][y+h[i][1]]->getside() != side && !(consider_check && b.check_if_move(x, y, x+h[i][0], y+h[i][1]))){
-			printf("%d\n",b.check_if_move(x, y, x+h[i][0], y+h[i][1]));
 			flag = 1;
 			vm[x+h[i][0]][y+h[i][1]] = 1;
 		}
