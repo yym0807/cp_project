@@ -10,25 +10,25 @@
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
-const int SCREEN_WIDTH = 1000;
-const int SCREEN_HEIGHT = 750;
+//const int SCREEN_WIDTH = 1000;
+//const int SCREEN_HEIGHT = 750;
 const double bo_w = (double)SCREEN_HEIGHT / 10 * 8, bo_h = (double)SCREEN_HEIGHT / 10 * 8;
 const double ori_x = (SCREEN_HEIGHT - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 const double gr_w = bo_w / 8, gr_h = bo_h / 8;
 const double l_w = 1; // line width
 
-//extern SDL_Window* gWindow;
-//extern SDL_Renderer* gRenderer;
-//extern TTF_Font* gFont;
+extern SDL_Window* gWindow;
+extern SDL_Renderer* gRenderer;
+extern TTF_Font* gFont;
 
 //The window we'll be rendering to
-SDL_Window* gWindow = NULL;
+//SDL_Window* gWindow = NULL;
 
 //The window renderer
-SDL_Renderer* gRenderer = NULL;
+//SDL_Renderer* gRenderer = NULL;
 
 //Globally used font
-TTF_Font* gFont = NULL;
+//TTF_Font* gFont = NULL;
 
 void blindfolded(){
 	//Start up SDL and create window
@@ -53,6 +53,8 @@ void blindfolded(){
 			int pointed_x = -1, pointed_y = -1;
 			bool mate = 0;
 			
+			Board b;
+			b.unloadimage();
 			//Clear screen
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 			SDL_RenderClear( gRenderer );
@@ -101,8 +103,6 @@ void blindfolded(){
 			
 			
 			
-			Board b;
-			b.unloadimage();
 			
 			
 				
@@ -113,7 +113,6 @@ void blindfolded(){
 			
 			while(!quit && !back && !mate){
 //			while(!quit && !mate){
-				b.unloadimage();
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
@@ -185,36 +184,54 @@ void blindfolded(){
 									}
 									b.promotion(bx, by, bbx - 4 * b.getturn());
 								}
-								if(b.checkmate() || b.stalemate()) mate = 1;
+								SDL_Rect vmRect = { ori_x + gr_w * by + l_w, ori_y + gr_h * bx + l_w, gr_w - l_w, gr_h - l_w };
+								if(bx + by & 1){
+									SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+								}
+								else{
+									SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+								}
+								SDL_RenderFillRect( gRenderer, &vmRect );
+								clicked = 0;
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
 										vm[i][j] = 0;
+									}
+								}
+								if(b.checkmate() || b.stalemate()) mate = 1;
+							}
+							else{
+								for(int i = 0; i < 8; i++){
+									for(int j = 0; j < 8; j++){
+										vm[i][j] = 0;
+									}
+								}
+								if(b.getboard()[bx][by]->getside() == b.getturn()){
+									clicked = 1;
+									clicked_x = bx;
+									clicked_y = by;
+									b.getboard()[bx][by]->valid_moves(vm, b, 1);
+									for(int i = 0; i < 8; i++){
+										for(int j = 0; j < 8; j++){
+											if(vm[i][j]){
+												SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
+												if(i + j & 1){
+													SDL_SetRenderDrawColor( gRenderer, 0xDD, 0xAA, 0xDD, 0xFF );
+												}
+												else{
+													SDL_SetRenderDrawColor( gRenderer, 0xFC, 0xDD, 0xFC, 0xFF );
+												}
+												SDL_RenderFillRect( gRenderer, &vmRect );
+											}
+										} 
 									}
 								}
 							}
-							else if(b.getboard()[bx][by]->getside() == b.getturn()){
-								for(int i = 0; i < 8; i++){
-									for(int j = 0; j < 8; j++){
-										vm[i][j] = 0;
-									}
-								}
-								clicked = 1;
-								clicked_x = bx;
-								clicked_y = by;
-								b.getboard()[bx][by]->valid_moves(vm, b, 1);
-								for(int i = 0; i < 8; i++){
-									for(int j = 0; j < 8; j++){
-										if(vm[i][j]){
-											SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
-											if(i + j & 1){
-												SDL_SetRenderDrawColor( gRenderer, 0xDD, 0xAA, 0xDD, 0xFF );
-											}
-											else{
-												SDL_SetRenderDrawColor( gRenderer, 0xFC, 0xDD, 0xFC, 0xFF );
-											}
-											SDL_RenderFillRect( gRenderer, &vmRect );
-										}
-									} 
+						}
+						else{
+							for(int i = 0; i < 8; i++){
+								for(int j = 0; j < 8; j++){
+									vm[i][j] = 0;
 								}
 							}
 						}
@@ -223,10 +240,10 @@ void blindfolded(){
 							SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
 							SDL_RenderFillRect( gRenderer, &cRect );
 						}
-						b.renderpieces();
+//						b.renderpieces();
 						SDL_RenderPresent( gRenderer );
 						int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
-						if(mx >= home_orix && cx == 12 && my >= home_oriy && cy == 9){
+						if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
 							back = 1;
 						}
 
@@ -294,6 +311,14 @@ void blindfolded(){
 									}
 									b.promotion(bx, by, bbx - 4 * b.getturn());
 								}
+								SDL_Rect vmRect = { ori_x + gr_w * by + l_w, ori_y + gr_h * bx + l_w, gr_w - l_w, gr_h - l_w };
+								if(bx + by & 1){
+									SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+								}
+								else{
+									SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+								}
+								SDL_RenderFillRect( gRenderer, &vmRect );
 								clicked = 0;
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
@@ -301,7 +326,7 @@ void blindfolded(){
 									}
 								}
 								if(b.checkmate() || b.stalemate()) mate = 1;
-								b.renderpieces();
+//								b.renderpieces();
 								SDL_RenderPresent( gRenderer );
 							}
 						}
@@ -317,7 +342,7 @@ void blindfolded(){
 								SDL_Rect cRect = { ori_x + gr_w * by + l_w, ori_y + gr_h * bx + l_w, gr_w - l_w, gr_h - l_w };
 								SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x99, 0x99, 0xFF );
 								SDL_RenderFillRect( gRenderer, &cRect );
-								b.getboard()[bx][by]->rerender();
+//								b.getboard()[bx][by]->rerender();
 							}
 							if(pointed_x >= 0 && pointed_x < 8 && pointed_y >= 0 && pointed_y < 8){
 								SDL_Rect cRect = { ori_x + gr_w * pointed_y + l_w, ori_y + gr_h * pointed_x + l_w, gr_w - l_w, gr_h - l_w };
@@ -331,9 +356,8 @@ void blindfolded(){
 									else SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 								}
 								SDL_RenderFillRect( gRenderer, &cRect );
-								b.getboard()[pointed_x][pointed_y]->rerender();
+//								b.getboard()[pointed_x][pointed_y]->rerender();
 							}
-							SDL_RenderPresent( gRenderer );
 							pointed_x = bx;
 							pointed_y = by;
 						}
@@ -350,11 +374,9 @@ void blindfolded(){
 					}
 				}
 			}
-//			printf("123");
 			if(back){
-				
 				return;
-			}
+			} 
 			
 			const std::string side_a[2] = {"w", "b"};
 			for(int x = 0; x < 8; x++){

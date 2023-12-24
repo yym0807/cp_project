@@ -9,6 +9,7 @@
 #include "three_check.h"
 #include "second_king.h"
 #include "cards.h"
+#include "blindfolded.h"
 #include "information_page.h"
 //enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
 extern const int SCREEN_WIDTH;
@@ -141,6 +142,9 @@ int main( int argc, char* args[] )
 									break;
 								case 3:
 									cards();
+									break;
+								case 4:
+									blindfolded();
 									break;
 													
 							}
