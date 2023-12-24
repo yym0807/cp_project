@@ -172,6 +172,17 @@ void colorblindness(){
 							if(vm[bx][by]){
 								if(b.move(clicked_x, clicked_y, bx, by)){
 									// promotion
+									SDL_Rect pRect = { ori_x + gr_w * by + l_w, ori_y + gr_h * bx + l_w, gr_w - l_w, gr_h - l_w };
+									if(bx + by & 1){
+										SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+									}
+									else{
+										SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+									}
+									SDL_RenderFillRect( gRenderer, &pRect );
+									b.getboard()[bx][by]->reloadImage("img/pawn_w.png");
+									b.getboard()[bx][by]->rerender();
+									SDL_RenderPresent( gRenderer );
 									int mmx, mmy, bbx, bby, last_bbx = -1, last_written = 0;
 									bool selected = 0;
 									while(!selected){
@@ -212,8 +223,22 @@ void colorblindness(){
 										}
 									}
 									b.promotion(bx, by, bbx - 4 * b.getturn());
+									if(*b.getboard()[bx][by] == KNIGHT) b.getboard()[bx][by]->reloadImage("img/knight_w.png");
+									if(*b.getboard()[bx][by] == BISHOP) b.getboard()[bx][by]->reloadImage("img/bishop_w.png");
+									if(*b.getboard()[bx][by] == ROOK) b.getboard()[bx][by]->reloadImage("img/rook_w.png");
+									if(*b.getboard()[bx][by] == QUEEN) b.getboard()[bx][by]->reloadImage("img/queen_w.png");
 								}
-								if(*b.getboard()[bx][by] == PAWN) b.getboard()[bx][by]->reloadImage("img/pawn_w.png"); 
+								if(*b.getboard()[bx][by] == PAWN){
+									SDL_Rect pRect = { ori_x + gr_w * by + l_w, ori_y + gr_h * bx + l_w, gr_w - l_w, gr_h - l_w };
+									if(bx + by & 1){
+										SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+									}
+									else{
+										SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+									}
+									SDL_RenderFillRect( gRenderer, &pRect );
+									b.getboard()[bx][by]->reloadImage("img/pawn_w.png"); 
+								}
 								clicked = 0;
 								for(int i = 0; i < 8; i++){
 									for(int j = 0; j < 8; j++){
@@ -302,6 +327,17 @@ void colorblindness(){
 								}
 								if(b.move(clicked_x, clicked_y, bx, by)){
 									// promotion
+									SDL_Rect pRect = { ori_x + gr_w * by + l_w, ori_y + gr_h * bx + l_w, gr_w - l_w, gr_h - l_w };
+									if(bx + by & 1){
+										SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+									}
+									else{
+										SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+									}
+									SDL_RenderFillRect( gRenderer, &pRect );
+									b.getboard()[bx][by]->reloadImage("img/pawn_w.png");
+									b.getboard()[bx][by]->rerender();
+									SDL_RenderPresent( gRenderer );
 									int mmx, mmy, bbx, bby, last_bbx = -1, last_written = 0;
 									bool selected = 0;
 									while(!selected){
@@ -342,6 +378,21 @@ void colorblindness(){
 										}
 									}
 									b.promotion(bx, by, bbx - 4 * b.getturn());
+									if(*b.getboard()[bx][by] == KNIGHT) b.getboard()[bx][by]->reloadImage("img/knight_w.png");
+									if(*b.getboard()[bx][by] == BISHOP) b.getboard()[bx][by]->reloadImage("img/bishop_w.png");
+									if(*b.getboard()[bx][by] == ROOK) b.getboard()[bx][by]->reloadImage("img/rook_w.png");
+									if(*b.getboard()[bx][by] == QUEEN) b.getboard()[bx][by]->reloadImage("img/queen_w.png");
+								}
+								if(*b.getboard()[bx][by] == PAWN){
+									SDL_Rect pRect = { ori_x + gr_w * by + l_w, ori_y + gr_h * bx + l_w, gr_w - l_w, gr_h - l_w };
+									if(bx + by & 1){
+										SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
+									}
+									else{
+										SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+									}
+									SDL_RenderFillRect( gRenderer, &pRect );
+									b.getboard()[bx][by]->reloadImage("img/pawn_w.png"); 
 								}
 								clicked = 0;
 								for(int i = 0; i < 8; i++){
@@ -449,6 +500,20 @@ void colorblindness(){
 							back = 1;
 						}
 					}
+					else if(e.type == SDL_MOUSEMOTION){
+						int mx, my;
+						SDL_GetMouseState(&mx, &my);
+						int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
+						if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
+							SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
+						}
+						else{
+							SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+						}
+						SDL_RenderDrawRect( gRenderer, &homeRect);
+						home.render(home_orix, home_oriy);
+						SDL_RenderPresent( gRenderer );
+					}
 				}
 			}
 			if(back) return;
@@ -459,7 +524,3 @@ void colorblindness(){
 	close();
 }
 
-//int main( int argc, char* args[] ){
-//	classic();
-//	return 0;
-//}
