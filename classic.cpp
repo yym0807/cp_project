@@ -92,7 +92,7 @@ void classic(){
 			
 			Text home;
 			home.loadFromRenderedText("Home", 30);
-			double home_orix =  (ori_x  - home.getWidth()) / 2, home_oriy = (ori_y - home.getHeight()) / 2;
+			double home_orix =  (ori_x - home.getWidth()) / 2 + 12 * gr_w, home_oriy = (ori_y - home.getHeight()) / 2 + 9 * gr_h;
 			SDL_Rect homeRect = {home_orix, home_oriy, home.getWidth(), home.getHeight()};
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 			SDL_RenderDrawRect( gRenderer, &homeRect );
@@ -222,7 +222,7 @@ void classic(){
 						b.renderpieces();
 						SDL_RenderPresent( gRenderer );
 						int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
-						if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
+						if(mx >= home_orix && cx == 12 && my >= home_oriy && cy == 9){
 							back = 1;
 						}
 
