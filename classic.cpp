@@ -334,7 +334,7 @@ void classic(){
 							pointed_y = by;
 						}
 						int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
-						if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
+						if(mx >= home_orix && cx == 12 && my >= home_oriy && cy == 9){
 							SDL_SetRenderDrawColor( gRenderer, 0xFF, 0x00, 0x00, 0xFF );
 						}
 						else{
@@ -395,7 +395,7 @@ void classic(){
 						int mx, my;
 						SDL_GetMouseState(&mx, &my);
 						int cx = (mx - home_orix) / home.getWidth(), cy = (my - home_oriy) / home.getHeight();
-						if(mx >= home_orix && cx == 0 && my >= home_oriy && cy == 0){
+						if(mx >= home_orix && cx == 9 && my >= home_oriy && cy == 12){
 							back = 1;
 						}
 					}
