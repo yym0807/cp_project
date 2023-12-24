@@ -66,6 +66,7 @@ class King: public Piece{
 	public:
 		King(int, int, int);
 		bool valid_moves(bool [][8], Board&);
+//		void loadResultImage(std::string);
 };
 
 class Queen: public Piece{

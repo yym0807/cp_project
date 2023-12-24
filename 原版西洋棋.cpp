@@ -90,6 +90,9 @@ void classic(){
 			}
 			
 			Board b;
+			
+			Text result; 
+			
 			//Update screen
 			SDL_RenderPresent( gRenderer );
 			
@@ -269,12 +272,29 @@ void classic(){
 				}
 				if(showwinner && b.checkmate()){
 					showwinner = 0;
-					const char side[2][6] = {"white", "black"};
-					printf("Winner is %s\n", side[!b.getturn()]);
+//					const char side[2][6] = {"white", "black"};
+//					printf("Winner is %s\n", side[!b.getturn()]);
+					const std::string side[2] = {"white", "black"};
+					result.loadFromRenderedText("Winner is " + side[!b.getturn()], 35);
+					result.render((SCREEN_WIDTH - result.getWidth()) / 2, SCREEN_HEIGHT / 20 - result.getHeight() / 2);				
+//					int x, y;
+//					for(x = 0; x < 8; x++){//§ä¨ì°ê¤ý¦ì¸m 
+//						for(y = 0; y < 8; y++){
+//							if(b.getboard()[x][y]->getname() == KING && b.getboard()[x][y]->getside() == !b.getturn()) break;
+//						}
+//						if(y < 8) break;
+//					}
+					
+					
+					
+					SDL_RenderPresent( gRenderer );	
 				}
 				else if(showwinner && b.stalemate()){
 					showwinner = 0;
-					printf("It's a stalemate\n");
+//					printf("It's a stalemate\n");
+					result.loadFromRenderedText("It's a draw", 35);
+					result.render((SCREEN_WIDTH - result.getWidth()) / 2, SCREEN_HEIGHT / 20 - result.getHeight() / 2);
+					SDL_RenderPresent( gRenderer );
 				}
 			}
 		}

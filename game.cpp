@@ -107,6 +107,12 @@ bool King::valid_moves(bool vm[][8], Board &b){
 	return flag;
 }
 
+//loadResultImage
+//void King::loadResultImage(std::string str){
+//	img.loadFromFile(str);
+//	img.render(ori_x + gr_w * yi + l_w, ori_y + gr_h * xi + l_w, NULL, 0.0, NULL, SDL_FLIP_NONE, &pRect);
+//}
+
 Queen::Queen(int xi, int yi, int si): Piece(xi, yi, QUEEN, si){}
 
 bool Queen::valid_moves(bool vm[][8], Board &b){

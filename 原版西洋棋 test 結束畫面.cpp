@@ -29,7 +29,7 @@ SDL_Renderer* gRenderer = NULL;
 //Globally used font
 TTF_Font* gFont = NULL;
 
-void three_check(){
+void classic(){
 	//Start up SDL and create window
 	if( !init() ){
 		printf( "Failed to initialize!\n" );
@@ -42,7 +42,6 @@ void three_check(){
 		else{	
 			//Main loop flag
 			bool quit = false;
-
 			//Event handler
 			SDL_Event e;
 			
@@ -51,7 +50,6 @@ void three_check(){
 			int clicked_x, clicked_y;
 			int pointed_x = -1, pointed_y = -1;
 			bool mate = 0;
-			int checkcount[2] = {};
 			bool showwinner = 1;
 			
 			//Clear screen
@@ -81,6 +79,7 @@ void three_check(){
 			
 			//add a~h 1~8 
 			Text alph[8], num[8];
+//			LTexture alph[8], num[8];
 			std::string alph_tb[8] = {"a", "b", "c", "d", "e", "f", "g", "h"};
 			std::string num_tb[8] = {"1", "2", "3", "4", "5", "6", "7", "8"};
 			for(int i = 0; i < 8; i++){
@@ -91,14 +90,14 @@ void three_check(){
 			}
 			
 			Board b;
-			Text result;
-			 
 			//Update screen
 			SDL_RenderPresent( gRenderer );
 			
+			Text result; 
+			
 			while(!quit){
 				//Handle events on queue
-				while(!mate && checkcount[b.getturn()] < 3){
+				while(!mate){
 					while( SDL_PollEvent( &e ) != 0 ){
 						//User requests quit
 						if( e.type == SDL_QUIT ){
@@ -147,6 +146,7 @@ void three_check(){
 															SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 															SDL_RenderFillRect( gRenderer, &pRect );
 															renderpm(b, last_bbx);
+//															b.renderpm(last_bbx);
 														}
 														if((mmx - ori_x) * 2 >= 17 * gr_w && (mmx - ori_x) * 2 <= 19 * gr_w && bbx - 4 * b.getturn() >= 0 && bbx - 4 * b.getturn() <= 3){
 															last_written = 1;
@@ -154,6 +154,7 @@ void three_check(){
 															SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
 															SDL_RenderFillRect( gRenderer, &pRect );
 															renderpm(b, bbx);
+//															b.renderpm(bbx);
 														}
 														else{
 															last_written = 0;
@@ -167,7 +168,6 @@ void three_check(){
 										b.promotion(bx, by, bbx - 4 * b.getturn());
 									}
 									if(b.checkmate() || b.stalemate()) mate = 1;
-									if(b.checked(b.getturn())) checkcount[b.getturn()]++;
 									for(int i = 0; i < 8; i++){
 										for(int j = 0; j < 8; j++){
 											vm[i][j] = 0;
@@ -268,7 +268,9 @@ void three_check(){
 							}
 						}
 					}
+///					if(b.checkmate()) printf("1");
 				}
+				
 				if(showwinner && b.checkmate()){
 					showwinner = 0;
 //					const char side[2][6] = {"white", "black"};
@@ -295,7 +297,6 @@ void three_check(){
 					result.render((SCREEN_WIDTH - result.getWidth()) / 2, SCREEN_HEIGHT / 20 - result.getHeight() / 2);
 					SDL_RenderPresent( gRenderer );
 				}
-				
 			}
 		}
 	}
@@ -305,6 +306,6 @@ void three_check(){
 }
 
 int main( int argc, char* args[] ){
-	three_check();
+	classic();
 	return 0;
 }

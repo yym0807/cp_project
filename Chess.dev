@@ -1,5 +1,5 @@
 [Project]
-FileName=SDL.dev
+FileName=Chess.dev
 Name=Chess
 Type=1
 Ver=2
@@ -81,7 +81,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=原版西洋棋.cpp
+FileName=三次將軍.cpp
 CompileCpp=1
 Folder=
 Compile=1
