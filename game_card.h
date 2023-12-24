@@ -1,5 +1,5 @@
-#ifndef GAME_S_K_H
-#define GAME_S_K_H
+#ifndef GAME_CARD_H
+#define GAME_CARD_H
 
 #include "LTexture.h" 
 enum {AIR, KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN};
@@ -19,6 +19,7 @@ class Board{
 		int passant;
 		Piece*** board;
 		Image pm[8]; // for promotion
+//		LTexture pm[8];
 	public:
 		Board();
 		~Board();
@@ -36,6 +37,7 @@ class Board{
 //		void print();
 		void renderpieces();
 		void promotion(int, int, int);
+//		void renderpm(int);
 };
 
 class Piece{
@@ -45,6 +47,7 @@ class Piece{
 		int x; // 8 ~ 1
 		int y; // a ~ h
 		Image img;
+//		LTexture img;
 	public:
 		Piece(int, int, int, int);
 		~Piece();
