@@ -217,10 +217,8 @@ void classic(){
 							if(my < ori_y) bx--;
 							if(clicked){
 								if(bx >= 0 && bx < 8 && by >= 0 && by < 8 && vm[bx][by]){
-									b.move(clicked_x, clicked_y, bx, by);
 									for(int i = 0; i < 8; i++){
 										for(int j = 0; j < 8; j++){
-											vm[i][j] = 0;
 											SDL_Rect vmRect = { ori_x + gr_w * j + l_w, ori_y + gr_h * i + l_w, gr_w - l_w, gr_h - l_w };
 											if(i + j & 1){
 												SDL_SetRenderDrawColor( gRenderer, 0xB0, 0xD0, 0xEE, 0xFF );
@@ -231,6 +229,56 @@ void classic(){
 											SDL_RenderFillRect( gRenderer, &vmRect );
 										}
 									}
+									if(b.move(clicked_x, clicked_y, bx, by)){
+										// promotion
+										int mmx, mmy, bbx, bby, last_bbx = -1, last_written = 0;
+										bool selected = 0;
+										while(!selected){
+											while( SDL_PollEvent( &e ) != 0 ){
+												if( e.type == SDL_MOUSEBUTTONDOWN ){
+													SDL_GetMouseState(&mmx, &mmy);
+													bbx = (mmy - ori_y) / gr_h;
+													if((mmx - ori_x) * 2 >= 17 * gr_w && (mmx - ori_x) * 2 <= 19 * gr_w && bbx - 4 * b.getturn() >= 0 && bbx - 4 * b.getturn() <= 3){
+														selected = 1;
+													}
+												}
+												else if( e.type == SDL_MOUSEMOTION ){
+													SDL_GetMouseState(&mmx, &mmy);
+													bbx = (mmy - ori_y) / gr_h;
+													if(bbx != last_bbx || last_written != ((mmx - ori_x) * 2 >= 17 * gr_w && (mmx - ori_x) * 2 <= 19 * gr_w)){
+														if(last_written){
+															SDL_Rect pRect = { ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * last_bbx + l_w, gr_w - l_w, gr_h - l_w };
+															SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+															SDL_RenderFillRect( gRenderer, &pRect );
+															renderpm(b, last_bbx);
+//															b.renderpm(last_bbx);
+														}
+														if((mmx - ori_x) * 2 >= 17 * gr_w && (mmx - ori_x) * 2 <= 19 * gr_w && bbx - 4 * b.getturn() >= 0 && bbx - 4 * b.getturn() <= 3){
+															last_written = 1;
+															SDL_Rect pRect = { ori_x + gr_w * 8.5 + l_w, ori_y + gr_h * bbx + l_w, gr_w - l_w, gr_h - l_w };
+															SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
+															SDL_RenderFillRect( gRenderer, &pRect );
+															renderpm(b, bbx);
+//															b.renderpm(bbx);
+														}
+														else{
+															last_written = 0;
+														}
+														SDL_RenderPresent( gRenderer );
+													}
+													last_bbx = bbx;
+												}
+											}
+										}
+										b.promotion(bx, by, bbx - 4 * b.getturn());
+									}
+									clicked = 0;
+									for(int i = 0; i < 8; i++){
+										for(int j = 0; j < 8; j++){
+											vm[i][j] = 0;
+										}
+									}
+									if(b.checkmate() || b.stalemate()) mate = 1;
 									b.renderpieces();
 									SDL_RenderPresent( gRenderer );
 								}
