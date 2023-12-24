@@ -4,31 +4,31 @@
 #include <string>
 #include <cmath>
 #include "game_all.h"
-#include "classic.h"
+#include "blindfolded.h"
 #include "LTexture.h"
 
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
-//const int SCREEN_WIDTH = 1000;
-//const int SCREEN_HEIGHT = 750;
+const int SCREEN_WIDTH = 1000;
+const int SCREEN_HEIGHT = 750;
 const double bo_w = (double)SCREEN_HEIGHT / 10 * 8, bo_h = (double)SCREEN_HEIGHT / 10 * 8;
 const double ori_x = (SCREEN_HEIGHT - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 const double gr_w = bo_w / 8, gr_h = bo_h / 8;
 const double l_w = 1; // line width
 
-extern SDL_Window* gWindow;
-extern SDL_Renderer* gRenderer;
-extern TTF_Font* gFont;
+//extern SDL_Window* gWindow;
+//extern SDL_Renderer* gRenderer;
+//extern TTF_Font* gFont;
 
 //The window we'll be rendering to
-//SDL_Window* gWindow = NULL;
+SDL_Window* gWindow = NULL;
 
 //The window renderer
-//SDL_Renderer* gRenderer = NULL;
+SDL_Renderer* gRenderer = NULL;
 
 //Globally used font
-//TTF_Font* gFont = NULL;
+TTF_Font* gFont = NULL;
 
 void blindfolded(){
 	//Start up SDL and create window
@@ -113,6 +113,7 @@ void blindfolded(){
 			
 			while(!quit && !back && !mate){
 //			while(!quit && !mate){
+				b.unloadimage();
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
@@ -349,11 +350,35 @@ void blindfolded(){
 					}
 				}
 			}
-			printf("123");
+//			printf("123");
 			if(back){
 				
 				return;
-			} 
+			}
+			
+			const std::string side_a[2] = {"w", "b"};
+			for(int x = 0; x < 8; x++){
+				for(int y = 0; y < 8; y++){
+					if(*b.getboard()[x][y] == QUEEN){
+						b.getboard()[x][y]->reloadImage("img/queen_" + side_a[b.getboard()[x][y]->getside()] + ".png");	
+					}
+					else if(*b.getboard()[x][y] == ROOK){
+						b.getboard()[x][y]->reloadImage("img/rook_" + side_a[b.getboard()[x][y]->getside()] + ".png");	
+					}
+					else if(*b.getboard()[x][y] == KNIGHT){
+						b.getboard()[x][y]->reloadImage("img/knight_" + side_a[b.getboard()[x][y]->getside()] + ".png");	
+					}
+					else if(*b.getboard()[x][y] == BISHOP){
+						b.getboard()[x][y]->reloadImage("img/bishop_" + side_a[b.getboard()[x][y]->getside()] + ".png");	
+					}
+					else if(*b.getboard()[x][y] == PAWN){
+						b.getboard()[x][y]->reloadImage("img/pawn_" + side_a[b.getboard()[x][y]->getside()] + ".png");	
+					}
+					b.getboard()[x][y]->rerender();				
+				}
+			}
+			
+		
 			if(b.checkmate()){
 //					const char side[2][6] = {"white", "black"};
 //					printf("Winner is %s\n", side[!b.getturn()]);
@@ -413,7 +438,7 @@ void blindfolded(){
 	close();
 }
 
-int main( int argc, char* args[] ){
-	classic();
-	return 0;
-}
+//int main( int argc, char* args[] ){
+//	blindfolded();
+//	return 0;
+//}

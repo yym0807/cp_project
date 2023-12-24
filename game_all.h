@@ -39,6 +39,7 @@ class Board{
 		Board();
 		~Board();
 		Piece***& getboard();
+		void unloadimage();
 		bool move(int, int, int, int);
 		bool checked(bool side);
 		bool check_if_move(int, int, int, int);
@@ -57,6 +58,7 @@ class Board{
 };
 
 class Piece{
+	friend class Board;
 	protected:
 		int p;
 		int side; // 0 for white, 1 for black, -1 for air
@@ -75,6 +77,7 @@ class Piece{
 //		int getname();
 		void rerender();
 		virtual void loadResultImage(std::string){}
+		void reloadImage(std::string);
 		bool getfreeze();
 		bool freezed();
 		bool unfreezed();

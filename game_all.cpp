@@ -78,6 +78,11 @@ void Piece::rerender(){
 	}
 }
 
+void Piece::reloadImage(std::string str){
+	img.loadFromFile(str);
+}
+
+
 bool Piece::getfreeze(){
 	return freeze;
 }
@@ -405,7 +410,7 @@ Board::Board(){
 Board::~Board(){
 	for(int i = 0; i < 8; i++){
 		for(int j = 0; j < 8; j++){
-			delete [] board[i][j];
+			delete board[i][j];
 		}
 		delete [] board[i];
 	}
@@ -415,6 +420,16 @@ Board::~Board(){
 Piece***& Board::getboard(){
 	return board;
 }
+
+void Board::unloadimage(){
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 8; j++){
+			board[i][j]->img.free();
+//			printf("123");
+		}
+	}
+}
+
 
 bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 	if(*board[xi][yi] == KING && (yi-yf) * (yi-yf) > 1){ // OO or OOO
