@@ -378,7 +378,7 @@ void second_king(){
 			result.render((SCREEN_WIDTH - result.getWidth()) / 2, SCREEN_HEIGHT / 20 - result.getHeight() / 2);
 			SDL_RenderPresent( gRenderer );
 		}
-		while(!quit){
+		while(!quit && !back){
 			//Handle events on queue
 			while( SDL_PollEvent( &e ) != 0 ){
 				//User requests quit

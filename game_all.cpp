@@ -544,13 +544,15 @@ bool Board::move(int xi, int yi, int xf, int yf){ // return 1 if promotion
 }
 
 bool Board::checked(bool side){
-	int x[2], y[2];
+	int x[2] = {}, y[2] = {};
 	int kc = 0;
 	for(x[kc] = 0; x[kc] < 8; x[kc]++){//§ä¨ì°ê¤ý¦ì¸m 
 		for(y[kc] = 0; y[kc] < 8; y[kc]++){
 			if(*board[x[kc]][y[kc]] == KING && board[x[kc]][y[kc]]->getside() == side){
 				kc++;
 				if(kc == 2) break;
+				x[kc] = x[kc-1];
+				y[kc] = y[kc-1];
 			}
 		}
 		if(kc == 2) break;
