@@ -10,8 +10,6 @@
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
-//const int SCREEN_WIDTH = 1000;
-//const int SCREEN_HEIGHT = 750;
 const double bo_w = (double)SCREEN_HEIGHT / 10 * 8, bo_h = (double)SCREEN_HEIGHT / 10 * 8;
 const double ori_x = (SCREEN_HEIGHT - bo_w) / 2, ori_y = (SCREEN_HEIGHT - bo_h) / 2;
 const double gr_w = bo_w / 8, gr_h = bo_h / 8;
@@ -20,15 +18,6 @@ const double l_w = 1; // line width
 extern SDL_Window* gWindow;
 extern SDL_Renderer* gRenderer;
 extern TTF_Font* gFont;
-
-//The window we'll be rendering to
-//SDL_Window* gWindow = NULL;
-
-//The window renderer
-//SDL_Renderer* gRenderer = NULL;
-
-//Globally used font
-//TTF_Font* gFont = NULL;
 
 void classic(){
 	//Start up SDL and create window
@@ -80,7 +69,6 @@ void classic(){
 			
 			//add a~h 1~8 
 			Text alph[8], num[8];
-//			LTexture alph[8], num[8];
 			std::string alph_tb[8] = {"a", "b", "c", "d", "e", "f", "g", "h"};
 			std::string num_tb[8] = {"1", "2", "3", "4", "5", "6", "7", "8"};
 			for(int i = 0; i < 8; i++){
@@ -98,18 +86,13 @@ void classic(){
 			SDL_RenderDrawRect( gRenderer, &homeRect );
 			home.render(home_orix, home_oriy);
 			
-			
-			
-			
 			Board b;
-				
 			Text result; 
 			
 			//Update screen
 			SDL_RenderPresent( gRenderer );
 			
 			while(!quit && !back && !mate){
-//			while(!quit && !mate){
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
@@ -160,7 +143,6 @@ void classic(){
 														SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 														SDL_RenderFillRect( gRenderer, &pRect );
 														renderpm(b, last_bbx);
-//															b.renderpm(last_bbx);
 													}
 													if((mmx - ori_x) * 2 >= 17 * gr_w && (mmx - ori_x) * 2 <= 19 * gr_w && bbx - 4 * b.getturn() >= 0 && bbx - 4 * b.getturn() <= 3){
 														last_written = 1;
@@ -168,7 +150,6 @@ void classic(){
 														SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
 														SDL_RenderFillRect( gRenderer, &pRect );
 														renderpm(b, bbx);
-//															b.renderpm(bbx);
 													}
 													else{
 														last_written = 0;
@@ -279,7 +260,6 @@ void classic(){
 														SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 														SDL_RenderFillRect( gRenderer, &pRect );
 														renderpm(b, last_bbx);
-//															b.renderpm(last_bbx);
 													}
 													if((mmx - ori_x) * 2 >= 17 * gr_w && (mmx - ori_x) * 2 <= 19 * gr_w && bbx - 4 * b.getturn() >= 0 && bbx - 4 * b.getturn() <= 3){
 														last_written = 1;
@@ -287,7 +267,6 @@ void classic(){
 														SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xDD, 0xAA, 0xFF );
 														SDL_RenderFillRect( gRenderer, &pRect );
 														renderpm(b, bbx);
-//															b.renderpm(bbx);
 													}
 													else{
 														last_written = 0;
@@ -359,8 +338,6 @@ void classic(){
 				return;
 			} 
 			if(b.checkmate()){
-//					const char side[2][6] = {"white", "black"};
-//					printf("Winner is %s\n", side[!b.getturn()]);
 				const std::string side[2] = {"white", "black"};
 				const std::string side_a[2] = {"w", "b"};
 				result.loadFromRenderedText("Winner is " + side[!b.getturn()], 35);
@@ -385,13 +362,11 @@ void classic(){
 				SDL_RenderPresent( gRenderer );	
 			}
 			else if(b.stalemate()){
-//					printf("It's a stalemate\n");
 				result.loadFromRenderedText("It's a draw", 35);
 				result.render((SCREEN_WIDTH - result.getWidth()) / 2, SCREEN_HEIGHT / 20 - result.getHeight() / 2);
 				SDL_RenderPresent( gRenderer );
 			}
 			while(!quit && !back){
-//			while(!quit){
 				//Handle events on queue
 				while( SDL_PollEvent( &e ) != 0 ){
 					//User requests quit
@@ -411,12 +386,7 @@ void classic(){
 			if(back) return;
 		}
 	}
-
 	//Free resources and close SDL
 	close();
 }
 
-//int main( int argc, char* args[] ){
-//	classic();
-//	return 0;
-//}
