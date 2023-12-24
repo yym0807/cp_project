@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "game_card.h"
+#include "game_cards.h"
 #include "Ltexture.h" 
 using namespace std;
 
@@ -28,15 +28,12 @@ Piece::Piece(int xi, int yi, int pi, int si): x(xi), y(yi), p(pi), side(si){
 			break;
 		case ROOK:
 			str = "img/rook_" + fs[si];
-			str = "img/freeze.png";
 			break;
 		case BISHOP:
 			str = "img/bishop_" + fs[si];
-			str = "img/bomb.png";
 			break;
 		case KNIGHT:
 			str = "img/knight_" + fs[si];
-			str = "img/penetrate.png";
 			break;
 		case PAWN:
 			str = "img/pawn_" + fs[si];

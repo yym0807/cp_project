@@ -2,7 +2,7 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
-#include "game.h"
+#include "game_second_king.h"
 #include "Ltexture.h" 
 using namespace std;
 
